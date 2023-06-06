@@ -34,6 +34,4 @@ public abstract class CloudCommand {
         String[] aliases() default {};
 
     }
-
-
 }

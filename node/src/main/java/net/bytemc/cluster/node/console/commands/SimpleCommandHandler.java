@@ -2,6 +2,7 @@ package net.bytemc.cluster.node.console.commands;
 
 import lombok.Getter;
 import net.bytemc.cluster.node.Node;
+import net.bytemc.cluster.node.console.impl.GroupCommand;
 import net.bytemc.cluster.node.console.impl.ShutdownCommand;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,6 +20,7 @@ public final class SimpleCommandHandler implements CommandHandler {
         this.cachedCloudCommands = new HashMap<>();
 
         this.registerCommand(new ShutdownCommand());
+        this.registerCommand(new GroupCommand());
     }
 
     public void execute(final @NotNull String command) {

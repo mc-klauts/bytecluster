@@ -4,6 +4,8 @@ public interface CloudServiceGroup {
 
     String getName();
 
+    CloudGroupType getGroupType();
+
     int getMinOnlineCount();
 
     int getMaxOnlineCount();
