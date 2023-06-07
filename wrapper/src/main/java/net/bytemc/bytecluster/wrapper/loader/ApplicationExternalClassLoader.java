@@ -14,7 +14,6 @@ public final class ApplicationExternalClassLoader extends URLClassLoader {
     @Getter
     private boolean closed = false;
 
-    @SneakyThrows
     public ApplicationExternalClassLoader() {
         super(new URL[]{}, ClassLoader.getSystemClassLoader());
     }

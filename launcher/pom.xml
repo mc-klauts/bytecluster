@@ -51,6 +51,7 @@
                     <finalName>bytecluster-launcher</finalName>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <shadedArtifactAttached>true</shadedArtifactAttached>
+
                 </configuration>
             </plugin>
             <plugin>

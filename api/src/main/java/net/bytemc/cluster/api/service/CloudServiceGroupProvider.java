@@ -10,12 +10,16 @@ public interface CloudServiceGroupProvider {
 
     Collection<CloudServiceGroup> findGroups();
 
-    TaskFuture<CloudServiceGroup> findGroupAsync(String name);
+    TaskFuture<CloudServiceGroup> findGroupAsync(String id);
 
-    CloudServiceGroup findGroup(String name);
+    CloudServiceGroup findGroup(String id);
 
     void addGroup(CloudServiceGroup group);
 
     void removeGroup(String name);
+
+    boolean exists(String id);
+
+    TaskFuture<Boolean> existsAsync(String id);
 
 }

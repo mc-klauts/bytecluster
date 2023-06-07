@@ -9,6 +9,8 @@ import java.util.function.Consumer;
 public final class TaskFuture<T> {
 
     private T value;
+    private State state = State.OPEN;
+
     private final Map<State, List<Object>> listeners = new HashMap<>();
 
     public void complete(T value) {
@@ -25,17 +27,33 @@ public final class TaskFuture<T> {
     }
 
     public enum State {
+        OPEN,
         SUCCESS,
         FAILURE
     }
 
     public TaskFuture<T> onComplete(Consumer<T> value) {
+        if (state == State.SUCCESS) {
+            value.accept(this.value);
+            return this;
+        }
         listeners.put(State.SUCCESS, ListHelper.getOrCreateAndElement(listeners.getOrDefault(State.SUCCESS, new ArrayList<>()), value));
         return this;
     }
 
     public TaskFuture<T> onCancel(Consumer<String> value) {
+        if(state == State.FAILURE) {
+            value.accept("Task was already cancelled.");
+            return this;
+        }
         listeners.put(State.FAILURE, ListHelper.getOrCreateAndElement(listeners.getOrDefault(State.FAILURE, new ArrayList<>()), value));
         return this;
     }
+
+    public static <T> TaskFuture<T> instantly(T value) {
+        TaskFuture<T> task = new TaskFuture<>();
+        task.complete(value);
+        return task;
+    }
+
 }

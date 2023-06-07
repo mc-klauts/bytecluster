@@ -37,6 +37,9 @@ public final class Node extends Cluster {
 
         this.runtimeConfiguraiton = ConfigurationHelper.readConfiguration(Path.of("config.json"), RuntimeConfiguraiton.DEFAULT_CONFIGURATION);
         this.serviceGroupProvider = new CloudServiceGroupProviderImpl();
+
+        Logger.info("Loading following groups: " + String.join(", ", serviceGroupProvider.findGroups().stream().map(it -> it.getName()).toList()));
+
         this.clusterNetwork = new ClusterNetwork(this.runtimeConfiguraiton);
 
         // if user close the cluster without the shutdown command

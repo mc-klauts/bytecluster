@@ -6,14 +6,10 @@ import io.netty5.handler.codec.DecoderException;
 import io.netty5.util.ResourceLeakDetector;
 import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
-import sun.misc.Unsafe;
 
 public final class NettyUtils {
 
     private static final int[] VAR_INT_BYTE_LENGTHS = new int[33];
-
-    @SuppressWarnings("sunapi")
-    public static final Unsafe unsafe;
 
     static {
         if (System.getProperty("io.netty5.leakDetection.level") == null) {
@@ -23,14 +19,6 @@ public final class NettyUtils {
             VAR_INT_BYTE_LENGTHS[i] = (int) Math.ceil((31d - (i - 1)) / 7d);
         }
         VAR_INT_BYTE_LENGTHS[32] = 1;
-
-        try {
-            var field = Unsafe.class.getDeclaredField("theUnsafe");
-            field.setAccessible(true);
-            unsafe = (Unsafe) field.get(null);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public static @NonNull Buffer writeVarInt(@NonNull Buffer buffer, int value) {
@@ -75,13 +63,4 @@ public final class NettyUtils {
     public static int varIntBytes(int contentLength) {
         return VAR_INT_BYTE_LENGTHS[Integer.numberOfLeadingZeros(contentLength)];
     }
-
-    public static Object initializeClass(Class<?> clazz) {
-        try {
-            return unsafe.allocateInstance(clazz);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 }
