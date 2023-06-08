@@ -15,4 +15,13 @@ public final class FileHelper {
             }
         }
     }
+
+    public static void deleteIfNotExists(Path path) {
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

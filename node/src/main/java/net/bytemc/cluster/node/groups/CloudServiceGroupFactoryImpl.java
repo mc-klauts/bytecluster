@@ -9,13 +9,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import net.bytemc.cluster.node.misc.FileHelper;
 
 public final class CloudServiceGroupFactoryImpl implements CloudServiceGroupFactory {
 
     private static Path GROUPS_STORAGE_PATH = Path.of("groups");
 
     public CloudServiceGroupFactoryImpl() {
-        ConfigurationHelper.createDirectoryIfNotExists(GROUPS_STORAGE_PATH);
+        FileHelper.createDirectoryIfNotExists(GROUPS_STORAGE_PATH);
     }
 
     @Override
@@ -37,7 +38,7 @@ public final class CloudServiceGroupFactoryImpl implements CloudServiceGroupFact
 
     @Override
     public void remove(CloudServiceGroup group) {
-        ConfigurationHelper.createDirectoryIfNotExists(GROUPS_STORAGE_PATH.resolve(group.getName()));
+        FileHelper.createDirectoryIfNotExists(GROUPS_STORAGE_PATH.resolve(group.getName()));
     }
 
     @Override

@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import net.bytemc.cluster.node.misc.FileHelper;
 
 public final class CloudServiceGroupProviderImpl implements CloudServiceGroupProvider {
 
@@ -60,7 +61,7 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
             Logger.warn("Group " + name + " does not exist.");
             return;
         }
-        ConfigurationHelper.deleteIfNotExists(Path.of("groups", name + ".json"));
+        FileHelper.deleteIfNotExists(Path.of("groups", name + ".json"));
         this.groups.remove(name);
         Logger.info("Successfully deleted group " + name + ".");
     }

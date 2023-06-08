@@ -6,24 +6,6 @@ import java.nio.file.Path;
 
 public final class ConfigurationHelper {
 
-    public static void createDirectoryIfNotExists(Path path) {
-        if (!Files.exists(path)) {
-            try {
-                Files.createDirectory(path);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void deleteIfNotExists(Path path) {
-        try {
-            Files.deleteIfExists(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void createConfigurationIfNotExists(Path path, Object value) {
         if (!Files.exists(path)) {
             ConfigurationProvider.write(path, value);
