@@ -2,6 +2,8 @@ package net.bytemc.cluster.node.configuration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.bytemc.cluster.api.service.CloudServiceGroup;
+import net.bytemc.cluster.node.configuration.layouts.PathSerializer;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -11,6 +13,7 @@ public final class ConfigurationProvider {
     private static final Gson DEFAULT_GSON = new GsonBuilder()
             .setPrettyPrinting()
             .serializeNulls()
+            .registerTypeHierarchyAdapter(Path.class, new PathSerializer())
             .disableHtmlEscaping()
             .create();
 

@@ -12,6 +12,7 @@ import net.bytemc.cluster.node.console.commands.CommandHandler;
 import net.bytemc.cluster.node.console.commands.SimpleCommandHandler;
 import net.bytemc.cluster.node.groups.CloudServiceGroupProviderImpl;
 import net.bytemc.cluster.node.logger.Logger;
+import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
 
 import java.nio.file.Path;
 
@@ -23,6 +24,8 @@ public final class Node extends Cluster {
 
     private final RuntimeConfiguraiton runtimeConfiguraiton;
     private final CloudServiceGroupProvider serviceGroupProvider;
+    private final CloudServiceProvider serviceProvider;
+
     private final CommandHandler commandHandler;
     private final ConsoleTerminal consoleTerminal;
     private final ClusterNetwork clusterNetwork;
@@ -40,15 +43,12 @@ public final class Node extends Cluster {
 
         Logger.info("Loading following groups: " + String.join(", ", serviceGroupProvider.findGroups().stream().map(it -> it.getName()).toList()));
 
+        this.serviceProvider = new CloudServiceProviderImpl(this.serviceGroupProvider);
         this.clusterNetwork = new ClusterNetwork(this.runtimeConfiguraiton);
 
         // if user close the cluster without the shutdown command
         Runtime.getRuntime().addShutdownHook(new Thread(() -> NodeShutdownHandler.shutdown(this)));
 
-    }
-
-    @Override
-    public CloudServiceProvider getServiceProvider() {
-        return null;
+        ((CloudServiceProviderImpl) this.serviceProvider).queue();
     }
 }

@@ -20,16 +20,15 @@ public final class CloudServiceGroupFactoryImpl implements CloudServiceGroupFact
 
     @Override
     public List<CloudServiceGroup> loadGroups() {
-        return Arrays.stream(GROUPS_STORAGE_PATH.toFile()
-                        .listFiles())
+        return Arrays.stream(GROUPS_STORAGE_PATH.toFile().listFiles())
                 .map(it -> ConfigurationProvider.read(GROUPS_STORAGE_PATH.resolve(it.getName()), CloudServiceGroupImpl.class))
-                .map(it -> (CloudServiceGroup) it)
+                .map(cloudServiceGroup -> (CloudServiceGroup) cloudServiceGroup)
                 .toList();
     }
 
     @Override
     public boolean create(CloudServiceGroup cloudServiceGroup) {
-        if(existInStorage(cloudServiceGroup)) {
+        if (existInStorage(cloudServiceGroup)) {
             return false;
         }
         ConfigurationProvider.write(GROUPS_STORAGE_PATH.resolve(cloudServiceGroup.getName()), cloudServiceGroup);

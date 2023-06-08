@@ -17,6 +17,8 @@ public final class ClusterLauncher {
         try {
 
             final var path = Path.of("storage", "node.jar");
+            final var wrapperPath = Path.of("storage", "wrapper.jar");
+
             final var storage = path.getParent();
 
             if (!Files.exists(storage)) {
@@ -24,6 +26,8 @@ public final class ClusterLauncher {
             }
 
             Files.copy(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResourceAsStream("node.jar")), path, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResourceAsStream("wrapper.jar")), wrapperPath, StandardCopyOption.REPLACE_EXISTING);
+
             BoostrapUrlLoader loader = new BoostrapUrlLoader(new URL[]{path.toUri().toURL()}, ClassLoader.getSystemClassLoader());
 
             Thread.currentThread().setContextClassLoader(loader);

@@ -25,6 +25,12 @@
                     <include>node.jar</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>${basedir}/../wrapper/target</directory>
+                <includes>
+                    <include>wrapper.jar</include>
+                </includes>
+            </resource>
         </resources>
         <plugins>
             <plugin>

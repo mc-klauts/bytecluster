@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
@@ -18,9 +19,12 @@ public final class ApplicationExternalClassLoader extends URLClassLoader {
         super(new URL[]{}, ClassLoader.getSystemClassLoader());
     }
 
-    @SneakyThrows
     public ApplicationExternalClassLoader addUrl(@NotNull final Path url){
-        this.addURL(url.toUri().toURL());
+        try {
+            this.addURL(url.toUri().toURL());
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
         return this;
     }
 

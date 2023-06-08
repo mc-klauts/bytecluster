@@ -1,21 +1,30 @@
 package net.bytemc.cluster.api.service;
 
+import net.bytemc.cluster.api.misc.TaskFuture;
+
 public interface CloudService {
 
-    String name();
+    String getName();
 
-    String host();
+    String getHostname();
 
-    int port();
+    int getPort();
 
-    String group();
+    int getId();
 
-    int onlinePlayers();
+    String getGroupName();
 
-    int maxPlayers();
+    int getPlayers();
 
-    String motd();
+    int getMaxPlayers();
+
+    String getMotd();
+
 
     void shutdown();
+
+    CloudServiceGroup getGroup();
+
+    TaskFuture<CloudServiceGroup> getGroupAsync();
 
 }
