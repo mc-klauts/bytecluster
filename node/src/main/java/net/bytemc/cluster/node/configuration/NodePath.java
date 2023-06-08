@@ -10,5 +10,6 @@ import java.nio.file.Path;
 public final class NodePath {
 
     private Path storagePath;
+    private Path serverRunningPath;
 
 }

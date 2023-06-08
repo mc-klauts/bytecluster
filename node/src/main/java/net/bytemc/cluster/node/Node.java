@@ -6,7 +6,7 @@ import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 import net.bytemc.cluster.node.cluster.ClusterNetwork;
 import net.bytemc.cluster.node.configuration.ConfigurationHelper;
-import net.bytemc.cluster.node.configuration.RuntimeConfiguraiton;
+import net.bytemc.cluster.node.configuration.RuntimeConfiguration;
 import net.bytemc.cluster.node.console.ConsoleTerminal;
 import net.bytemc.cluster.node.console.commands.CommandHandler;
 import net.bytemc.cluster.node.console.commands.SimpleCommandHandler;
@@ -22,7 +22,7 @@ public final class Node extends Cluster {
     @Getter
     private static Node instance;
 
-    private final RuntimeConfiguraiton runtimeConfiguraiton;
+    private final RuntimeConfiguration runtimeConfiguration;
     private final CloudServiceGroupProvider serviceGroupProvider;
     private final CloudServiceProvider serviceProvider;
 
@@ -38,13 +38,13 @@ public final class Node extends Cluster {
 
         Logger.info("Initializing networkservice...");
 
-        this.runtimeConfiguraiton = ConfigurationHelper.readConfiguration(Path.of("config.json"), RuntimeConfiguraiton.DEFAULT_CONFIGURATION);
+        this.runtimeConfiguration = ConfigurationHelper.readConfiguration(Path.of("config.json"), RuntimeConfiguration.DEFAULT_CONFIGURATION);
         this.serviceGroupProvider = new CloudServiceGroupProviderImpl();
 
         Logger.info("Loading following groups: " + String.join(", ", serviceGroupProvider.findGroups().stream().map(it -> it.getName()).toList()));
 
         this.serviceProvider = new CloudServiceProviderImpl(this.serviceGroupProvider);
-        this.clusterNetwork = new ClusterNetwork(this.runtimeConfiguraiton);
+        this.clusterNetwork = new ClusterNetwork(this.runtimeConfiguration);
 
         // if user close the cluster without the shutdown command
         Runtime.getRuntime().addShutdownHook(new Thread(() -> NodeShutdownHandler.shutdown(this)));
