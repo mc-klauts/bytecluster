@@ -38,7 +38,7 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
 
     @Override
     public CloudServiceGroup findGroup(String name) {
-        return null;
+        return groups.get(name);
     }
 
     @Override

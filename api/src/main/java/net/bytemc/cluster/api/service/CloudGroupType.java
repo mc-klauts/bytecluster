@@ -8,8 +8,8 @@ import java.nio.file.Path;
 @AllArgsConstructor
 public enum CloudGroupType {
 
-    VELOCITY("velocity", true),
-    MINESTOM("minestom");
+    VELOCITY("velocity.jar", true),
+    MINESTOM("minestom.jar");
 
     String fileId;
     boolean proxy = false;

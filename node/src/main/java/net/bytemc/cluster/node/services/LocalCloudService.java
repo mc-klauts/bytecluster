@@ -7,6 +7,7 @@ import net.bytemc.cluster.api.misc.TaskFuture;
 import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudServiceState;
+import net.bytemc.cluster.node.Node;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -80,6 +81,6 @@ public final class LocalCloudService implements CloudService {
     }
 
     public Path getDirectory() {
-        return Path.of("temp", getName());
+        return Node.getInstance().getRuntimeConfiguration().getNodePath().getServerRunningPath().resolve(getName());
     }
 }

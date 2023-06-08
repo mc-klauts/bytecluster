@@ -6,6 +6,7 @@ import net.bytemc.cluster.api.service.CloudServiceFactory;
 import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.node.logger.Logger;
 import net.bytemc.cluster.node.misc.FileHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -42,12 +43,16 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
     }
 
     @Override
-    public void start(CloudService cloudServiceGroup) {
+    public void start(@NotNull CloudService service) {
 
-        FileHelper.createDirectoryIfNotExists(Node.getInstance().getRuntimeConfiguration().getNodePath().getServerRunningPath().resolve(cloudServiceGroup.getName()));
+        FileHelper.createDirectoryIfNotExists(Node.getInstance().getRuntimeConfiguration().getNodePath().getServerRunningPath().resolve(service.getName()));
+        try {
+            Files.copy(service.getGroup().getGroupType().getPath(Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath()), service.getGroup().getGroupType().getPath(((LocalCloudService) service).getDirectory()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-
-        if (cloudServiceGroup instanceof LocalCloudService cloudService) {
+        if (service instanceof LocalCloudService cloudService) {
             Logger.info("Starting service " + cloudService.getName());
 
             /*
@@ -64,19 +69,24 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
 
     @Override
     public void stop(CloudService service) {
-        if(service instanceof LocalCloudService localService)
-        if (localService.getProcess() != null) {
-            service.executeCommand(service.getGroup().getGroupType().isProxy() ? "end" : "stop");
-            try {
-                if (localService.getProcess().waitFor(5, TimeUnit.SECONDS)) {
-                    localService.setProcess(null);
-                    return;
+        if (service instanceof LocalCloudService localService)
+            if (localService.getProcess() != null) {
+                service.executeCommand(service.getGroup().getGroupType().isProxy() ? "end" : "stop");
+                try {
+                    if (localService.getProcess().waitFor(5, TimeUnit.SECONDS)) {
+                        localService.setProcess(null);
+                        return;
+                    }
+                } catch (InterruptedException ignored) {}
+                localService.getProcess().toHandle().destroyForcibly();
+                localService.setProcess(null);
+
+                try {
+                    Files.deleteIfExists(((LocalCloudService) service).getDirectory().toAbsolutePath());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (InterruptedException ignored) {
             }
-            localService.getProcess().toHandle().destroyForcibly();
-            localService.setProcess(null);
-        }
     }
 
 

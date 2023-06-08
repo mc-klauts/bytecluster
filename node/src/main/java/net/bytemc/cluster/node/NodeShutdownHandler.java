@@ -6,6 +6,10 @@ public final class NodeShutdownHandler {
 
         node.setRunning(false);
 
+        for (var service : node.getServiceProvider().findServices()) {
+            service.shutdown();
+        }
+
         //disable and shutdown console process
         node.getConsoleTerminal().close();
 
