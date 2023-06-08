@@ -5,9 +5,11 @@ import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 import net.bytemc.cluster.node.Node;
+import net.bytemc.cluster.node.misc.FileHelper;
 import net.bytemc.cluster.node.misc.PortHelper;
 
 import java.util.*;
+
 import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
@@ -27,12 +29,17 @@ public final class CloudServiceFactoryQueue {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if(!tasks.isEmpty()) {
+            if (!tasks.isEmpty()) {
                 var group = tasks.poll();
                 var service = new LocalCloudService(group.getName(), group.getName(), findId(group), PortHelper.getNextPort(group), 10, "Default template motd");
+                ((CloudServiceProviderImpl) Node.getInstance().getServiceProvider()).addService(service);
                 cloudServiceProvider.getFactory().start(service);
             }
         }
+    }
+
+    public void shutdown() {
+        FileHelper.deleteDirectory(Node.getInstance().getRuntimeConfiguration().getNodePath().getServerRunningPath());
     }
 
     private int findId(@NotNull CloudServiceGroup group) {

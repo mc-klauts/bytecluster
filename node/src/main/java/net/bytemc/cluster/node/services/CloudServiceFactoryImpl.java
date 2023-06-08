@@ -16,17 +16,16 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
-import org.jetbrains.annotations.NotNull;
 
 public final class CloudServiceFactoryImpl implements CloudServiceFactory {
 
     private static final List<String> VELOCITY_FLAGS = Arrays.asList(
-        "-XX:+UseG1GC",
-        "-XX:G1HeapRegionSize=4M",
-        "-XX:+UnlockExperimentalVMOptions",
-        "-XX:+ParallelRefProcEnabled",
-        "-XX:+AlwaysPreTouch",
-        "-XX:MaxInlineLevel=15"
+            "-XX:+UseG1GC",
+            "-XX:G1HeapRegionSize=4M",
+            "-XX:+UnlockExperimentalVMOptions",
+            "-XX:+ParallelRefProcEnabled",
+            "-XX:+AlwaysPreTouch",
+            "-XX:MaxInlineLevel=15"
     );
 
     private static final String WRAPPER_MAIN_CLASS;
@@ -70,7 +69,7 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
 
     @Override
     public void stop(CloudService service) {
-        if (service instanceof LocalCloudService localService)
+        if (service instanceof LocalCloudService localService) {
             if (localService.getProcess() != null) {
                 service.executeCommand(service.getGroup().getGroupType().isProxy() ? "end" : "stop");
                 try {
@@ -78,18 +77,14 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
                         localService.setProcess(null);
                         return;
                     }
-                } catch (InterruptedException ignored) {}
+                } catch (InterruptedException ignored) {
+                }
                 localService.getProcess().toHandle().destroyForcibly();
                 localService.setProcess(null);
-
-                try {
-                    Files.deleteIfExists(((LocalCloudService) service).getDirectory().toAbsolutePath());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
+            FileHelper.deleteDirectory(localService.getDirectory());
+        }
     }
-
 
     private @NotNull List<String> arguments(@NotNull LocalCloudService service) {
         final var wrapper = Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath().toAbsolutePath();

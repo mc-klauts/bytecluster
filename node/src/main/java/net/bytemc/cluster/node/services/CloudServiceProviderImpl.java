@@ -12,9 +12,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Getter
 public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
-    @Getter
     private final CloudServiceFactory factory = new CloudServiceFactoryImpl();
     private final CloudServiceFactoryQueue queue = new CloudServiceFactoryQueue(this);
 
@@ -74,5 +74,8 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
         this.queue.start();
     }
 
+    public void addService(CloudService service) {
+        this.services.put(service.getName(), service);
+    }
 
 }
