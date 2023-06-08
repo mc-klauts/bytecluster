@@ -32,7 +32,7 @@ public final class ConsoleTerminal {
 
     public ConsoleTerminal() {
 
-        this.prompt = "cloud » ";
+        this.prompt = ConsoleColorInterpreter.toColoredString('&', "&b cloud &8» &7");
 
         try {
             java.util.logging.Logger.getLogger("org.jline").setLevel(Level.OFF);

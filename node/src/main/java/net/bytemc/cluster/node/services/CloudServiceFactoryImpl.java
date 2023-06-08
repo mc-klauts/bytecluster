@@ -53,17 +53,13 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
         }
 
         if (service instanceof LocalCloudService cloudService) {
-            Logger.info("Starting service " + cloudService.getName());
+            Logger.info("Told local node to start service " + cloudService.getName());
 
-            /*
-            try {
-                var process = new ProcessBuilder(arguments(cloudService)).directory(cloudService.getDirectory().toFile()).start();
-                cloudService.setProcess(process);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
-             */
+               // var process = new ProcessBuilder(arguments(cloudService)).directory(cloudService.getDirectory().toFile()).start();
+             //   cloudService.setProcess(process);
+
+                //clear
         }
     }
 
@@ -74,8 +70,10 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
                 service.executeCommand(service.getGroup().getGroupType().isProxy() ? "end" : "stop");
                 try {
                     if (localService.getProcess().waitFor(5, TimeUnit.SECONDS)) {
-                        localService.setProcess(null);
-                        return;
+                        if (!localService.getProcess().isAlive()) {
+                            localService.setProcess(null);
+                            return;
+                        }
                     }
                 } catch (InterruptedException ignored) {
                 }
@@ -83,6 +81,7 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
                 localService.setProcess(null);
             }
             FileHelper.deleteDirectory(localService.getDirectory());
+            Logger.info("Service " + localService.getName() + " is now stopped.");
         }
     }
 

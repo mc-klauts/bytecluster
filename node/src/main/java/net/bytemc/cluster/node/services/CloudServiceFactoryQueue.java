@@ -5,6 +5,7 @@ import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 import net.bytemc.cluster.node.Node;
+import net.bytemc.cluster.node.logger.Logger;
 import net.bytemc.cluster.node.misc.FileHelper;
 import net.bytemc.cluster.node.misc.PortHelper;
 
@@ -20,6 +21,7 @@ public final class CloudServiceFactoryQueue {
 
     public void addTask(CloudServiceGroup group) {
         this.tasks.add(group);
+        Logger.info("Service from type " + group.getName() + " is now queued...");
     }
 
     public void start() {
