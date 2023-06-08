@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
-import net.bytemc.cluster.node.logger.Logger;
+import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.node.misc.PortHelper;
 
 import java.util.*;
@@ -21,7 +21,7 @@ public final class CloudServiceFactoryQueue {
     }
 
     public void start() {
-        while (true) {
+        while (Node.getInstance().isRunning()) {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {

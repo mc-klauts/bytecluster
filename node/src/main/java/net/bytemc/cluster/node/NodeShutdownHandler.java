@@ -6,6 +6,8 @@ public final class NodeShutdownHandler {
 
     public static void shutdown(@NotNull Node node) {
 
+        node.setRunning(false);
+
         //disable and shutdown console process
         node.getConsoleTerminal().close();
 

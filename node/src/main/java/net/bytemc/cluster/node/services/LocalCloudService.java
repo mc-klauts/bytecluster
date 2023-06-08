@@ -11,6 +11,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 @Getter
@@ -53,8 +55,21 @@ public final class LocalCloudService implements CloudService {
     }
 
     @Override
+    public void executeCommand(String command) {
+        if (this.process != null) {
+            final var outputStream = this.process.getOutputStream();
+            try {
+                outputStream.write((command + "\n").getBytes(StandardCharsets.UTF_8));
+                outputStream.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
     public void shutdown() {
-        // todo
+        Cluster.getInstance().getServiceProvider().getFactory().stop(this);
     }
 
     @Override
