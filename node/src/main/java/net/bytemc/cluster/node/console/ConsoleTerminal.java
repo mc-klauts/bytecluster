@@ -53,8 +53,12 @@ public final class ConsoleTerminal {
             this.lineReader.option(LineReader.Option.AUTO_FRESH_LINE, true);
             this.lineReader.option(LineReader.Option.DISABLE_EVENT_EXPANSION, true);
 
-            this.consoleThread.start();
             this.clearScreen();
+
+            //display header
+            ConsoleHeader.print(this);
+
+            this.consoleThread.start();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
