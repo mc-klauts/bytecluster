@@ -5,6 +5,7 @@ import net.bytemc.cluster.node.Node;
 
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import org.jetbrains.annotations.NotNull;
 
 public final class PortHelper {
 
@@ -13,7 +14,7 @@ public final class PortHelper {
     //todo
     private static final int PORTS_BOUNCE = 25590;
 
-    public static int getNextPort(CloudServiceGroup service) {
+    public static int getNextPort(@NotNull CloudServiceGroup service) {
         var port = service.getGroupType().isProxy() ? PORTS_BOUNCE_PROXY : PORTS_BOUNCE;
         while (isPortUsed(port)) {
             port++;

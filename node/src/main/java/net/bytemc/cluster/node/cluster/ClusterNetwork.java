@@ -3,12 +3,13 @@ package net.bytemc.cluster.node.cluster;
 import net.bytemc.cluster.node.configuration.RuntimeConfiguration;
 import net.bytemc.cluster.node.logger.Logger;
 import net.bytemc.cluster.node.network.netty.NettyServer;
+import org.jetbrains.annotations.NotNull;
 
 public final class ClusterNetwork {
 
     private NettyServer nettyServer;
 
-    public ClusterNetwork(RuntimeConfiguration configuration) {
+    public ClusterNetwork(@NotNull RuntimeConfiguration configuration) {
         this.nettyServer = new NettyServer();
 
         this.nettyServer.initialize(configuration.getPort()).onComplete(unused -> {

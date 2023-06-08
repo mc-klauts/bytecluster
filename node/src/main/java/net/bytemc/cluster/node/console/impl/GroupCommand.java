@@ -7,12 +7,13 @@ import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.node.console.commands.CloudCommand;
 import net.bytemc.cluster.node.groups.CloudServiceGroupImpl;
 import net.bytemc.cluster.node.logger.Logger;
+import org.jetbrains.annotations.NotNull;
 
 @CloudCommand.Command(name = "group", aliases = {"groups"})
 public final class GroupCommand extends CloudCommand {
 
     @Override
-    public void execute(Node node, String[] args) {
+    public void execute(@NotNull Node node, String @NotNull [] args) {
 
         final var groupManager = node.getServiceGroupProvider();
 

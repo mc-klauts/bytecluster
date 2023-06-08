@@ -1,9 +1,10 @@
 package net.bytemc.cluster.node.console;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jline.reader.LineReader;
 import org.jline.reader.impl.LineReaderImpl;
 import org.jline.style.StyleResolver;
@@ -63,7 +64,7 @@ public final class ConsoleTerminal {
         this.forceWrite(text);
     }
 
-    private String formatText(String input, String ensureEndsWith) {
+    private @NotNull String formatText(String input, String ensureEndsWith) {
         var content = this.supportAnsiSupport ? ConsoleColorInterpreter.toColoredString('&', input) : ConsoleColorInterpreter.stripColor('&', input);
         if (!content.endsWith(ensureEndsWith)) {
             content += ensureEndsWith;
@@ -92,18 +93,17 @@ public final class ConsoleTerminal {
         this.redisplay();
     }
 
-    public ConsoleTerminal writeEmpty(Supplier<String> rawText) {
+    public void writeEmpty(@NotNull Supplier<String> rawText) {
         this.disallowLog.lock();
         try {
             this.print(this.formatText(rawText.get(), ""));
-            return this;
         } finally {
             this.disallowLog.unlock();
         }
     }
 
 
-    private ConsoleTerminal forceWrite(String text) {
+    private void forceWrite(String text) {
         this.disallowLog.lock();
         try {
             var content = this.formatText(text, System.lineSeparator());
@@ -111,7 +111,6 @@ public final class ConsoleTerminal {
         } finally {
             this.disallowLog.unlock();
         }
-        return this;
     }
 
     public void close()  {

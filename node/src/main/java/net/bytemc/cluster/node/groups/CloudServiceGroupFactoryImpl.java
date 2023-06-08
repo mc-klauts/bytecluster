@@ -1,5 +1,6 @@
 package net.bytemc.cluster.node.groups;
 
+import java.util.Objects;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudServiceGroupFactory;
 import net.bytemc.cluster.node.configuration.ConfigurationHelper;
@@ -10,6 +11,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import net.bytemc.cluster.node.misc.FileHelper;
+import org.jetbrains.annotations.NotNull;
 
 public final class CloudServiceGroupFactoryImpl implements CloudServiceGroupFactory {
 
@@ -21,7 +23,7 @@ public final class CloudServiceGroupFactoryImpl implements CloudServiceGroupFact
 
     @Override
     public List<CloudServiceGroup> loadGroups() {
-        return Arrays.stream(GROUPS_STORAGE_PATH.toFile().listFiles())
+        return Arrays.stream(Objects.requireNonNull(GROUPS_STORAGE_PATH.toFile().listFiles()))
                 .map(it -> ConfigurationProvider.read(GROUPS_STORAGE_PATH.resolve(it.getName()), CloudServiceGroupImpl.class))
                 .map(cloudServiceGroup -> (CloudServiceGroup) cloudServiceGroup)
                 .toList();
@@ -37,12 +39,12 @@ public final class CloudServiceGroupFactoryImpl implements CloudServiceGroupFact
     }
 
     @Override
-    public void remove(CloudServiceGroup group) {
+    public void remove(@NotNull CloudServiceGroup group) {
         FileHelper.createDirectoryIfNotExists(GROUPS_STORAGE_PATH.resolve(group.getName()));
     }
 
     @Override
-    public boolean existInStorage(CloudServiceGroup group) {
+    public boolean existInStorage(@NotNull CloudServiceGroup group) {
         return Files.exists(GROUPS_STORAGE_PATH.resolve(group.getName()));
     }
 }

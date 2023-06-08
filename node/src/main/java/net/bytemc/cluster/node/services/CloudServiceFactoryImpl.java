@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
+import org.jetbrains.annotations.NotNull;
 
 public final class CloudServiceFactoryImpl implements CloudServiceFactory {
 
@@ -62,7 +63,7 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
         }
     }
 
-    private List<String> arguments(LocalCloudService service) {
+    private @NotNull List<String> arguments(@NotNull LocalCloudService service) {
         final var wrapper = Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath().toAbsolutePath();
         final var group = service.getGroup();
         final var arguments = new ArrayList<String>();

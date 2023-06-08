@@ -7,6 +7,8 @@ import net.bytemc.cluster.api.misc.TaskFuture;
 import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudServiceState;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
@@ -37,8 +39,9 @@ public final class LocalCloudService implements CloudService {
         this.motd = motd;
     }
 
+    @Contract(pure = true)
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return groupName + "-" + id;
     }
 
@@ -60,11 +63,11 @@ public final class LocalCloudService implements CloudService {
     }
 
     @Override
-    public TaskFuture<CloudServiceGroup> getGroupAsync() {
+    public @NotNull TaskFuture<CloudServiceGroup> getGroupAsync() {
         return TaskFuture.instantly(getGroup());
     }
 
-    public Path getDirectory() {
+    public @NotNull Path getDirectory() {
         return Path.of("temp", getName());
     }
 }

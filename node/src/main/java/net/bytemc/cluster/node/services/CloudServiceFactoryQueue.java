@@ -8,6 +8,7 @@ import net.bytemc.cluster.node.logger.Logger;
 import net.bytemc.cluster.node.misc.PortHelper;
 
 import java.util.*;
+import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
 public final class CloudServiceFactoryQueue {
@@ -34,7 +35,7 @@ public final class CloudServiceFactoryQueue {
         }
     }
 
-    private int findId(CloudServiceGroup group) {
+    private int findId(@NotNull CloudServiceGroup group) {
         var services = cloudServiceProvider.findServices(group.getName());
         var id = 1;
         while (isIdPresent(id, services)) {
@@ -43,7 +44,7 @@ public final class CloudServiceFactoryQueue {
         return id;
     }
 
-    private boolean isIdPresent(int id, Collection<CloudService> cloudServices) {
+    private boolean isIdPresent(int id, @NotNull Collection<CloudService> cloudServices) {
         return cloudServices.stream().anyMatch(service -> service.getId() == id);
     }
 }
