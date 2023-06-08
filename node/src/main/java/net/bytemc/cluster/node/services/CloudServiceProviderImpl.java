@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,12 +23,10 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     public CloudServiceProviderImpl(@NotNull CloudServiceGroupProvider groupProvider) {
         for (var group : groupProvider.findGroups()) {
-            if(group.getMinOnlineCount() <= 0) {
+            if (group.getMinOnlineCount() <= 0) {
                 continue;
             }
-            for (int i = 0; i < group.getMinOnlineCount(); i++) {
-                this.queue.addTask(group);
-            }
+            this.queue.addTask(group, group.getMinOnlineCount());
         }
     }
 

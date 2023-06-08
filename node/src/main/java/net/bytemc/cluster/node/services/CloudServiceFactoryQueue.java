@@ -19,9 +19,11 @@ public final class CloudServiceFactoryQueue {
     private final CloudServiceProvider cloudServiceProvider;
     private final Queue<CloudServiceGroup> tasks = new LinkedList<>();
 
-    public void addTask(CloudServiceGroup group) {
-        this.tasks.add(group);
-        Logger.info("Service from type " + group.getName() + " is now queued...");
+    public void addTask(CloudServiceGroup group, int amount) {
+        for(int i = 0; i < amount; i++) {
+            this.tasks.add(group);
+        }
+        Logger.info(amount + " service(s) from type " + group.getName() + " is now queued...");
     }
 
     public void start() {
