@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 
@@ -63,7 +64,19 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
 
     @Override
     public void stop(CloudService service) {
-
+        if(service instanceof LocalCloudService localService)
+        if (localService.getProcess() != null) {
+            service.executeCommand(service.getGroup().getGroupType().isProxy() ? "end" : "stop");
+            try {
+                if (localService.getProcess().waitFor(5, TimeUnit.SECONDS)) {
+                    localService.setProcess(null);
+                    return;
+                }
+            } catch (InterruptedException ignored) {
+            }
+            localService.getProcess().toHandle().destroyForcibly();
+            localService.setProcess(null);
+        }
     }
 
 
