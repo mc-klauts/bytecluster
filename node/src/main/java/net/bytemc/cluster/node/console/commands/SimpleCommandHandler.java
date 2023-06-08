@@ -41,7 +41,7 @@ public final class SimpleCommandHandler implements CommandHandler {
     }
 
     @Override
-    public void registerCommands(@NotNull CloudCommand... commands) {
+    public void registerCommands(@NotNull CloudCommand @NotNull ... commands) {
         for (final var command : commands) this.registerCommand(command);
     }
 

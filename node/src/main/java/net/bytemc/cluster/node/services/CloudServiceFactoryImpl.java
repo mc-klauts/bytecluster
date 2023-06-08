@@ -16,16 +16,17 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
+import org.jetbrains.annotations.NotNull;
 
 public final class CloudServiceFactoryImpl implements CloudServiceFactory {
 
     private static final List<String> VELOCITY_FLAGS = Arrays.asList(
-            "-XX:+UseG1GC",
-            "-XX:G1HeapRegionSize=4M",
-            "-XX:+UnlockExperimentalVMOptions",
-            "-XX:+ParallelRefProcEnabled",
-            "-XX:+AlwaysPreTouch",
-            "-XX:MaxInlineLevel=15"
+        "-XX:+UseG1GC",
+        "-XX:G1HeapRegionSize=4M",
+        "-XX:+UnlockExperimentalVMOptions",
+        "-XX:+ParallelRefProcEnabled",
+        "-XX:+AlwaysPreTouch",
+        "-XX:MaxInlineLevel=15"
     );
 
     private static final String WRAPPER_MAIN_CLASS;
@@ -90,7 +91,7 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
     }
 
 
-    private List<String> arguments(LocalCloudService service) {
+    private @NotNull List<String> arguments(@NotNull LocalCloudService service) {
         final var wrapper = Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath().toAbsolutePath();
         final var group = service.getGroup();
         final var arguments = new ArrayList<String>();

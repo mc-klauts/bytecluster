@@ -8,6 +8,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
@@ -17,7 +20,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     private final Map<String, CloudService> services = new HashMap<>();
 
-    public CloudServiceProviderImpl(CloudServiceGroupProvider groupProvider) {
+    public CloudServiceProviderImpl(@NotNull CloudServiceGroupProvider groupProvider) {
         for (var group : groupProvider.findGroups()) {
             if(group.getMinOnlineCount() <= 0) {
                 continue;
@@ -28,28 +31,32 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
         }
     }
 
+    @Contract(pure = true)
     @Override
-    public TaskFuture<Collection<CloudService>> findServicesAsync() {
+    public @Nullable TaskFuture<Collection<CloudService>> findServicesAsync() {
         return null;
     }
 
+    @Contract(pure = true)
     @Override
-    public Collection<CloudService> findServices() {
+    public @NotNull Collection<CloudService> findServices() {
         return this.services.values();
     }
 
+    @Contract(pure = true)
     @Override
-    public TaskFuture<CloudService> findServiceAsync(String name) {
+    public @Nullable TaskFuture<CloudService> findServiceAsync(String name) {
         return null;
     }
 
     @Override
-    public CloudService findService(String name) {
+    public @NotNull CloudService findService(String name) {
         return findServices().stream().filter(it -> it.getName().equals(name)).findFirst().get();
     }
 
+    @Contract(pure = true)
     @Override
-    public TaskFuture<Collection<CloudService>> findServicesAsync(String group) {
+    public @Nullable TaskFuture<Collection<CloudService>> findServicesAsync(String group) {
         return null;
     }
 

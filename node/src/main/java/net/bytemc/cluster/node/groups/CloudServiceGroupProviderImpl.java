@@ -11,6 +11,10 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import net.bytemc.cluster.node.misc.FileHelper;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class CloudServiceGroupProviderImpl implements CloudServiceGroupProvider {
 
@@ -21,28 +25,32 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
         factory.loadGroups().forEach(cloudServiceGroup -> groups.put(cloudServiceGroup.getName(), cloudServiceGroup));
     }
 
+    @Contract(pure = true)
     @Override
-    public TaskFuture<Collection<CloudServiceGroup>> findGroupsAsync() {
+    public @Nullable TaskFuture<Collection<CloudServiceGroup>> findGroupsAsync() {
         return null;
     }
 
+    @Contract(pure = true)
     @Override
-    public Collection<CloudServiceGroup> findGroups() {
+    public @NotNull Collection<CloudServiceGroup> findGroups() {
         return groups.values();
     }
 
+    @Contract(pure = true)
     @Override
-    public TaskFuture<CloudServiceGroup> findGroupAsync(String name) {
+    public @Nullable TaskFuture<CloudServiceGroup> findGroupAsync(String name) {
         return null;
     }
 
+    @Contract(pure = true)
     @Override
     public CloudServiceGroup findGroup(String name) {
         return groups.get(name);
     }
 
     @Override
-    public void addGroup(CloudServiceGroup group) {
+    public void addGroup(@NotNull CloudServiceGroup group) {
 
         if (this.exists(group.getName())) {
             Logger.warn("Group " + group.getName() + " already exists.");
@@ -60,7 +68,7 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
             Logger.warn("Group " + name + " does not exist.");
             return;
         }
-        ConfigurationHelper.deleteIfNotExists(Path.of("groups", name + ".json"));
+        FileHelper.deleteIfNotExists(Path.of("groups", name + ".json"));
         this.groups.remove(name);
         Logger.info("Successfully deleted group " + name + ".");
     }
@@ -71,7 +79,7 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
     }
 
     @Override
-    public TaskFuture<Boolean> existsAsync(String id) {
+    public @NotNull TaskFuture<Boolean> existsAsync(String id) {
         return TaskFuture.instantly(this.exists(id));
     }
 }

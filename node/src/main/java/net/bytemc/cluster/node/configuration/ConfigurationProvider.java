@@ -7,6 +7,8 @@ import net.bytemc.cluster.node.configuration.layouts.PathSerializer;
 
 import java.io.*;
 import java.nio.file.Path;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class ConfigurationProvider {
 
@@ -17,7 +19,7 @@ public final class ConfigurationProvider {
             .disableHtmlEscaping()
             .create();
 
-    public static void write(Path path, Object value) {
+    public static void write(@NotNull Path path, Object value) {
         try(FileWriter writer = new FileWriter(path.toFile())) {
             writer.write(DEFAULT_GSON.toJson(value));
         } catch (IOException e) {
@@ -25,7 +27,7 @@ public final class ConfigurationProvider {
         }
     }
 
-    public static <T> T read(Path path, Class<T> value) {
+    public static <T> @Nullable T read(Path path, Class<T> value) {
         try(BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))) {
             return DEFAULT_GSON.fromJson(reader, value);
         } catch (IOException e) {

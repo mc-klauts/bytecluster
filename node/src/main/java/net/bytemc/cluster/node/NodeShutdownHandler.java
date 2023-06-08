@@ -1,8 +1,10 @@
 package net.bytemc.cluster.node;
 
+import org.jetbrains.annotations.NotNull;
+
 public final class NodeShutdownHandler {
 
-    public static void shutdown(Node node) {
+    public static void shutdown(@NotNull Node node) {
 
         node.setRunning(false);
 
