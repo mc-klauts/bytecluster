@@ -1,6 +1,7 @@
 package net.bytemc.cluster.node;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
@@ -21,6 +22,9 @@ public final class Node extends Cluster {
 
     @Getter
     private static Node instance;
+
+    @Setter
+    private boolean running = true;
 
     private final RuntimeConfiguration runtimeConfiguration;
     private final CloudServiceGroupProvider serviceGroupProvider;

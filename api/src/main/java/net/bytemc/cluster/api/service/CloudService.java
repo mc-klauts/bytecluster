@@ -20,6 +20,7 @@ public interface CloudService {
 
     String getMotd();
 
+    void executeCommand(String command);
 
     void shutdown();
 

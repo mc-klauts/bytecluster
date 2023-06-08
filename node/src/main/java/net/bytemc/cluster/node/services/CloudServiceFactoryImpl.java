@@ -9,7 +9,6 @@ import net.bytemc.cluster.node.misc.FileHelper;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +43,7 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
     @Override
     public void start(CloudService cloudServiceGroup) {
 
-        // todo copy templates
+        FileHelper.createDirectoryIfNotExists(Node.getInstance().getRuntimeConfiguration().getNodePath().getServerRunningPath().resolve(cloudServiceGroup.getName()));
 
 
         if (cloudServiceGroup instanceof LocalCloudService cloudService) {
@@ -61,6 +60,12 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
              */
         }
     }
+
+    @Override
+    public void stop(CloudService service) {
+
+    }
+
 
     private List<String> arguments(LocalCloudService service) {
         final var wrapper = Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath().toAbsolutePath();
