@@ -31,6 +31,7 @@ public final class LocalCloudService implements CloudService {
     @Nullable @Setter
     private Process process;
 
+    @Setter
     private CloudServiceState state = CloudServiceState.OPEN;
 
     public LocalCloudService(String groupName, String hostname, int id, int port, int maxPlayers, String motd) {

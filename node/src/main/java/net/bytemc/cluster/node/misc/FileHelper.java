@@ -19,7 +19,7 @@ public final class FileHelper {
         }
     }
 
-    public static void deleteIfNotExists(Path path) {
+    public static void deleteIfExists(Path path) {
         try {
             Files.deleteIfExists(path);
         } catch (IOException e) {

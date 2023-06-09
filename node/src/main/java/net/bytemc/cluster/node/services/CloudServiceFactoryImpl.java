@@ -3,6 +3,7 @@ package net.bytemc.cluster.node.services;
 import net.bytemc.cluster.api.service.CloudGroupType;
 import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceFactory;
+import net.bytemc.cluster.api.service.CloudServiceState;
 import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.node.logger.Logger;
 import net.bytemc.cluster.node.misc.FileHelper;
@@ -39,27 +40,38 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
     }
 
     public CloudServiceFactoryImpl() {
+        var runningPath = Node.getInstance().getRuntimeConfiguration().getNodePath().getServerRunningPath();
+
+        if (Files.exists(runningPath)) {
+            FileHelper.deleteDirectory(runningPath);
+            Logger.info("Clean up on running service directory...");
+        }
         FileHelper.createDirectoryIfNotExists(Node.getInstance().getRuntimeConfiguration().getNodePath().getServerRunningPath());
     }
 
     @Override
     public void start(@NotNull CloudService service) {
 
-        FileHelper.createDirectoryIfNotExists(Node.getInstance().getRuntimeConfiguration().getNodePath().getServerRunningPath().resolve(service.getName()));
-        try {
-            Files.copy(service.getGroup().getGroupType().getPath(Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath()), service.getGroup().getGroupType().getPath(((LocalCloudService) service).getDirectory()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
         if (service instanceof LocalCloudService cloudService) {
+            FileHelper.createDirectoryIfNotExists(Node.getInstance().getRuntimeConfiguration().getNodePath().getServerRunningPath().resolve(service.getName()));
+
+            try {
+                Files.copy(service.getGroup().getGroupType().getPath(Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath()), service.getGroup().getGroupType().getPath(((LocalCloudService) service).getDirectory()));
+            } catch (IOException e) {
+                Logger.error("Cannot copy service runtime file. Service is now closed.", e);
+
+                cloudService.setState(CloudServiceState.STOPPED);
+                service.shutdown();
+                return;
+            }
+
             Logger.info("Told local node to start service " + cloudService.getName());
 
 
-               // var process = new ProcessBuilder(arguments(cloudService)).directory(cloudService.getDirectory().toFile()).start();
-             //   cloudService.setProcess(process);
+            // var process = new ProcessBuilder(arguments(cloudService)).directory(cloudService.getDirectory().toFile()).start();
+            //   cloudService.setProcess(process);
 
-                //clear
+            //clear
         }
     }
 

@@ -68,7 +68,7 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
             Logger.warn("Group " + name + " does not exist.");
             return;
         }
-        FileHelper.deleteIfNotExists(Path.of("groups", name + ".json"));
+        FileHelper.deleteIfExists(Path.of("groups", name + ".json"));
         this.groups.remove(name);
         Logger.info("Successfully deleted group " + name + ".");
     }

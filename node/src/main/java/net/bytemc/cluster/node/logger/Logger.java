@@ -17,8 +17,9 @@ public final class Logger {
         print(text);
     }
 
-    public static void error(String text, Exception exception) {
+    public static void error(String text, Throwable exception) {
         print(text);
+        exception.printStackTrace();
     }
 
     public static void empty() {
