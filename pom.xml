@@ -10,8 +10,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>api</module>
-        <module>node</module>
         <module>wrapper</module>
+        <module>node</module>
         <module>launcher</module>
     </modules>
 
