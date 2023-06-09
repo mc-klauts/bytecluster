@@ -55,6 +55,7 @@ public class WrapperLauncher {
                 }
             }, "ByteCluster-Service-Thread");
             wrapperThread.setContextClassLoader(classLoader);
+            wrapper.connect();
         } catch (Exception e) {
             e.printStackTrace();
         }

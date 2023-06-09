@@ -22,6 +22,10 @@ public final class Logger {
         exception.printStackTrace();
     }
 
+    public static void error(String text) {
+        Node.getInstance().getConsoleTerminal().write("&8[&7" + DATE_FORMAT.format(new Date()) + "&8] &cerror &8» &7" + text);
+    }
+
     public static void empty() {
         System.out.println(" ");
     }

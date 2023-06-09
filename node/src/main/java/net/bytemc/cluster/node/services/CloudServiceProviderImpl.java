@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +20,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     private final CloudServiceFactory factory = new CloudServiceFactoryImpl();
     private final CloudServiceFactoryQueue queue = new CloudServiceFactoryQueue(this);
 
-    private final Map<String, CloudService> services = new HashMap<>();
+    private final Map<String, CloudService> services = new ConcurrentHashMap<>();
 
     public CloudServiceProviderImpl(@NotNull CloudServiceGroupProvider groupProvider) {
         for (var group : groupProvider.findGroups()) {
