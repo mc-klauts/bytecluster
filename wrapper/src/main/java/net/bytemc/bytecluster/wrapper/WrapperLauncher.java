@@ -1,5 +1,7 @@
 package net.bytemc.bytecluster.wrapper;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.bytemc.bytecluster.wrapper.loader.ApplicationExternalClassLoader;
 
 import java.lang.instrument.Instrumentation;
@@ -14,7 +16,9 @@ import java.util.jar.JarInputStream;
 public class WrapperLauncher {
 
     private static Instrumentation instrumentation;
-    private static boolean cacheInitialized = false;
+
+    @Getter
+    private static Thread wrapperThread;
 
     public static void premain(final String s, final Instrumentation instrumentation) {
         WrapperLauncher.instrumentation = instrumentation;
@@ -22,10 +26,7 @@ public class WrapperLauncher {
 
     public static void main(String[] args) {
         try {
-            final var wrapper = new Wrapper();
-            //todo
-          //  wrapper.getPacketHandler().registerPacketListener(CacheInitPacket.class, (channelHandlerContext, packet) -> cacheInitialized.set(true));
-
+            final var wrapper = new Wrapper("proxy-1");
             final var arguments = new ArrayList<>(Arrays.asList(args));
             final var main = arguments.remove(0);
             final var applicationFile = Paths.get(arguments.remove(0));
@@ -46,19 +47,14 @@ public class WrapperLauncher {
 
             instrumentation.appendToSystemClassLoaderSearch(new JarFile(applicationFile.toFile()));
             final var mainClass = Class.forName(main, true, classLoader);
-            final var thread = new Thread(() -> {
+            wrapperThread = new Thread(() -> {
                 try {
                     mainClass.getMethod("main", String[].class).invoke(null, (Object) arguments.toArray(new String[0]));
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
             }, "ByteCluster-Service-Thread");
-            thread.setContextClassLoader(classLoader);
-            //if (cacheInitialized) {
-                thread.start();
-          //  } else {
-              //  wrapper.getPacketHandler().registerPacketListener(CacheInitPacket.class, (channelHandlerContext, packet) -> thread.start());
-           // }
+            wrapperThread.setContextClassLoader(classLoader);
         } catch (Exception e) {
             e.printStackTrace();
         }
