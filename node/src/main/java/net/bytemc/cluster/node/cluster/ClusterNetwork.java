@@ -15,10 +15,7 @@ public final class ClusterNetwork {
         this.nettyServer.initialize(configuration.getPort()).onComplete(unused -> {
             Logger.info("Netty server initialize successfully.");
         }).onCancel(s -> {
-
-
             // todo : load modules
-
         });
     }
 

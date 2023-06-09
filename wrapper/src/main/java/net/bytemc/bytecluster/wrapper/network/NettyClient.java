@@ -18,8 +18,8 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public final class NettyClient {
 
-    private static final String HOSTNAME = "service-cluster-prod";
-    private static final int PORT = 8465;
+    private static final String HOSTNAME = "127.0.0.1";
+    private static final int PORT = 8879;
     private static final int CONNECTION_TIMEOUT_MILLIS = 5_000;
 
     private final EventLoopGroup eventLoopGroup = new MultithreadEventLoopGroup(ConnectionUtils.newEventLoopGroup(0));

@@ -26,7 +26,7 @@ public final class NettyNetworkHandler extends SimpleChannelInboundHandler<Packe
 
     @Override
     public void channelActive(ChannelHandlerContext channel) {
-
+        System.out.println("connect");
     }
 
     @Override

@@ -15,11 +15,11 @@ public final class TaskFuture<T> {
 
     public void complete(T value) {
         this.value = value;
-        this.listeners.get(State.SUCCESS).forEach(it -> ((Consumer<T>) it).accept(value));
+        this.listeners.get(this.state = State.SUCCESS).forEach(it -> ((Consumer<T>) it).accept(value));
     }
 
     public void cancel(String reason) {
-        this.listeners.get(State.FAILURE).forEach(it -> ((Consumer<String>) it).accept(reason));
+        this.listeners.get(this.state = State.FAILURE).forEach(it -> ((Consumer<String>) it).accept(reason));
     }
 
     public T get() {
