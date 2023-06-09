@@ -77,4 +77,9 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
         this.services.put(service.getName(), service);
     }
 
+    public void removeService(String service) {
+        this.services.remove(service);
+    }
+
+
 }

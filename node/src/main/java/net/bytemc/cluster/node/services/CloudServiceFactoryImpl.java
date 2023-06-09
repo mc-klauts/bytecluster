@@ -9,7 +9,9 @@ import net.bytemc.cluster.node.logger.Logger;
 import net.bytemc.cluster.node.misc.FileHelper;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,10 +70,12 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
             Logger.info("Told local node to start service " + cloudService.getName());
 
 
-            // var process = new ProcessBuilder(arguments(cloudService)).directory(cloudService.getDirectory().toFile()).start();
-            //   cloudService.setProcess(process);
-
-            //clear
+            try {
+                var process = new ProcessBuilder(arguments(cloudService)).directory(cloudService.getDirectory().toFile()).start();
+                cloudService.setProcess(process);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -94,11 +98,12 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
             }
             FileHelper.deleteDirectory(localService.getDirectory());
             Logger.info("Service " + localService.getName() + " is now stopped.");
+            ((CloudServiceProviderImpl) Node.getInstance().getServiceProvider()).removeService(service.getName());
         }
     }
 
     private @NotNull List<String> arguments(@NotNull LocalCloudService service) {
-        final var wrapper = Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath().toAbsolutePath();
+        final var wrapper = Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath().resolve("wrapper.jar").toAbsolutePath();
         final var group = service.getGroup();
         final var arguments = new ArrayList<String>();
         arguments.add("java");
@@ -112,7 +117,7 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
         arguments.add("-javaagent:" + wrapper);
         arguments.add(WRAPPER_MAIN_CLASS);
 
-        final var applicationFile = service.getDirectory().resolve(group.getGroupType().getPath(Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath()));
+        final var applicationFile = group.getGroupType().getPath(service.getDirectory());
 
         var preLoadClasses = false;
         try (final var jarFile = new JarFile(applicationFile.toFile())) {
@@ -129,7 +134,6 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
         //todo i dont know but i think this is the ip of the node
         arguments.add("127.0.0.1");
         arguments.add(String.valueOf(Node.getInstance().getRuntimeConfiguration().getPort()));
-
         arguments.add(String.valueOf(service.getPort()));
         return arguments;
     }

@@ -54,11 +54,11 @@ public class WrapperLauncher {
                 }
             }, "ByteCluster-Service-Thread");
             thread.setContextClassLoader(classLoader);
-            if (cacheInitialized) {
+            //if (cacheInitialized) {
                 thread.start();
-            } else {
+          //  } else {
               //  wrapper.getPacketHandler().registerPacketListener(CacheInitPacket.class, (channelHandlerContext, packet) -> thread.start());
-            }
+           // }
         } catch (Exception e) {
             e.printStackTrace();
         }
