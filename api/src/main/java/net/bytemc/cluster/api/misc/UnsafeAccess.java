@@ -21,7 +21,7 @@ public final class UnsafeAccess {
 
     public static <T> T allocate(Class<T> clazz) {
         try {
-            return (T) THE_UNSAFE.getClass().getDeclaredMethod("allocate", Class.class).invoke(THE_UNSAFE, clazz);
+            return (T) THE_UNSAFE.getClass().getDeclaredMethod("allocateInstance", Class.class).invoke(THE_UNSAFE, clazz);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }

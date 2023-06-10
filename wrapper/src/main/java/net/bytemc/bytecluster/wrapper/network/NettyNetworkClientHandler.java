@@ -5,6 +5,8 @@ import io.netty5.channel.SimpleChannelInboundHandler;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.bytemc.cluster.api.network.Packet;
+import net.bytemc.cluster.api.network.packets.ServiceIdentifiyPacket;
+
 import java.io.IOException;
 
 @RequiredArgsConstructor
@@ -29,7 +31,7 @@ public final class NettyNetworkClientHandler extends SimpleChannelInboundHandler
     public void channelActive(ChannelHandlerContext ctx) {
         // authorize instance
         nettyClient.setChannel(ctx.channel());
-        System.out.println("finished");
+        ctx.channel().writeAndFlush(new ServiceIdentifiyPacket(instanceName));
     }
 
     @Override
