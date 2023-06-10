@@ -1,5 +1,6 @@
 package net.bytemc.cluster.node.services;
 
+import io.netty5.channel.Channel;
 import lombok.Getter;
 import net.bytemc.cluster.api.misc.TaskFuture;
 import net.bytemc.cluster.api.service.*;
@@ -21,6 +22,9 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     private final CloudServiceFactoryQueue queue = new CloudServiceFactoryQueue(this);
 
     private final Map<String, CloudService> services = new ConcurrentHashMap<>();
+
+    // extra separated map for faster access
+    private final Map<Channel, CloudService> serviceChannels = new HashMap<>();
 
     public CloudServiceProviderImpl(@NotNull CloudServiceGroupProvider groupProvider) {
         for (var group : groupProvider.findGroups()) {
@@ -82,5 +86,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
         this.services.remove(service);
     }
 
-
+    public boolean isConnectionVerified(Channel channel) {
+        return this.serviceChannels.containsKey(channel);
+    }
 }

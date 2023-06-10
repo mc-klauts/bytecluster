@@ -11,17 +11,25 @@ import io.netty5.channel.unix.UnixChannelOption;
 import io.netty5.util.concurrent.Future;
 import net.bytemc.cluster.api.misc.TaskFuture;
 import net.bytemc.cluster.api.network.ConnectionUtils;
+import net.bytemc.cluster.api.network.PacketPool;
+import net.bytemc.cluster.api.network.packets.ServiceIdentifiyPacket;
 import net.bytemc.cluster.node.logger.Logger;
 import org.jetbrains.annotations.Nullable;
 
 public final class NettyServer {
 
     private static final String HOSTNAME = "0.0.0.0";
+    private final PacketPool packetPool = new PacketPool();
+
     private final EventLoopGroup bossEventLoopGroup = new MultithreadEventLoopGroup(ConnectionUtils.newEventLoopGroup(1));
     private final EventLoopGroup workerEventLoopGroup = new MultithreadEventLoopGroup(ConnectionUtils.newEventLoopGroup(0));
 
     @Nullable
     private Future<Void> channelFuture;
+
+    public NettyServer() {
+        this.packetPool.registerPacket(ServiceIdentifiyPacket.class);
+    }
 
     public TaskFuture<Void> initialize(int port) {
         var task = new TaskFuture<Void>();

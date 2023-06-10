@@ -1,5 +1,6 @@
 package net.bytemc.cluster.node.services;
 
+import io.netty5.channel.Channel;
 import lombok.Getter;
 import lombok.Setter;
 import net.bytemc.cluster.api.Cluster;
