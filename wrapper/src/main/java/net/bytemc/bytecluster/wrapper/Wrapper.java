@@ -28,16 +28,10 @@ public final class Wrapper extends Cluster {
         this.serviceGroupProvider = new CloudServiceGroupProviderImpl();
         this.serviceProvider = new CloudServiceProviderImpl();
 
-        this.client = new NettyClient("proxy-1");
+        this.client = new NettyClient(id);
     }
 
     public void connect() {
-        this.client.connect().onComplete(s -> {
-            System.out.println("Polo");
-            WrapperLauncher.getWrapperThread().start();
-        }).onCancel(s -> {
-            System.exit(-1);
-        });
+        this.client.connect().onComplete(s -> WrapperLauncher.getWrapperThread().start()).onCancel(s -> System.exit(-1));
     }
-
 }

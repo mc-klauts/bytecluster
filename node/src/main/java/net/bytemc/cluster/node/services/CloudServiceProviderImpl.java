@@ -55,7 +55,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Override
     public @NotNull CloudService findService(String name) {
-        return findServices().stream().filter(it -> it.getName().equals(name)).findFirst().get();
+        return this.services.get(name);
     }
 
     @Contract(pure = true)
@@ -89,4 +89,13 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     public boolean isConnectionVerified(Channel channel) {
         return this.serviceChannels.containsKey(channel);
     }
+
+    public CloudService getServiceByConnection(Channel channel) {
+        return this.serviceChannels.get(channel);
+    }
+
+    public void addServiceConnection(Channel channel, CloudService service) {
+        this.serviceChannels.put(channel, service);
+    }
+
 }

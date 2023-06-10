@@ -5,6 +5,7 @@ import io.netty5.channel.SimpleChannelInboundHandler;
 import lombok.NonNull;
 import net.bytemc.cluster.api.network.Packet;
 import net.bytemc.cluster.api.network.packets.ServiceIdentifiyPacket;
+import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.node.logger.Logger;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
@@ -24,9 +25,13 @@ public final class NettyNetworkHandler extends SimpleChannelInboundHandler<Packe
         }
 
         if (packet instanceof ServiceIdentifiyPacket serviceIdentifiyPacket) {
-
-            Logger.info("polo indendtifiy");
-
+            var service = serviceHandler.findService(serviceIdentifiyPacket.getId());
+            if (service == null) {
+                ctx.close();
+                return;
+            }
+            serviceHandler.addServiceConnection(ctx.channel(), service);
+            Logger.info("Service " + serviceIdentifiyPacket.getId() + " is online and connected to the node.");
         } else {
             ctx.close();
         }
