@@ -2,19 +2,11 @@ package net.bytemc.bytecluster.wrapper.services;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.bytemc.cluster.api.service.CloudService;
+import net.bytemc.cluster.api.service.AbstractCloudService;
 
 @Getter
 @AllArgsConstructor
-public final class WrapperCloudService implements CloudService {
-
-    private String name;
-    private String hostname;
-    private int port;
-    private int id;
-    private String groupName;
-    private int maxPlayers;
-    private String motd;
+public final class WrapperCloudService extends AbstractCloudService {
 
     @Override
     public int getPlayers() {

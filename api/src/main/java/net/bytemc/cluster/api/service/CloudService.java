@@ -21,6 +21,8 @@ public interface CloudService {
 
     String getMotd();
 
+    CloudServiceState getState();
+
     void executeCommand(String command);
 
     void shutdown();
