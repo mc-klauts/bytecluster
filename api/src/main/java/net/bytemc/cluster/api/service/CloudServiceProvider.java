@@ -1,6 +1,7 @@
 package net.bytemc.cluster.api.service;
 
 import net.bytemc.cluster.api.misc.TaskFuture;
+import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -22,5 +23,7 @@ public interface CloudServiceProvider {
     Optional<CloudService> findFallback();
 
     CloudServiceFactory getFactory();
+
+    CloudService getCloudServiceByBuffer(PacketBuffer buffer);
 
 }

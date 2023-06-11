@@ -74,16 +74,6 @@ public final class LocalCloudService implements CloudService {
     public void shutdown() {
         Cluster.getInstance().getServiceProvider().getFactory().stop(this);
     }
-
-    @Override
-    public CloudServiceGroup getGroup() {
-        return Cluster.getInstance().getServiceGroupProvider().findGroup(this.groupName);
-    }
-
-    @Override
-    public @NotNull TaskFuture<CloudServiceGroup> getGroupAsync() {
-        return TaskFuture.instantly(getGroup());
-    }
     
     public @NotNull Path getDirectory() {
         return Node.getInstance().getRuntimeConfiguration().getNodePath().getServerRunningPath().resolve(getName());

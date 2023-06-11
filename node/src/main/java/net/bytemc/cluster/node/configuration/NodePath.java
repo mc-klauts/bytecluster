@@ -11,5 +11,6 @@ public final class NodePath {
 
     private Path storagePath;
     private Path serverRunningPath;
+    private Path templatePath;
 
 }

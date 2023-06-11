@@ -3,6 +3,7 @@ package net.bytemc.cluster.node.services;
 import io.netty5.channel.Channel;
 import lombok.Getter;
 import net.bytemc.cluster.api.misc.TaskFuture;
+import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 import net.bytemc.cluster.api.service.*;
 
 import java.util.Collection;
@@ -71,7 +72,14 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Override
     public Optional<CloudService> findFallback() {
+        //todo
         return Optional.empty();
+    }
+
+    @Override
+    public CloudService getCloudServiceByBuffer(PacketBuffer buffer) {
+        //todo
+        return null;
     }
 
     public void queue() {
@@ -97,5 +105,4 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     public void addServiceConnection(Channel channel, CloudService service) {
         this.serviceChannels.put(channel, service);
     }
-
 }
