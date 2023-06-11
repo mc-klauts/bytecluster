@@ -19,8 +19,12 @@ public final class LocalCloudService extends AbstractCloudService {
     @Nullable @Setter
     private Process process;
 
-    public LocalCloudService(String name, String hostname, String groupName, String motd, int port, int id, int maxPlayers, CloudServiceState state) {
-        super(name, hostname, groupName, motd, port, id, maxPlayers, state);
+    // duplicate this entry, because not allow to modify the original api source code
+    @Getter @Setter
+    private CloudServiceState state = CloudServiceState.OPEN;
+
+    public LocalCloudService(String name, String hostname, String groupName, String motd, int port, int id, int maxPlayers) {
+        super(name, hostname, groupName, motd, port, id, maxPlayers, null);
     }
 
     @Override
@@ -49,5 +53,10 @@ public final class LocalCloudService extends AbstractCloudService {
     
     public @NotNull Path getDirectory() {
         return Node.getInstance().getRuntimeConfiguration().getNodePath().getServerRunningPath().resolve(getName());
+    }
+
+    @Override
+    public CloudServiceState getState() {
+        return this.state;
     }
 }

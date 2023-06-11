@@ -9,13 +9,17 @@ import net.bytemc.cluster.api.network.packets.services.SingletonServiceResponse;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 
+@Getter
 public abstract class Cluster {
 
     @Getter
     private static Cluster instance;
 
+    private PacketPool packetPool;
+
     public Cluster() {
         instance = this;
+        packetPool = new PacketPool();
 
         PacketPool.registerPackets(
 

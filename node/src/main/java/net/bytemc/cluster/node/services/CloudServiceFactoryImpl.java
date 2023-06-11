@@ -62,7 +62,6 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
                 Files.copy(service.getGroup().getGroupType().getPath(Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath()), service.getGroup().getGroupType().getPath(((LocalCloudService) service).getDirectory()));
             } catch (IOException e) {
                 Logger.error("Cannot copy service runtime file. Service is now closed.", e);
-
                 cloudService.setState(CloudServiceState.STOPPED);
                 service.shutdown();
                 return;

@@ -23,15 +23,11 @@ public final class Wrapper extends Cluster {
 
     private final CloudServiceGroupProvider serviceGroupProvider;
     private final CloudServiceProvider serviceProvider;
-
-    private PacketPool packetPool = new PacketPool();
     private final NettyClient client;
 
     public Wrapper(String id) {
 
         instance = this;
-
-        this.packetPool.registerPacket(ServiceIdentifiyPacket.class);
 
         this.serviceGroupProvider = new CloudServiceGroupProviderImpl();
         this.serviceProvider = new CloudServiceProviderImpl();
@@ -45,7 +41,7 @@ public final class Wrapper extends Cluster {
 
     public <T extends Packet, R extends Packet> void sendQueryPacket(Packet packet, Class<R> responseType, Consumer<R> response) {
         var id = UUID.randomUUID();
-        this.packetPool.saveResponse(id, response);
+        this.getPacketPool().saveResponse(id, response);
         this.sendPacket(new QueryPacket(id, packet));
     }
 
