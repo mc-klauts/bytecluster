@@ -15,7 +15,7 @@ public abstract class Cluster {
     @Getter
     private static Cluster instance;
 
-    private PacketPool packetPool;
+    private final PacketPool packetPool;
 
     public Cluster() {
         instance = this;

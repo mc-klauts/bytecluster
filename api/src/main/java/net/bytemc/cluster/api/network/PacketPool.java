@@ -14,7 +14,7 @@ public final class PacketPool {
 
     private static final Map<Integer, Class<? extends Packet>> PACKET_ID_POOL = new HashMap<>();
 
-    private final Map<UUID, Consumer<? extends Packet>> responsePool = new HashMap<>();
+    private final Map<UUID, Consumer<Packet>> responsePool = new HashMap<>();
 
     // default packet listeners
     private final Map<Class<? extends Packet>, List<BiConsumer<Channel, ? extends Packet>>> packetListeners = new HashMap<>();
@@ -34,11 +34,15 @@ public final class PacketPool {
     }
 
     public void saveResponse(UUID uuid, Consumer<? extends Packet> applyAnswer) {
-        this.responsePool.put(uuid, applyAnswer);
+        this.responsePool.put(uuid, (Consumer<Packet>) applyAnswer);
     }
 
     public <T extends Packet> void registerListener(Class<T> packet, BiConsumer<Channel, T> listener) {
         this.packetListeners.put(packet, ListHelper.getOrCreateAndElement(this.packetListeners.get(packet), listener));
+    }
+
+    public void callResponseRecievd(UUID id, Packet packet) {
+        this.responsePool.get(id).accept(packet);
     }
 
     public boolean isResponsePresent(UUID responseId) {
