@@ -3,12 +3,9 @@ package net.bytemc.cluster.node.services;
 import lombok.Getter;
 import lombok.Setter;
 import net.bytemc.cluster.api.Cluster;
-import net.bytemc.cluster.api.misc.TaskFuture;
-import net.bytemc.cluster.api.service.CloudService;
-import net.bytemc.cluster.api.service.CloudServiceGroup;
+import net.bytemc.cluster.api.service.AbstractCloudService;
 import net.bytemc.cluster.api.service.CloudServiceState;
 import net.bytemc.cluster.node.Node;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,38 +14,18 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 @Getter
-public final class LocalCloudService implements CloudService {
-
-    private String groupName;
-    private String hostname;
-
-    private int id;
-    private int port;
-
-    private int maxPlayers;
-    private String motd;
+public final class LocalCloudService extends AbstractCloudService {
 
     @Nullable @Setter
     private Process process;
 
-    @Setter
+    // duplicate this entry, because not allow to modify the original api source code
+    @Getter @Setter
     private CloudServiceState state = CloudServiceState.OPEN;
 
-    public LocalCloudService(String groupName, String hostname, int id, int port, int maxPlayers, String motd) {
-        this.groupName = groupName;
-        this.hostname = hostname;
-        this.id = id;
-        this.port = port;
-        this.maxPlayers = maxPlayers;
-        this.motd = motd;
+    public LocalCloudService(String name, String hostname, String groupName, String motd, int port, int id, int maxPlayers) {
+        super(name, hostname, groupName, motd, port, id, maxPlayers, null);
     }
-
-    @Contract(pure = true)
-    @Override
-    public @NotNull String getName() {
-        return groupName + "-" + id;
-    }
-
 
     @Override
     public int getPlayers() {
@@ -73,18 +50,13 @@ public final class LocalCloudService implements CloudService {
     public void shutdown() {
         Cluster.getInstance().getServiceProvider().getFactory().stop(this);
     }
-
-    @Override
-    public CloudServiceGroup getGroup() {
-        return Cluster.getInstance().getServiceGroupProvider().findGroup(this.groupName);
-    }
-
-    @Override
-    public @NotNull TaskFuture<CloudServiceGroup> getGroupAsync() {
-        return TaskFuture.instantly(getGroup());
-    }
     
     public @NotNull Path getDirectory() {
         return Node.getInstance().getRuntimeConfiguration().getNodePath().getServerRunningPath().resolve(getName());
+    }
+
+    @Override
+    public CloudServiceState getState() {
+        return this.state;
     }
 }

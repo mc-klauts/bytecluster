@@ -26,7 +26,8 @@ public class WrapperLauncher {
 
     public static void main(String[] args) {
         try {
-            final var wrapper = new Wrapper("proxy-1");
+            final var wrapper = new Wrapper(args[3]);
+
             final var arguments = new ArrayList<>(Arrays.asList(args));
             final var main = arguments.remove(0);
             final var applicationFile = Paths.get(arguments.remove(0));
@@ -55,6 +56,7 @@ public class WrapperLauncher {
                 }
             }, "ByteCluster-Service-Thread");
             wrapperThread.setContextClassLoader(classLoader);
+            wrapper.connect();
         } catch (Exception e) {
             e.printStackTrace();
         }

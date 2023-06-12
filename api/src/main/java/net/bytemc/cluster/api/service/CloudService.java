@@ -1,5 +1,6 @@
 package net.bytemc.cluster.api.service;
 
+import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.misc.TaskFuture;
 
 public interface CloudService {
@@ -20,12 +21,17 @@ public interface CloudService {
 
     String getMotd();
 
+    CloudServiceState getState();
+
     void executeCommand(String command);
 
     void shutdown();
 
-    CloudServiceGroup getGroup();
+    default CloudServiceGroup getGroup() {
+        return Cluster.getInstance().getServiceGroupProvider().findGroup(this.getGroupName());
+    }
 
-    TaskFuture<CloudServiceGroup> getGroupAsync();
-
+    default TaskFuture<CloudServiceGroup> getGroupAsync() {
+        return TaskFuture.instantly(getGroup());
+    }
 }

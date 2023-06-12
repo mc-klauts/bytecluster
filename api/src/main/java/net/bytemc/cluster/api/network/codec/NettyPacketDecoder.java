@@ -5,8 +5,13 @@ import io.netty5.channel.ChannelHandlerContext;
 import io.netty5.handler.codec.ByteToMessageDecoder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import net.bytemc.cluster.api.misc.UnsafeAccess;
 import net.bytemc.cluster.api.network.NettyUtils;
+import net.bytemc.cluster.api.network.Packet;
+import net.bytemc.cluster.api.network.PacketPool;
 import net.bytemc.cluster.api.network.buffer.PacketBuffer;
+
+import java.lang.reflect.InvocationTargetException;
 
 @RequiredArgsConstructor
 public final class NettyPacketDecoder extends ByteToMessageDecoder {
@@ -18,39 +23,13 @@ public final class NettyPacketDecoder extends ByteToMessageDecoder {
             return;
         }
 
-        try {
-            // read the required base data from the buffer
-            var packetId = NettyUtils.readVarInt(in);
+        final var buf = new PacketBuffer(in);
+        final var id = buf.readInt();
 
-            // extract the body
-            var bodyLength = NettyUtils.readVarInt(in);
-            var body = new PacketBuffer(in.copy(in.readerOffset(), bodyLength, true));
-            in.skipReadableBytes(bodyLength);
+        final var packetClass = PacketPool.getPacketClass(id);
+        final Packet packet = UnsafeAccess.allocate(packetClass);
 
-            /*
-            // construct the packet
-            var packetClass = PacketPool.getPacketClass(packetId);
-            BasicPacket packet;
-
-            if (packetClass.getDeclaredAnnotation(Packet.class).useNoArgConstructor()) {
-                packet = packetClass.getConstructor().newInstance();
-            } else {
-                packet = (BasicPacket) NettyUtils.initializeClass(packetClass);
-            }
-
-            if (packet == null) {
-                throw new NullPointerException("Packet is null with id " + packetId + " is null");
-            }
-
-             */
-
-           // packet.setContent(body);
-          //  packet.read(body);
-
-            // register the packet for further downstream handling
-           // ctx.fireChannelRead(packet);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
+        packet.read(buf);
+        ctx.fireChannelRead(packet);
     }
 }

@@ -1,4 +1,4 @@
-package net.bytemc.bytecluster.wrapper.services;
+package net.bytemc.bytecluster.wrapper.groups;
 
 import net.bytemc.cluster.api.misc.TaskFuture;
 import net.bytemc.cluster.api.service.CloudServiceGroup;

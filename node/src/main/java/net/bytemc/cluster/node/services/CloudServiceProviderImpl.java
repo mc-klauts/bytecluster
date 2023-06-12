@@ -1,13 +1,16 @@
 package net.bytemc.cluster.node.services;
 
+import io.netty5.channel.Channel;
 import lombok.Getter;
 import net.bytemc.cluster.api.misc.TaskFuture;
+import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 import net.bytemc.cluster.api.service.*;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +22,10 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     private final CloudServiceFactory factory = new CloudServiceFactoryImpl();
     private final CloudServiceFactoryQueue queue = new CloudServiceFactoryQueue(this);
 
-    private final Map<String, CloudService> services = new HashMap<>();
+    private final Map<String, CloudService> services = new ConcurrentHashMap<>();
+
+    // extra separated map for faster access
+    private final Map<Channel, CloudService> serviceChannels = new HashMap<>();
 
     public CloudServiceProviderImpl(@NotNull CloudServiceGroupProvider groupProvider) {
         for (var group : groupProvider.findGroups()) {
@@ -50,7 +56,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Override
     public @NotNull CloudService findService(String name) {
-        return findServices().stream().filter(it -> it.getName().equals(name)).findFirst().get();
+        return this.services.get(name);
     }
 
     @Contract(pure = true)
@@ -66,7 +72,14 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Override
     public Optional<CloudService> findFallback() {
+        //todo
         return Optional.empty();
+    }
+
+    @Override
+    public CloudService getCloudServiceByBuffer(PacketBuffer buffer) {
+        //todo
+        return null;
     }
 
     public void queue() {
@@ -81,5 +94,15 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
         this.services.remove(service);
     }
 
+    public boolean isConnectionVerified(Channel channel) {
+        return this.serviceChannels.containsKey(channel);
+    }
 
+    public CloudService getServiceByConnection(Channel channel) {
+        return this.serviceChannels.get(channel);
+    }
+
+    public void addServiceConnection(Channel channel, CloudService service) {
+        this.serviceChannels.put(channel, service);
+    }
 }

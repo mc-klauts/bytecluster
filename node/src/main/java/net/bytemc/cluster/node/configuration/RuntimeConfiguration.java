@@ -12,7 +12,8 @@ public final class RuntimeConfiguration {
     public static RuntimeConfiguration DEFAULT_CONFIGURATION = new RuntimeConfiguration(8879,
             new NodePath(
                     Path.of("storage"),
-                    Path.of("temp")));
+                    Path.of("temp"),
+                    Path.of("templates")));
 
     private int port;
     private NodePath nodePath;

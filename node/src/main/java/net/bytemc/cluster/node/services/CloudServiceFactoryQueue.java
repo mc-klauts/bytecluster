@@ -20,7 +20,7 @@ public final class CloudServiceFactoryQueue {
     private final Queue<CloudServiceGroup> tasks = new LinkedList<>();
 
     public void addTask(CloudServiceGroup group, int amount) {
-        for(int i = 0; i < amount; i++) {
+        for (int i = 0; i < amount; i++) {
             this.tasks.add(group);
         }
         Logger.info(amount + " service(s) from type " + group.getName() + " is now queued...");
@@ -35,7 +35,9 @@ public final class CloudServiceFactoryQueue {
             }
             if (!tasks.isEmpty()) {
                 var group = tasks.poll();
-                var service = new LocalCloudService(group.getName(), group.getName(), findId(group), PortHelper.getNextPort(group), 10, "Default template motd");
+
+                // use localhost name, because we are running on the same machine
+                var service = new LocalCloudService(group.getName(), "127.0.0.1", group.getName(), "Default template motd", PortHelper.getNextPort(group), findId(group), 10);
                 ((CloudServiceProviderImpl) Node.getInstance().getServiceProvider()).addService(service);
                 cloudServiceProvider.getFactory().start(service);
             }

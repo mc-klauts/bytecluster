@@ -10,6 +10,7 @@ import net.bytemc.cluster.node.misc.FileHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
@@ -61,7 +62,6 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
                 Files.copy(service.getGroup().getGroupType().getPath(Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath()), service.getGroup().getGroupType().getPath(((LocalCloudService) service).getDirectory()));
             } catch (IOException e) {
                 Logger.error("Cannot copy service runtime file. Service is now closed.", e);
-
                 cloudService.setState(CloudServiceState.STOPPED);
                 service.shutdown();
                 return;
@@ -71,7 +71,10 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
 
 
             try {
-                var process = new ProcessBuilder(arguments(cloudService)).directory(cloudService.getDirectory().toFile()).start();
+                var process = new ProcessBuilder(arguments(cloudService))
+                        .redirectError(new File("wrapper.errors"))
+                        .directory(cloudService.getDirectory().toFile())
+                        .start();
                 cloudService.setProcess(process);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -82,23 +85,28 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
     @Override
     public void stop(CloudService service) {
         if (service instanceof LocalCloudService localService) {
-            if (localService.getProcess() != null) {
-                service.executeCommand(service.getGroup().getGroupType().isProxy() ? "end" : "stop");
-                try {
-                    if (localService.getProcess().waitFor(5, TimeUnit.SECONDS)) {
-                        if (!localService.getProcess().isAlive()) {
+            localService.setState(CloudServiceState.STOPPED);
+            synchronized (this) {
+                if (localService.getProcess() != null && localService.getProcess().toHandle().isAlive()) {
+                    service.executeCommand("close");
+                    service.executeCommand("stop");
+
+                    try {
+                        if (localService.getProcess().waitFor(5, TimeUnit.SECONDS)) {
+                            localService.getProcess().exitValue();
                             localService.setProcess(null);
+                            FileHelper.deleteDirectory(localService.getDirectory());
+                            Logger.info("Service " + localService.getName() + " is now stopped.");
                             return;
                         }
+                    } catch (InterruptedException ignored) {
                     }
-                } catch (InterruptedException ignored) {
+                    localService.getProcess().toHandle().destroyForcibly();
+                    localService.setProcess(null);
+                    FileHelper.deleteDirectory(localService.getDirectory());
+                    Logger.info("Service " + localService.getName() + " is now stopped.");
                 }
-                localService.getProcess().toHandle().destroyForcibly();
-                localService.setProcess(null);
             }
-            FileHelper.deleteDirectory(localService.getDirectory());
-            Logger.info("Service " + localService.getName() + " is now stopped.");
-            ((CloudServiceProviderImpl) Node.getInstance().getServiceProvider()).removeService(service.getName());
         }
     }
 

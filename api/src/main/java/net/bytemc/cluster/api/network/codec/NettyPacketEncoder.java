@@ -5,6 +5,7 @@ import io.netty5.channel.ChannelHandlerContext;
 import io.netty5.handler.codec.MessageToByteEncoder;
 import lombok.NonNull;
 import net.bytemc.cluster.api.network.Packet;
+import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 
 public final class NettyPacketEncoder extends MessageToByteEncoder<Packet> {
 
@@ -17,19 +18,12 @@ public final class NettyPacketEncoder extends MessageToByteEncoder<Packet> {
 
     @Override
     protected void encode(@NonNull ChannelHandlerContext ctx, @NonNull Packet msg, @NonNull Buffer out) {
-        /*
-                final var buf = new NetworkBuf(out);
+        final var buf = new PacketBuffer(out);
 
-        int packetId = PacketRegistry.getInstance().getPacketId(packet);
-        buf.writeVarInt(packetId);
+        int packetId = msg.id();
+        buf.writeInt(packetId);
 
-        if(PacketDebugger.isEnable()) {
-            System.out.println("Outgoing packet: (id=" + packetId + ") " + packet.getClass().getSimpleName());
-        }
-
-        packet.write(buf);
-
-         */
+        msg.write(buf);
     }
 
     @Override
