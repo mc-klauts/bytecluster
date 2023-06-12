@@ -12,6 +12,8 @@ import net.bytemc.cluster.node.configuration.ConfigurationHelper;
 import net.bytemc.cluster.node.configuration.RuntimeConfiguration;
 import net.bytemc.cluster.node.console.ConsoleTerminal;
 import net.bytemc.cluster.node.console.impl.ClearScreenCommand;
+import net.bytemc.cluster.node.console.impl.GroupCommand;
+import net.bytemc.cluster.node.console.impl.ShutdownCommand;
 import net.bytemc.cluster.node.groups.CloudServiceGroupProviderImpl;
 import net.bytemc.cluster.node.logger.Logger;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
@@ -40,6 +42,8 @@ public final class Node extends Cluster {
 
         final CommandRepository commandRepository = Cluster.getInstance().getCommandRepository();
         commandRepository.registerCommand(ClearScreenCommand.class);
+        commandRepository.registerCommand(ShutdownCommand.class);
+        commandRepository.registerCommand(GroupCommand.class);
         this.commandExecutor = new CommandExecutor();
 
 
