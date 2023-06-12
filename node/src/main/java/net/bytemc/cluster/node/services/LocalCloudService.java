@@ -23,8 +23,8 @@ public final class LocalCloudService extends AbstractCloudService {
     @Getter @Setter
     private CloudServiceState state = CloudServiceState.OPEN;
 
-    public LocalCloudService(String name, String hostname, String groupName, String motd, int port, int id, int maxPlayers) {
-        super(name, hostname, groupName, motd, port, id, maxPlayers, null);
+    public LocalCloudService(String hostname, String groupName, String motd, int port, int id, int maxPlayers) {
+        super(hostname, groupName, motd, port, id, maxPlayers, null);
     }
 
     @Override

@@ -2,6 +2,7 @@ package net.bytemc.cluster.api.network.packets.services;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.network.Packet;
 import net.bytemc.cluster.api.network.PacketBufferHelper;
@@ -10,6 +11,7 @@ import net.bytemc.cluster.api.service.CloudService;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Packet.Info(id = 11)
 public final class SingletonServiceResponse extends Packet {
 
@@ -17,11 +19,11 @@ public final class SingletonServiceResponse extends Packet {
 
     @Override
     public void read(PacketBuffer reader) {
-        PacketBufferHelper.writeService(reader, cloudService);
+        this.cloudService = Cluster.getInstance().getServiceProvider().getCloudServiceByBuffer(reader);
     }
 
     @Override
     public void write(PacketBuffer writer) {
-        this.cloudService = Cluster.getInstance().getServiceProvider().getCloudServiceByBuffer(writer);
+        PacketBufferHelper.writeService(writer, cloudService);
     }
 }

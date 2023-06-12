@@ -7,7 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public abstract class AbstractCloudService implements CloudService {
 
-    private String name;
     private String hostname;
 
     // not save the complete object, only the name, because only the service process is faster
@@ -24,7 +23,7 @@ public abstract class AbstractCloudService implements CloudService {
     private CloudServiceState state;
 
     public String getName() {
-        return name + "-" + id;
+        return groupName + "-" + id;
     }
 }
 

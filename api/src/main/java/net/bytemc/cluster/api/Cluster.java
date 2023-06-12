@@ -14,25 +14,10 @@ public abstract class Cluster {
 
     @Getter
     private static Cluster instance;
-
-    private final PacketPool packetPool;
+    private final PacketPool packetPool = new PacketPool();
 
     public Cluster() {
         instance = this;
-        packetPool = new PacketPool();
-
-        PacketPool.registerPackets(
-
-                // general packets
-                QueryPacket.class,
-
-                // cloud logic packets
-                ServiceIdentifiyPacket.class,
-
-                // api packets
-                SingletonServiceResponse.class,
-                SingletonServiceRequest.class
-        );
     }
 
     public abstract CloudServiceGroupProvider getServiceGroupProvider();

@@ -37,7 +37,7 @@ public final class CloudServiceFactoryQueue {
                 var group = tasks.poll();
 
                 // use localhost name, because we are running on the same machine
-                var service = new LocalCloudService(group.getName(), "127.0.0.1", group.getName(), "Default template motd", PortHelper.getNextPort(group), findId(group), 10);
+                var service = new LocalCloudService("127.0.0.1", group.getName(), "Default template motd", PortHelper.getNextPort(group), findId(group), 10);
                 ((CloudServiceProviderImpl) Node.getInstance().getServiceProvider()).addService(service);
                 cloudServiceProvider.getFactory().start(service);
             }

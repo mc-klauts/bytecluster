@@ -8,6 +8,7 @@ import net.bytemc.cluster.api.network.packets.services.SingletonServiceResponse;
 import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceFactory;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
+import net.bytemc.cluster.api.service.CloudServiceState;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -27,10 +28,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     @Override
     public TaskFuture<CloudService> findServiceAsync(String name) {
         TaskFuture<CloudService> tasks = new TaskFuture<>();
-
-        Wrapper.getInstance().sendQueryPacket(new SingletonServiceRequest(), SingletonServiceResponse.class, (packet) -> {
-            System.out.println("found");
-        });
+        Wrapper.getInstance().sendQueryPacket(new SingletonServiceRequest(name), SingletonServiceResponse.class, (packet) -> tasks.complete(packet.getCloudService()));
         return tasks;
     }
 
@@ -61,6 +59,15 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Override
     public CloudService getCloudServiceByBuffer(PacketBuffer buffer) {
-        return null;
+
+        int id = buffer.readInt();
+        var hostname = buffer.readString();
+        var groupName = buffer.readString();
+        var motd = buffer.readString();
+        var maxPlayers = buffer.readInt();
+        var port = buffer.readInt();
+
+        //todo onlinestate
+        return new WrapperCloudService(hostname, groupName, motd, port, id, maxPlayers, CloudServiceState.ONLINE);
     }
 }

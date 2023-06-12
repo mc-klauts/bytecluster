@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 public final class NettyPacketDecoder extends ByteToMessageDecoder {
 
     @Override
-    protected void decode(@NonNull ChannelHandlerContext ctx, @NonNull Buffer in) {
+    protected void decode(@NonNull ChannelHandlerContext ctx, @NonNull Buffer in) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         // validates that the channel associated to this decoder call is still active and actually transferred data before
         if (!ctx.channel().isActive() || in.readableBytes() <= 0) {
             return;

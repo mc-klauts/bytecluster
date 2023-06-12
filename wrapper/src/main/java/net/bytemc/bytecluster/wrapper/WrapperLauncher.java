@@ -3,6 +3,7 @@ package net.bytemc.bytecluster.wrapper;
 import lombok.Getter;
 import lombok.Setter;
 import net.bytemc.bytecluster.wrapper.loader.ApplicationExternalClassLoader;
+import net.bytemc.cluster.api.Cluster;
 
 import java.lang.instrument.Instrumentation;
 import java.nio.file.Files;
@@ -55,6 +56,7 @@ public class WrapperLauncher {
                     exception.printStackTrace();
                 }
             }, "ByteCluster-Service-Thread");
+
             wrapperThread.setContextClassLoader(classLoader);
             wrapper.connect();
         } catch (Exception e) {

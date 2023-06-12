@@ -73,6 +73,7 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
             try {
                 var process = new ProcessBuilder(arguments(cloudService))
                         .redirectError(new File("wrapper.errors"))
+                        .redirectOutput(new File("wrapper.output"))
                         .directory(cloudService.getDirectory().toFile())
                         .start();
                 cloudService.setProcess(process);

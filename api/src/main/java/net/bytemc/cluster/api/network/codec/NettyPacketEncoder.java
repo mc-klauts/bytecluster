@@ -22,7 +22,6 @@ public final class NettyPacketEncoder extends MessageToByteEncoder<Packet> {
 
         int packetId = msg.id();
         buf.writeInt(packetId);
-
         msg.write(buf);
     }
 

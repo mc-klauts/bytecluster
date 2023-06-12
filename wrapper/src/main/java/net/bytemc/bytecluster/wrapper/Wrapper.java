@@ -26,9 +26,7 @@ public final class Wrapper extends Cluster {
     private final NettyClient client;
 
     public Wrapper(String id) {
-
         instance = this;
-
         this.serviceGroupProvider = new CloudServiceGroupProviderImpl();
         this.serviceProvider = new CloudServiceProviderImpl();
 
@@ -50,6 +48,11 @@ public final class Wrapper extends Cluster {
     }
 
     public void connect() {
-        this.client.connect().onComplete(s -> WrapperLauncher.getWrapperThread().start()).onCancel(s -> System.exit(-1));
+        this.client.connect().onComplete(s -> {
+            Cluster.getInstance().getServiceProvider().findServiceAsync("Lobby-1").onComplete(service -> {
+                System.out.println(service.getMotd());
+            });
+            WrapperLauncher.getWrapperThread().start();
+        }).onCancel(s -> System.exit(-1));
     }
 }

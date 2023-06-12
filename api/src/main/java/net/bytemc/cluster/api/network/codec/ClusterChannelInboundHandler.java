@@ -14,12 +14,14 @@ public abstract class ClusterChannelInboundHandler extends SimpleChannelInboundH
     @Override
     public void messageReceived(ChannelHandlerContext ctx, Packet packet) throws Exception {
         if (packet instanceof QueryPacket queryPacket) {
-            if (Cluster.getInstance().getPacketPool().isResponsePresent(queryPacket.getId())) {
-
+            var pool = Cluster.getInstance().getPacketPool();
+            if (pool.isResponsePresent(queryPacket.getId())) {
+                pool.callResponseRecievd(queryPacket.getId(), queryPacket.getPacket());
             } else {
-
+                if (pool.isQueryModificationPresent(queryPacket.getPacket().getClass())) {
+                    ctx.channel().writeAndFlush(new QueryPacket(queryPacket.getId(), pool.callQueryModification(queryPacket.getPacket())));
+                }
             }
-
         } else {
             // todo call packet listener
         }
