@@ -16,7 +16,7 @@ public final class WrapperEventHandler extends AbstractEventHandler {
 
         if (parameter.getSuperclass() != null && parameter.getSuperclass().equals(AbstractCommunicatableEvent.class)) {
             // call to node that subscribe this events
-            Wrapper.getInstance().sendPacket(new SubscribeEventPacket(parameter));
+            Wrapper.getInstance().sendPacket(new SubscribeEventPacket((Class<? extends AbstractCommunicatableEvent>) parameter));
         }
     }
 }

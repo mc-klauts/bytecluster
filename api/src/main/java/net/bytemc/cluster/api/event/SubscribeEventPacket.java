@@ -10,12 +10,12 @@ import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 @AllArgsConstructor
 public final class SubscribeEventPacket extends Packet {
 
-    private Class<?> eventClass;
+    private Class<? extends AbstractCommunicatableEvent> eventClass;
 
     @Override
     public void read(PacketBuffer reader) {
         try {
-            this.eventClass = Class.forName(reader.readString());
+            this.eventClass = (Class<? extends AbstractCommunicatableEvent>) Class.forName(reader.readString());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
