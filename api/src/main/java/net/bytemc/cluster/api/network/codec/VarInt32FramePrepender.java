@@ -11,9 +11,8 @@ public final class VarInt32FramePrepender extends MessageToByteEncoder<Buffer> {
     public static final VarInt32FramePrepender INSTANCE = new VarInt32FramePrepender();
 
     @Override
-    protected Buffer allocateBuffer(@NonNull ChannelHandlerContext ctx, @NonNull Buffer msg) {
-        var bufferSize = NettyUtils.varIntBytes(msg.readableBytes()) + msg.readableBytes();
-        return ctx.bufferAllocator().allocate(bufferSize);
+    protected Buffer allocateBuffer(@NonNull ChannelHandlerContext ctx, @NonNull Buffer buffer) {
+        return ctx.bufferAllocator().allocate(Integer.numberOfLeadingZeros(buffer.readableBytes()) + buffer.readableBytes());
     }
 
     @Override

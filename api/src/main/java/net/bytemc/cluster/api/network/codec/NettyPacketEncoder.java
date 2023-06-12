@@ -19,7 +19,6 @@ public final class NettyPacketEncoder extends MessageToByteEncoder<Packet> {
     @Override
     protected void encode(@NonNull ChannelHandlerContext ctx, @NonNull Packet msg, @NonNull Buffer out) {
         final var buf = new PacketBuffer(out);
-
         int packetId = msg.id();
         buf.writeInt(packetId);
         msg.write(buf);

@@ -28,4 +28,9 @@ public final class NettyNetworkClientHandler extends ClusterChannelInboundHandle
     public void channelInactive(ChannelHandlerContext ctx) {
 
     }
+
+    @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) {
+        ctx.flush();
+    }
 }

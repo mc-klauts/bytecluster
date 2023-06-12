@@ -30,13 +30,10 @@ public final class CloudEventHandlerImpl extends AbstractEventHandler {
     @Override
     public void call(@NotNull Object event) {
         super.call(event);
-
         if (event instanceof AbstractCommunicatableEvent communicatableEvent) {
-
             if (!subscribedServices.containsKey(event.getClass())) {
                 return;
             }
-
             for (var cloudService : subscribedServices.get(event.getClass())) {
                 if (cloudService instanceof LocalCloudService localCloudService) {
                     localCloudService.sendPacket(new CallEventPacket(communicatableEvent));

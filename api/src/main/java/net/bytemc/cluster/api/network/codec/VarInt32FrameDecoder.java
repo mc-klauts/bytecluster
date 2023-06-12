@@ -8,38 +8,32 @@ import net.bytemc.cluster.api.network.NettyUtils;
 public final class VarInt32FrameDecoder extends ByteToMessageDecoder {
 
     @Override
-    protected void decode(@NonNull ChannelHandlerContext ctx, @NonNull Buffer in) {
-        // ensure that the channel we're reading from is still open
+    protected void decode(@NonNull ChannelHandlerContext ctx, @NonNull Buffer buf) {
         if (!ctx.channel().isActive()) {
+            buf.close();
             return;
         }
 
-        var readerIndex = in.readerOffset();
+        final var readerIndex = buf.readerOffset();
+        final var length = NettyUtils.readVarInt(buf);
 
-        // try to read the full message length from the buffer, reset the buffer if we've read nothing
-        var length = NettyUtils.readVarIntOrNull(in);
-        if (length == null || readerIndex == in.readerOffset()) {
-            in.readerOffset(readerIndex);
+        if (readerIndex == buf.readerOffset()) {
+            buf.readerOffset(readerIndex);
             return;
         }
 
-        // skip empty packets silently
         if (length <= 0) {
-            // check if there are bytes to skip
-            if (in.readableBytes() > 0) {
-                in.skipReadableBytes(in.readableBytes());
+            if (buf.readableBytes() > 0) {
+                buf.skipReadableBytes(buf.readableBytes());
             }
             return;
         }
 
-        // check if the packet data supplied in the buffer is actually at least the transmitted size
-        if (in.readableBytes() >= length) {
-            // fire the channel read
-            ctx.fireChannelRead(in.copy(in.readerOffset(), length, true));
-            in.skipReadableBytes(length);
+        if (buf.readableBytes() >= length) {
+            ctx.fireChannelRead(buf.copy(buf.readerOffset(), length, true));
+            buf.skipReadableBytes(length);
         } else {
-            // reset the reader index, there is still data missing
-            in.readerOffset(readerIndex);
+            buf.readerOffset(readerIndex);
         }
     }
 }

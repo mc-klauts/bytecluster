@@ -60,14 +60,9 @@ public final class Wrapper extends Cluster {
         this.client.sendPacket(packet);
     }
 
-    @SubscribeEvent
-    public void handle(CloudServiceConnectEvent event) {
-        System.out.println("polo");
-    }
-
     public void connect() {
         this.client.connect().onComplete(s -> {
-            Cluster.getInstance().getEventHandler().registerListener(this);
+            Cluster.getInstance().getEventHandler().registerListener(new TestListener());
             WrapperLauncher.getWrapperThread().start();
         }).onCancel(s -> System.exit(-1));
     }

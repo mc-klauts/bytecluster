@@ -15,3 +15,4 @@
 - [ ] manage player fallback
 - [ ] module folder and module loader
 - [ ] better command system
+- [ ] message channel

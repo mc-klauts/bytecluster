@@ -13,7 +13,6 @@ import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 
 import java.lang.reflect.InvocationTargetException;
 
-@RequiredArgsConstructor
 public final class NettyPacketDecoder extends ByteToMessageDecoder {
 
     @Override

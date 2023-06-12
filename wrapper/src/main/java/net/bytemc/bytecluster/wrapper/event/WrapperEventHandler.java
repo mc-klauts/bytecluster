@@ -1,14 +1,19 @@
 package net.bytemc.bytecluster.wrapper.event;
 
 import net.bytemc.bytecluster.wrapper.Wrapper;
-import net.bytemc.cluster.api.event.AbstractCommunicatableEvent;
-import net.bytemc.cluster.api.event.AbstractEventHandler;
-import net.bytemc.cluster.api.event.CloudEvent;
-import net.bytemc.cluster.api.event.SubscribeEventPacket;
+import net.bytemc.cluster.api.Cluster;
+import net.bytemc.cluster.api.event.*;
 
 import java.lang.reflect.Method;
 
 public final class WrapperEventHandler extends AbstractEventHandler {
+
+    public WrapperEventHandler() {
+        var pool = Cluster.getInstance().getPacketPool();
+
+        //call external events form node
+        pool.registerListener(CallEventPacket.class, (channel, packet) -> call(packet.getEvent()));
+    }
 
     @Override
     public void registerEvent(Class<? extends CloudEvent> parameter, Method method, Object event) {

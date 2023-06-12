@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 public interface EventHandler {
 
-    <T> void registerListener(@NotNull Object clazz);
+    <T> void registerListener(@NotNull Object object);
 
     void call(@NotNull Object event);
 

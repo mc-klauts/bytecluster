@@ -8,7 +8,6 @@ import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
-@NotNull
 @AllArgsConstructor
 @Packet.Info(id = 20)
 public final class CallEventPacket extends Packet {
@@ -25,7 +24,7 @@ public final class CallEventPacket extends Packet {
     public void read(@NotNull PacketBuffer buf) {
         try {
             final var eventClass = Class.forName(buf.readString());
-            final var event = (AbstractCommunicatableEvent) UnsafeAccess.allocate(eventClass);
+            event = (AbstractCommunicatableEvent) UnsafeAccess.allocate(eventClass);
             event.read(buf);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

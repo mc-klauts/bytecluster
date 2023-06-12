@@ -20,6 +20,7 @@ public final class NettyNetworkHandler extends ClusterChannelInboundHandler {
 
         if (serviceHandler.isConnectionVerified(ctx.channel())) {
             super.messageReceived(ctx, packet);
+            return;
         }
 
         if (packet instanceof ServiceIdentifiyPacket serviceIdentifiyPacket) {
@@ -36,6 +37,11 @@ public final class NettyNetworkHandler extends ClusterChannelInboundHandler {
         } else {
             ctx.close();
         }
+    }
+
+    @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) {
+        ctx.flush();
     }
 
     @Override
