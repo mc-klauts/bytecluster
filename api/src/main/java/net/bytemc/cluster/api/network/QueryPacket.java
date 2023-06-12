@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 @Packet.Info(id = 1)
 public final class QueryPacket extends Packet {

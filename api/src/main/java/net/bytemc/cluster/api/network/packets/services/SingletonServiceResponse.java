@@ -11,7 +11,6 @@ import net.bytemc.cluster.api.service.CloudService;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 @Packet.Info(id = 11)
 public final class SingletonServiceResponse extends Packet {
 

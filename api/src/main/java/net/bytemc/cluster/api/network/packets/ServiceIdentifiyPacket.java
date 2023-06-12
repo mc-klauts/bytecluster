@@ -8,7 +8,6 @@ import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 @Packet.Info(id = 0)
 public final class ServiceIdentifiyPacket extends Packet {
 

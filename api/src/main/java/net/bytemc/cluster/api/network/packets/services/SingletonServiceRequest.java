@@ -8,7 +8,6 @@ import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 @Packet.Info(id = 10)
 public final class SingletonServiceRequest extends Packet {
 
