@@ -62,7 +62,6 @@ public final class Wrapper extends Cluster {
 
     public void connect() {
         this.client.connect().onComplete(s -> {
-            Cluster.getInstance().getEventHandler().registerListener(new TestListener());
             WrapperLauncher.getWrapperThread().start();
         }).onCancel(s -> System.exit(-1));
     }
