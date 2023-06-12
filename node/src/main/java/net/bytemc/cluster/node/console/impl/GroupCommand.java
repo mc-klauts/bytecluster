@@ -36,10 +36,10 @@ public final class GroupCommand {
     @SubCommand(name = "create", example = "group create <name> <group_type> <memory> <fallback>")
     private void createGroup(
         CommandSender commandSender,
-        @CommandArgument(name = "name", transformer = ArgumentTransformerType.STRING, needed = true) String name,
-        @CommandArgument(name = "group_type", transformer = ArgumentTransformerType.CLOUD_GROUP_TYPE, needed = true) CloudGroupType type,
-        @CommandArgument(name = "memory", transformer = ArgumentTransformerType.INT, needed = true) int memory,
-        @CommandArgument(name = "fallback", transformer = ArgumentTransformerType.BOOLEAN, needed = true) boolean fallback
+        @CommandArgument(name = "name", transformer = ArgumentTransformerType.STRING) String name,
+        @CommandArgument(name = "group_type", transformer = ArgumentTransformerType.CLOUD_GROUP_TYPE) CloudGroupType type,
+        @CommandArgument(name = "memory", transformer = ArgumentTransformerType.INT) int memory,
+        @CommandArgument(name = "fallback", transformer = ArgumentTransformerType.BOOLEAN) boolean fallback
     ) {
         final CloudServiceGroupProvider cloudServiceGroupProvider = Node.getInstance()
             .getServiceGroupProvider();
@@ -56,7 +56,7 @@ public final class GroupCommand {
     @SubCommand(name = "remove", example = "group remove <name>")
     private void removeGroup(
         @NotNull CommandSender commandSender,
-        @CommandArgument(name = "name", transformer = ArgumentTransformerType.STRING, needed = true) String name
+        @CommandArgument(name = "name", transformer = ArgumentTransformerType.STRING) String name
     ) {
         final CloudServiceGroupProvider cloudServiceGroupProvider = Node.getInstance()
             .getServiceGroupProvider();

@@ -14,9 +14,5 @@ public @interface CommandArgument {
 
     ArgumentTransformerType transformer();
 
-    /**
-     * If not needed then a default state set in the transformer will be used.
-     */
-    boolean needed();
 
 }
