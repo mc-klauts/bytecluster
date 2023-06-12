@@ -1,6 +1,6 @@
 package net.bytemc.cluster.api.command.argument;
 
-public final class ArgumentExecutor {
+public final class ArgumentPacker {
 
 
 

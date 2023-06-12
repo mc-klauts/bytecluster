@@ -3,14 +3,15 @@ package net.bytemc.cluster.node;
 import lombok.Getter;
 import lombok.Setter;
 import net.bytemc.cluster.api.Cluster;
+import net.bytemc.cluster.api.command.CommandExecutor;
+import net.bytemc.cluster.api.command.CommandRepository;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 import net.bytemc.cluster.node.cluster.ClusterNetwork;
 import net.bytemc.cluster.node.configuration.ConfigurationHelper;
 import net.bytemc.cluster.node.configuration.RuntimeConfiguration;
 import net.bytemc.cluster.node.console.ConsoleTerminal;
-import net.bytemc.cluster.node.console.commands.CommandHandler;
-import net.bytemc.cluster.node.console.commands.SimpleCommandHandler;
+import net.bytemc.cluster.node.console.impl.ClearScreenCommand;
 import net.bytemc.cluster.node.groups.CloudServiceGroupProviderImpl;
 import net.bytemc.cluster.node.logger.Logger;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
@@ -30,14 +31,18 @@ public final class Node extends Cluster {
     private final CloudServiceGroupProvider serviceGroupProvider;
     private final CloudServiceProvider serviceProvider;
 
-    private final CommandHandler commandHandler;
+    private final CommandExecutor commandExecutor;
     private final ConsoleTerminal consoleTerminal;
     private final ClusterNetwork clusterNetwork;
 
     public Node() {
         instance = this;
 
-        this.commandHandler = new SimpleCommandHandler();
+        final CommandRepository commandRepository = Cluster.getInstance().getCommandRepository();
+        commandRepository.registerCommand(ClearScreenCommand.class);
+        this.commandExecutor = new CommandExecutor();
+
+
         this.consoleTerminal = new ConsoleTerminal();
 
         Logger.info("Initializing networkservice...");

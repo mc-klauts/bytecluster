@@ -1,4 +1,4 @@
-package net.bytemc.cluster.api.command;
+package net.bytemc.cluster.api.command.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,10 +7,8 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
-public @interface SubCommand {
+public @interface CommandHelpTopic {
 
-    String name();
-
-    String example();
+    String[] messages();
 
 }

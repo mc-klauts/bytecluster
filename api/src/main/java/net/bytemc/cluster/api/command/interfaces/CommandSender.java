@@ -1,4 +1,4 @@
-package net.bytemc.cluster.api.command;
+package net.bytemc.cluster.api.command.interfaces;
 
 public interface CommandSender {
 

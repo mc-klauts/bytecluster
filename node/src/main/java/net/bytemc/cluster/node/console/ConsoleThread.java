@@ -2,6 +2,7 @@ package net.bytemc.cluster.node.console;
 
 import lombok.AllArgsConstructor;
 import net.bytemc.cluster.node.Node;
+import net.bytemc.cluster.node.console.command.SimpleCommandSender;
 import org.fusesource.jansi.Ansi;
 import org.jetbrains.annotations.Nullable;
 import org.jline.reader.EndOfFileException;
@@ -20,7 +21,7 @@ public final class ConsoleThread extends Thread {
         String line;
         while (!Thread.currentThread().isInterrupted() && (line = this.readLine()) != null) {
             this.terminal.writeEmpty(() -> Ansi.ansi().reset().cursorUp(1).eraseLine().toString());
-            Node.getInstance().getCommandHandler().execute(line);
+            Node.getInstance().getCommandExecutor().tryExecution(new SimpleCommandSender(), line);
         }
     }
 
