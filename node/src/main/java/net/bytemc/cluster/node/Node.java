@@ -16,11 +16,9 @@ import net.bytemc.cluster.node.console.ConsoleTerminal;
 import net.bytemc.cluster.node.console.impl.ClearScreenCommand;
 import net.bytemc.cluster.node.console.impl.GroupCommand;
 import net.bytemc.cluster.node.console.impl.ShutdownCommand;
-import net.bytemc.cluster.node.console.commands.CommandHandler;
-import net.bytemc.cluster.node.console.commands.SimpleCommandHandler;
 import net.bytemc.cluster.node.event.CloudEventHandlerImpl;
 import net.bytemc.cluster.node.groups.CloudServiceGroupProviderImpl;
-import net.bytemc.cluster.node.logger.Logger;
+import net.bytemc.cluster.node.logger.NodeLogger;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
 
 import java.nio.file.Path;
