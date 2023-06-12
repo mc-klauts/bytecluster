@@ -1,18 +1,17 @@
 package net.bytemc.cluster.node.services;
 
+import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.service.CloudGroupType;
 import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceFactory;
 import net.bytemc.cluster.api.service.CloudServiceState;
 import net.bytemc.cluster.node.Node;
-import net.bytemc.cluster.node.logger.Logger;
+import net.bytemc.cluster.node.logger.NodeLogger;
 import net.bytemc.cluster.node.misc.FileHelper;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,7 +71,8 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
 
             try {
                 var process = new ProcessBuilder(arguments(cloudService))
-                        .redirectError(new File("wrapper.errors"))
+                        .redirectError(cloudService.getDirectory().resolve("wrapper.error").toFile())
+                        .redirectOutput(cloudService.getDirectory().resolve("wrapper.output").toFile())
                         .directory(cloudService.getDirectory().toFile())
                         .start();
                 cloudService.setProcess(process);

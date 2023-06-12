@@ -37,7 +37,7 @@ public final class TaskFuture<T> {
             value.accept(this.value);
             return this;
         }
-        listeners.put(State.SUCCESS, ListHelper.getOrCreateAndElement(listeners.getOrDefault(State.SUCCESS, new ArrayList<>()), value));
+        listeners.put(State.SUCCESS, ListHelper.addElementInList(listeners.getOrDefault(State.SUCCESS, new ArrayList<>()), value));
         return this;
     }
 
@@ -46,7 +46,7 @@ public final class TaskFuture<T> {
             value.accept("Task was already cancelled.");
             return this;
         }
-        listeners.put(State.FAILURE, ListHelper.getOrCreateAndElement(listeners.getOrDefault(State.FAILURE, new ArrayList<>()), value));
+        listeners.put(State.FAILURE, ListHelper.addElementInList(listeners.getOrDefault(State.FAILURE, new ArrayList<>()), value));
         return this;
     }
 

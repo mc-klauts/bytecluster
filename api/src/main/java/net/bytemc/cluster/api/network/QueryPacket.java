@@ -2,6 +2,7 @@ package net.bytemc.cluster.api.network;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.bytemc.cluster.api.misc.UnsafeAccess;
 import net.bytemc.cluster.api.network.buffer.PacketBuffer;
@@ -21,8 +22,8 @@ public final class QueryPacket extends Packet {
     @Override
     public void write(@NotNull PacketBuffer buf) {
         buf.writeUUID(id);
-        buf.writeInt(packet.id());
 
+        buf.writeInt(packet.id());
         packet.write(buf);
     }
 

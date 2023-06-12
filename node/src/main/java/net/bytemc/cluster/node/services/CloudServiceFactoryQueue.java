@@ -1,11 +1,12 @@
 package net.bytemc.cluster.node.services;
 
 import lombok.RequiredArgsConstructor;
+import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 import net.bytemc.cluster.node.Node;
-import net.bytemc.cluster.node.logger.Logger;
+import net.bytemc.cluster.node.logger.NodeLogger;
 import net.bytemc.cluster.node.misc.FileHelper;
 import net.bytemc.cluster.node.misc.PortHelper;
 
@@ -20,7 +21,7 @@ public final class CloudServiceFactoryQueue {
     private final Queue<CloudServiceGroup> tasks = new LinkedList<>();
 
     public void addTask(CloudServiceGroup group, int amount) {
-        for (int i = 0; i < amount; i++) {
+        for (var i = 0; i < amount; i++) {
             this.tasks.add(group);
         }
         Logger.info(amount + " service(s) from type " + group.getName() + " is now queued...");
@@ -37,7 +38,7 @@ public final class CloudServiceFactoryQueue {
                 var group = tasks.poll();
 
                 // use localhost name, because we are running on the same machine
-                var service = new LocalCloudService(group.getName(), "127.0.0.1", group.getName(), "Default template motd", PortHelper.getNextPort(group), findId(group), 10);
+                var service = new LocalCloudService("127.0.0.1", group.getName(), "Default template motd", PortHelper.getNextPort(group), findId(group), 10);
                 ((CloudServiceProviderImpl) Node.getInstance().getServiceProvider()).addService(service);
                 cloudServiceProvider.getFactory().start(service);
             }

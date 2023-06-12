@@ -2,6 +2,7 @@ package net.bytemc.cluster.api.misc;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public final class UnsafeAccess {
 
@@ -26,4 +27,5 @@ public final class UnsafeAccess {
             throw new RuntimeException(e);
         }
     }
+
 }

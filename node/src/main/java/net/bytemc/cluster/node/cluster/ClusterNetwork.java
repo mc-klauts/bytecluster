@@ -1,8 +1,9 @@
 package net.bytemc.cluster.node.cluster;
 
+import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.node.configuration.RuntimeConfiguration;
-import net.bytemc.cluster.node.logger.Logger;
-import net.bytemc.cluster.node.network.netty.NettyServer;
+import net.bytemc.cluster.node.logger.NodeLogger;
+import net.bytemc.cluster.node.network.NettyServer;
 import org.jetbrains.annotations.NotNull;
 
 public final class ClusterNetwork {

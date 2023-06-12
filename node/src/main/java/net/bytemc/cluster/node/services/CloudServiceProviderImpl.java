@@ -104,5 +104,9 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     public void addServiceConnection(Channel channel, CloudService service) {
         this.serviceChannels.put(channel, service);
+
+        if(service instanceof LocalCloudService localCloudService) {
+            localCloudService.setChannel(channel);
+        }
     }
 }

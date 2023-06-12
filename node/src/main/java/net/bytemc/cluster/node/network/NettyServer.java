@@ -1,4 +1,4 @@
-package net.bytemc.cluster.node.network.netty;
+package net.bytemc.cluster.node.network;
 
 import io.netty5.bootstrap.ServerBootstrap;
 import io.netty5.channel.ChannelOption;
@@ -9,11 +9,13 @@ import io.netty5.channel.epoll.EpollServerSocketChannel;
 import io.netty5.channel.socket.nio.NioServerSocketChannel;
 import io.netty5.channel.unix.UnixChannelOption;
 import io.netty5.util.concurrent.Future;
+import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.misc.TaskFuture;
 import net.bytemc.cluster.api.network.ConnectionUtils;
-import net.bytemc.cluster.api.network.PacketPool;
-import net.bytemc.cluster.api.network.packets.ServiceIdentifiyPacket;
-import net.bytemc.cluster.node.logger.Logger;
+import net.bytemc.cluster.node.logger.NodeLogger;
+import net.bytemc.cluster.node.network.listener.ApiQueryResponseHandler;
+import net.bytemc.cluster.node.network.netty.NettyNetworkServerInitializer;
+import net.bytemc.cluster.node.network.netty.NettyOptionSettingChannelInitializer;
 import org.jetbrains.annotations.Nullable;
 
 public final class NettyServer {
@@ -25,6 +27,11 @@ public final class NettyServer {
 
     @Nullable
     private Future<Void> channelFuture;
+
+    public NettyServer() {
+        // for api query
+        new ApiQueryResponseHandler();
+    }
 
     public TaskFuture<Void> initialize(int port) {
         var task = new TaskFuture<Void>();
