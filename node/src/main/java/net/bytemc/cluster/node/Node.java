@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.event.EventHandler;
+import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 import net.bytemc.cluster.node.cluster.ClusterNetwork;
@@ -14,7 +15,7 @@ import net.bytemc.cluster.node.console.commands.CommandHandler;
 import net.bytemc.cluster.node.console.commands.SimpleCommandHandler;
 import net.bytemc.cluster.node.event.CloudEventHandlerImpl;
 import net.bytemc.cluster.node.groups.CloudServiceGroupProviderImpl;
-import net.bytemc.cluster.node.logger.Logger;
+import net.bytemc.cluster.node.logger.NodeLogger;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
 
 import java.nio.file.Path;
@@ -28,6 +29,8 @@ public final class Node extends Cluster {
     @Setter
     private boolean running = true;
 
+    private Logger logger;
+
     private final RuntimeConfiguration runtimeConfiguration;
     private final CloudServiceGroupProvider serviceGroupProvider;
     private final CloudServiceProvider serviceProvider;
@@ -40,6 +43,8 @@ public final class Node extends Cluster {
 
     public Node() {
         instance = this;
+
+        this.logger = new NodeLogger();
 
         this.eventHandler = new CloudEventHandlerImpl();
         this.commandHandler = new SimpleCommandHandler();

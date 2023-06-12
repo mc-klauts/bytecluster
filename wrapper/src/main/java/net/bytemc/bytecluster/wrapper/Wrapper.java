@@ -2,11 +2,15 @@ package net.bytemc.bytecluster.wrapper;
 
 import lombok.Getter;
 import net.bytemc.bytecluster.wrapper.event.WrapperEventHandler;
+import net.bytemc.bytecluster.wrapper.logging.WrapperLogging;
 import net.bytemc.bytecluster.wrapper.services.CloudServiceProviderImpl;
 import net.bytemc.bytecluster.wrapper.network.NettyClient;
 import net.bytemc.bytecluster.wrapper.groups.CloudServiceGroupProviderImpl;
 import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.event.EventHandler;
+import net.bytemc.cluster.api.event.SubscribeEvent;
+import net.bytemc.cluster.api.event.services.CloudServiceConnectEvent;
+import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.network.Packet;
 import net.bytemc.cluster.api.network.PacketPool;
 import net.bytemc.cluster.api.network.QueryPacket;
@@ -23,6 +27,8 @@ public final class Wrapper extends Cluster {
     @Getter
     private static Wrapper instance;
 
+    private Logger logger;
+
     private final EventHandler eventHandler;
     private final CloudServiceGroupProvider serviceGroupProvider;
     private final CloudServiceProvider serviceProvider;
@@ -30,6 +36,8 @@ public final class Wrapper extends Cluster {
 
     public Wrapper(String id) {
         instance = this;
+
+        this.logger = new WrapperLogging();
 
         this.eventHandler = new WrapperEventHandler();
         this.serviceGroupProvider = new CloudServiceGroupProviderImpl();
@@ -52,11 +60,14 @@ public final class Wrapper extends Cluster {
         this.client.sendPacket(packet);
     }
 
+    @SubscribeEvent
+    public void handle(CloudServiceConnectEvent event) {
+        System.out.println("polo");
+    }
+
     public void connect() {
         this.client.connect().onComplete(s -> {
-            Cluster.getInstance().getServiceProvider().findServiceAsync("Lobby-1").onComplete(service -> {
-                System.out.println(service.getMotd());
-            });
+            Cluster.getInstance().getEventHandler().registerListener(this);
             WrapperLauncher.getWrapperThread().start();
         }).onCancel(s -> System.exit(-1));
     }

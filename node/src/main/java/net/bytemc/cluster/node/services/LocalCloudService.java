@@ -1,8 +1,10 @@
 package net.bytemc.cluster.node.services;
 
+import io.netty5.channel.Channel;
 import lombok.Getter;
 import lombok.Setter;
 import net.bytemc.cluster.api.Cluster;
+import net.bytemc.cluster.api.network.Packet;
 import net.bytemc.cluster.api.service.AbstractCloudService;
 import net.bytemc.cluster.api.service.CloudServiceState;
 import net.bytemc.cluster.node.Node;
@@ -22,6 +24,9 @@ public final class LocalCloudService extends AbstractCloudService {
     // duplicate this entry, because not allow to modify the original api source code
     @Getter @Setter
     private CloudServiceState state = CloudServiceState.OPEN;
+
+    @Nullable @Setter
+    private Channel channel;
 
     public LocalCloudService(String hostname, String groupName, String motd, int port, int id, int maxPlayers) {
         super(hostname, groupName, motd, port, id, maxPlayers, null);
@@ -58,5 +63,9 @@ public final class LocalCloudService extends AbstractCloudService {
     @Override
     public CloudServiceState getState() {
         return this.state;
+    }
+
+    public void sendPacket(Packet packet) {
+        this.channel.writeAndFlush(packet);
     }
 }

@@ -23,7 +23,7 @@ public abstract class ClusterChannelInboundHandler extends SimpleChannelInboundH
                 }
             }
         } else {
-            // todo call packet listener
+            Cluster.getInstance().getPacketPool().callPacketListener(ctx.channel(), packet);
         }
     }
 

@@ -1,12 +1,11 @@
 package net.bytemc.cluster.node.console.impl;
 
-import net.bytemc.cluster.api.Cluster;
+import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.service.CloudGroupType;
-import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.node.console.commands.CloudCommand;
 import net.bytemc.cluster.node.groups.CloudServiceGroupImpl;
-import net.bytemc.cluster.node.logger.Logger;
+import net.bytemc.cluster.node.logger.NodeLogger;
 import org.jetbrains.annotations.NotNull;
 
 @CloudCommand.Command(name = "group", aliases = {"groups"})
@@ -34,6 +33,5 @@ public final class GroupCommand extends CloudCommand {
         }
 
         Logger.info("group create <name> <type> <memory> <fallback>");
-
     }
 }

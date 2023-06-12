@@ -1,16 +1,15 @@
 package net.bytemc.cluster.api.network;
 
 import io.netty5.channel.Channel;
+import net.bytemc.cluster.api.event.CallEventPacket;
+import net.bytemc.cluster.api.event.SubscribeEventPacket;
 import net.bytemc.cluster.api.misc.ListHelper;
 import net.bytemc.cluster.api.network.packets.ServiceIdentifiyPacket;
 import net.bytemc.cluster.api.network.packets.services.SingletonServiceRequest;
 import net.bytemc.cluster.api.network.packets.services.SingletonServiceResponse;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -29,14 +28,18 @@ public final class PacketPool {
 
                 // api packets
                 SingletonServiceResponse.class,
-                SingletonServiceRequest.class
+                SingletonServiceRequest.class,
+
+                // event system basics
+                CallEventPacket.class,
+                SubscribeEventPacket.class
         );
     }
 
     private final Map<UUID, Consumer<Packet>> responsePool = new HashMap<>();
 
     // default packet listeners
-    private final Map<Class<? extends Packet>, List<BiConsumer<Channel, ? extends Packet>>> packetListeners = new HashMap<>();
+    private final Map<Class<? extends Packet>, List<BiConsumer<Channel, Packet>>> packetListeners = new HashMap<>();
 
     // if a packet is sent to a service, it can be modified before it is sent, if the service is not the target
     private final Map<Class<? extends Packet>, Function<Packet, Packet>> queryResponseModificationPool = new HashMap<>();
@@ -72,7 +75,7 @@ public final class PacketPool {
     }
 
     public <T extends Packet> void registerListener(Class<T> packet, BiConsumer<Channel, T> listener) {
-        this.packetListeners.put(packet, ListHelper.getOrCreateAndElement(this.packetListeners.get(packet), listener));
+        this.packetListeners.put(packet, ListHelper.addElementInList(this.packetListeners.getOrDefault(packet, new ArrayList<>()), (BiConsumer<Channel, Packet>) listener));
     }
 
     public boolean isQueryModificationPresent(Class<? extends Packet> packetClass) {
@@ -91,4 +94,12 @@ public final class PacketPool {
     public boolean isResponsePresent(UUID responseId) {
         return this.responsePool.containsKey(responseId);
     }
+
+    public void callPacketListener(Channel channel, Packet packet) {
+        if(!packetListeners.containsKey(packet.getClass())) {
+            return;
+        }
+        packetListeners.get(packet.getClass()).forEach(listener -> listener.accept(channel, packet));
+    }
+
 }

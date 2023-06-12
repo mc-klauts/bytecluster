@@ -1,20 +1,15 @@
 package net.bytemc.cluster.node.network.netty;
 
 import io.netty5.channel.ChannelHandlerContext;
-import io.netty5.channel.SimpleChannelInboundHandler;
-import lombok.NonNull;
 import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.event.services.CloudServiceConnectEvent;
+import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.network.Packet;
-import net.bytemc.cluster.api.network.QueryPacket;
 import net.bytemc.cluster.api.network.codec.ClusterChannelInboundHandler;
 import net.bytemc.cluster.api.network.packets.ServiceIdentifiyPacket;
-import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.node.Node;
-import net.bytemc.cluster.node.logger.Logger;
+import net.bytemc.cluster.node.logger.NodeLogger;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
-
-import java.io.IOException;
 
 public final class NettyNetworkHandler extends ClusterChannelInboundHandler {
 
@@ -37,7 +32,7 @@ public final class NettyNetworkHandler extends ClusterChannelInboundHandler {
             Logger.info("Service " + serviceIdentifiyPacket.getId() + " is online and connected to the node.");
 
             // call on all instances of the node
-            Cluster.getInstance().getEventHandler().call(new CloudServiceConnectEvent(service.getName()));
+            Cluster.getInstance().getEventHandler().call(new CloudServiceConnectEvent(service));
         } else {
             ctx.close();
         }
