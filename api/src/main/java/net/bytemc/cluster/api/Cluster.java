@@ -1,6 +1,7 @@
 package net.bytemc.cluster.api;
 
 import lombok.Getter;
+import net.bytemc.cluster.api.event.EventHandler;
 import net.bytemc.cluster.api.network.PacketPool;
 import net.bytemc.cluster.api.network.QueryPacket;
 import net.bytemc.cluster.api.network.packets.ServiceIdentifiyPacket;
@@ -19,6 +20,8 @@ public abstract class Cluster {
     public Cluster() {
         instance = this;
     }
+
+    public abstract EventHandler getEventHandler();
 
     public abstract CloudServiceGroupProvider getServiceGroupProvider();
 

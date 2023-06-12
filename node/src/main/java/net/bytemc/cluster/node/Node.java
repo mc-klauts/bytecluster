@@ -3,6 +3,7 @@ package net.bytemc.cluster.node;
 import lombok.Getter;
 import lombok.Setter;
 import net.bytemc.cluster.api.Cluster;
+import net.bytemc.cluster.api.event.EventHandler;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 import net.bytemc.cluster.node.cluster.ClusterNetwork;
@@ -11,6 +12,7 @@ import net.bytemc.cluster.node.configuration.RuntimeConfiguration;
 import net.bytemc.cluster.node.console.ConsoleTerminal;
 import net.bytemc.cluster.node.console.commands.CommandHandler;
 import net.bytemc.cluster.node.console.commands.SimpleCommandHandler;
+import net.bytemc.cluster.node.event.CloudEventHandlerImpl;
 import net.bytemc.cluster.node.groups.CloudServiceGroupProviderImpl;
 import net.bytemc.cluster.node.logger.Logger;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
@@ -34,9 +36,12 @@ public final class Node extends Cluster {
     private final ConsoleTerminal consoleTerminal;
     private final ClusterNetwork clusterNetwork;
 
+    private EventHandler eventHandler;
+
     public Node() {
         instance = this;
 
+        this.eventHandler = new CloudEventHandlerImpl();
         this.commandHandler = new SimpleCommandHandler();
         this.consoleTerminal = new ConsoleTerminal();
 
