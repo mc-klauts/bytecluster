@@ -27,7 +27,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Override
     public TaskFuture<CloudService> findServiceAsync(String name) {
-        TaskFuture<CloudService> tasks = new TaskFuture<>();
+        var tasks = new TaskFuture<CloudService>();
         Wrapper.getInstance().sendQueryPacket(new SingletonServiceRequest(name), SingletonServiceResponse.class, (packet) -> tasks.complete(packet.getCloudService()));
         return tasks;
     }

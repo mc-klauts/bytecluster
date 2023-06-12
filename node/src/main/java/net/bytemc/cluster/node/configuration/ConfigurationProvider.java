@@ -20,7 +20,7 @@ public final class ConfigurationProvider {
             .create();
 
     public static void write(@NotNull Path path, Object value) {
-        try(FileWriter writer = new FileWriter(path.toFile())) {
+        try(var writer = new FileWriter(path.toFile())) {
             writer.write(DEFAULT_GSON.toJson(value));
         } catch (IOException e) {
             e.printStackTrace();
@@ -28,7 +28,7 @@ public final class ConfigurationProvider {
     }
 
     public static <T> @Nullable T read(Path path, Class<T> value) {
-        try(BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))) {
+        try(var reader = new BufferedReader(new FileReader(path.toFile()))) {
             return DEFAULT_GSON.fromJson(reader, value);
         } catch (IOException e) {
             e.printStackTrace();

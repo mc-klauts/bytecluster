@@ -27,8 +27,7 @@ public final class Wrapper extends Cluster {
     @Getter
     private static Wrapper instance;
 
-    private Logger logger;
-
+    private final Logger logger;
     private final EventHandler eventHandler;
     private final CloudServiceGroupProvider serviceGroupProvider;
     private final CloudServiceProvider serviceProvider;
@@ -61,8 +60,6 @@ public final class Wrapper extends Cluster {
     }
 
     public void connect() {
-        this.client.connect().onComplete(s -> {
-            WrapperLauncher.getWrapperThread().start();
-        }).onCancel(s -> System.exit(-1));
+        this.client.connect().onComplete(s -> WrapperLauncher.getWrapperThread().start()).onCancel(s -> System.exit(-1));
     }
 }

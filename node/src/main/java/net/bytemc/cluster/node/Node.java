@@ -61,9 +61,7 @@ public final class Node extends Cluster {
         this.clusterNetwork = new ClusterNetwork(this.runtimeConfiguration);
 
         // if user close the cluster without the shutdown command
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            NodeShutdownHandler.shutdown(this);
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> NodeShutdownHandler.shutdown(this)));
 
         ((CloudServiceProviderImpl) this.serviceProvider).queue();
     }
