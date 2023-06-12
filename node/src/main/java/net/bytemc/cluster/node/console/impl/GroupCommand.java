@@ -11,6 +11,7 @@ import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
 import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.node.groups.CloudServiceGroupImpl;
+import org.jetbrains.annotations.NotNull;
 
 @Command(name = "group")
 public final class GroupCommand {
@@ -42,13 +43,29 @@ public final class GroupCommand {
     ) {
         final CloudServiceGroupProvider cloudServiceGroupProvider = Node.getInstance()
             .getServiceGroupProvider();
-        if (cloudServiceGroupProvider.findGroup(name) != null) {
-            commandSender.sendMessage("Group with this name already exist");
+        if (cloudServiceGroupProvider.exists(name)) {
+            commandSender.sendMessage("Group with this name already exists");
             return;
         }
 
         cloudServiceGroupProvider.addGroup(
             new CloudServiceGroupImpl(name, type, 1, 1, memory, fallback));
         commandSender.sendMessage("Created group " + name);
+    }
+
+    @SubCommand(name = "remove", example = "group remove <name>")
+    private void removeGroup(
+        @NotNull CommandSender commandSender,
+        @CommandArgument(name = "name", transformer = ArgumentTransformerType.STRING, needed = true) String name
+    ) {
+        final CloudServiceGroupProvider cloudServiceGroupProvider = Node.getInstance()
+            .getServiceGroupProvider();
+        if (!cloudServiceGroupProvider.exists(name)) {
+            commandSender.sendMessage("There is no group with this name");
+            return;
+        }
+
+        cloudServiceGroupProvider.removeGroup(name);
+        commandSender.sendMessage("Successfully removed group " + name);
     }
 }
