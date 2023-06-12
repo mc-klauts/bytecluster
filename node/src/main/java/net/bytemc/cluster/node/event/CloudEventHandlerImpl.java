@@ -20,7 +20,7 @@ public final class CloudEventHandlerImpl extends AbstractEventHandler {
     public CloudEventHandlerImpl() {
         Cluster.getInstance().getPacketPool().registerListener(SubscribeEventPacket.class, (channel, subscribeEventPacket) -> {
 
-            System.out.println("event subcribe: " + subscribeEventPacket.getEventClass().getSimpleName());
+            System.out.println("event subscribe: " + subscribeEventPacket.getEventClass().getSimpleName());
 
         });
     }
