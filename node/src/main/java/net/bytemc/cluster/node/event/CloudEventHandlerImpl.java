@@ -16,7 +16,7 @@ import java.util.Map;
 
 public final class CloudEventHandlerImpl extends AbstractEventHandler {
 
-    private Map<Class<? extends CloudEvent>, List<CloudService>> subscribedServices = new HashMap<>();
+    private final Map<Class<? extends CloudEvent>, List<CloudService>> subscribedServices = new HashMap<>();
 
     // for special things on node
     public CloudEventHandlerImpl() {

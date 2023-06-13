@@ -16,3 +16,8 @@
 - [ ] module folder and module loader
 - [ ] better command system
 - [ ] message channel
+- [ ] spigot 1.20 support
+- [ ] minestom support
+- [ ] auto forwarding-secret
+- [ ] queue check
+- [ ] memory calculation

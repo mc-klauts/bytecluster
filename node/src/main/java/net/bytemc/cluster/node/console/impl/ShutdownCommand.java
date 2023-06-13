@@ -7,7 +7,7 @@ import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.node.NodeShutdownHandler;
 import org.jetbrains.annotations.NotNull;
 
-@Command(name = "shutdown", aliases = {"exit"})
+@Command(name = "shutdown", aliases = {"exit", "stop"})
 public final class ShutdownCommand {
 
     @DefaultCommand
