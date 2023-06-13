@@ -1,0 +1,5 @@
+{
+  "entrypoint": "net.bytemc.cluster.plugin.minestom.MinestomExtension",
+  "name": "bytecluster",
+  "version": "1.0.0"
+}

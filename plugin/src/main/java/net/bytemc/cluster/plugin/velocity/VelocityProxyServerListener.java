@@ -13,6 +13,8 @@ public final class VelocityProxyServerListener {
 
     @SubscribeEvent
     public void handleCloudServiceConnect(CloudServiceConnectEvent event) {
+        System.out.println("#######");
+        System.out.println(event.getService().getName());
         //todo
         /*
         Cluster.getInstance().getServiceGroupProvider().getGroupAsync(event.getService().group()).whenComplete((serviceGroup, throwable) -> {
@@ -23,10 +25,4 @@ public final class VelocityProxyServerListener {
 
          */
     }
-
-    @SubscribeEvent
-    public void handleCloudServiceDisconnect(CloudServiceShutdownEvent event) {
-        this.proxyServer.getServer(event.getCloudService().getName()).ifPresent(registeredServer -> this.proxyServer.unregisterServer(registeredServer.getServerInfo()));
-    }
-
 }

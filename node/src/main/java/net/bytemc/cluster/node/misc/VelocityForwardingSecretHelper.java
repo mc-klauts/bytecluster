@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public final class VelocityForwardingSecretHelper {
 
-    private static String TOKEN = generateToken();
+    public static String TOKEN = generateToken();
 
     public static void generate(@NotNull Path path) {
         // create forwarding secret if not exists to prevent runtime exception

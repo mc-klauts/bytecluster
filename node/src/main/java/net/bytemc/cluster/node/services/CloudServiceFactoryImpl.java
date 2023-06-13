@@ -64,8 +64,14 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
             try {
                 Files.copy(service.getGroup().getGroupType().getPath(nodePath.getStoragePath()), service.getGroup().getGroupType().getPath(((LocalCloudService) service).getDirectory()));
 
-                FileHelper.createDirectoryIfNotExists(serviceDirectory.resolve("plugins"));
-                Files.copy(nodePath.getStoragePath().resolve("bytecluster-plugin.jar"), serviceDirectory.resolve("plugins").resolve("bytecluster-plugin.jar"));
+                if (cloudService.getGroup().getGroupType() == CloudGroupType.MINESTOM) {
+                    FileHelper.createDirectoryIfNotExists(serviceDirectory.resolve("extensions"));
+                    Files.copy(nodePath.getStoragePath().resolve("bytecluster-plugin.jar"), serviceDirectory.resolve("extensions").resolve("bytecluster-plugin.jar"));
+                } else {
+                    FileHelper.createDirectoryIfNotExists(serviceDirectory.resolve("plugins"));
+                    Files.copy(nodePath.getStoragePath().resolve("bytecluster-plugin.jar"), serviceDirectory.resolve("plugins").resolve("bytecluster-plugin.jar"));
+                }
+
             } catch (IOException e) {
                 Logger.error("Cannot copy service runtime file. Service is now closed.", e);
                 cloudService.setState(CloudServiceState.STOPPED);
@@ -167,6 +173,10 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
         arguments.add("127.0.0.1");
         arguments.add(String.valueOf(Node.getInstance().getRuntimeConfiguration().getPort()));
         arguments.add(String.valueOf(service.getPort()));
+
+        if (service.getGroup().getGroupType() == CloudGroupType.MINESTOM) {
+            arguments.add(VelocityForwardingSecretHelper.TOKEN);
+        }
         return arguments;
     }
 }

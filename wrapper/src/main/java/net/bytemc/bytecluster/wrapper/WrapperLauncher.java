@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
@@ -15,6 +16,9 @@ import java.util.jar.JarInputStream;
 public class WrapperLauncher {
 
     private static Instrumentation instrumentation;
+
+    @Getter
+    private static Optional<String> secureToken;
 
     @Getter
     private static Thread wrapperThread;
@@ -43,6 +47,11 @@ public class WrapperLauncher {
                         }
                     }
                 }
+            }
+
+            // if velocity forwarding is enabled, we need to add the velocity forwarding secret helper to the classpath
+            if (arguments.size() >= 5) {
+                secureToken = Optional.ofNullable(arguments.get(4));
             }
 
             instrumentation.appendToSystemClassLoaderSearch(new JarFile(applicationFile.toFile()));
