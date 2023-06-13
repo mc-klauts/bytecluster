@@ -6,11 +6,9 @@ import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceFactory;
 import net.bytemc.cluster.api.service.CloudServiceState;
 import net.bytemc.cluster.node.Node;
-import net.bytemc.cluster.node.logger.NodeLogger;
 import net.bytemc.cluster.node.misc.FileHelper;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -55,10 +53,14 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
     public void start(@NotNull CloudService service) {
 
         if (service instanceof LocalCloudService cloudService) {
-            FileHelper.createDirectoryIfNotExists(Node.getInstance().getRuntimeConfiguration().getNodePath().getServerRunningPath().resolve(service.getName()));
+            var nodePath = Node.getInstance().getRuntimeConfiguration().getNodePath();
+            FileHelper.createDirectoryIfNotExists(nodePath.getServerRunningPath().resolve(service.getName()));
 
             try {
-                Files.copy(service.getGroup().getGroupType().getPath(Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath()), service.getGroup().getGroupType().getPath(((LocalCloudService) service).getDirectory()));
+                Files.copy(service.getGroup().getGroupType().getPath(nodePath.getStoragePath()), service.getGroup().getGroupType().getPath(((LocalCloudService) service).getDirectory()));
+
+                FileHelper.createDirectoryIfNotExists(cloudService.getDirectory().resolve("plugins"));
+                Files.copy(nodePath.getStoragePath().resolve("bytecluster-plugin.jar"), cloudService.getDirectory().resolve("plugins").resolve("bytecluster-plugin.jar"));
             } catch (IOException e) {
                 Logger.error("Cannot copy service runtime file. Service is now closed.", e);
                 cloudService.setState(CloudServiceState.STOPPED);

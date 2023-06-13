@@ -1,7 +1,6 @@
 package net.bytemc.bytecluster.wrapper.services;
 
 import net.bytemc.bytecluster.wrapper.Wrapper;
-import net.bytemc.cluster.api.misc.TaskFuture;
 import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 import net.bytemc.cluster.api.network.packets.services.CollectionServiceRequest;
@@ -15,9 +14,7 @@ import net.bytemc.cluster.api.service.CloudServiceState;
 import net.bytemc.cluster.api.service.filter.CloudServiceFilter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 
 public final class CloudServiceProviderImpl implements CloudServiceProvider {
@@ -30,10 +27,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     @Override
     public AsyncTask<Collection<CloudService>> findServicesAsync() {
         var tasks = new AsyncTask<Collection<CloudService>>();
-        Wrapper.getInstance().sendQueryPacket(new CollectionServiceRequest(CollectionServiceRequest.Filter.ALL), CollectionServiceResponse.class, (packet) -> {
-            System.out.println("bin da");
-            tasks.complete(packet.getServices());
-        });
+        Wrapper.getInstance().sendQueryPacket(new CollectionServiceRequest(CollectionServiceRequest.Filter.ALL), CollectionServiceResponse.class, (packet) -> tasks.complete(packet.getServices()));
         return tasks;
     }
 

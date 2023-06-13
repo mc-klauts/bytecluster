@@ -8,14 +8,9 @@ import net.bytemc.bytecluster.wrapper.network.NettyClient;
 import net.bytemc.bytecluster.wrapper.groups.CloudServiceGroupProviderImpl;
 import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.event.EventHandler;
-import net.bytemc.cluster.api.event.SubscribeEvent;
-import net.bytemc.cluster.api.event.services.CloudServiceConnectEvent;
 import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.network.Packet;
-import net.bytemc.cluster.api.network.PacketPool;
 import net.bytemc.cluster.api.network.QueryPacket;
-import net.bytemc.cluster.api.network.packets.ServiceIdentifiyPacket;
-import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 
@@ -62,14 +57,8 @@ public final class Wrapper extends Cluster {
 
     public void connect() {
         this.client.connect().onComplete(s -> {
-            /*
-            Cluster.getInstance().getServiceProvider().findServicesAsync().whenComplete((cloudServices, throwable) -> {
-                for (CloudService service : cloudServices) {
-                    System.out.println(service.toString());
-                }
-            });
 
-             */
+            // it is important to use sync methods only in platform threads
 
             WrapperLauncher.getWrapperThread().start();
         }).onCancel(s -> System.exit(-1));

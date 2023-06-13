@@ -2,7 +2,6 @@ package net.bytemc.cluster.api.network.packets;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import net.bytemc.cluster.api.network.Packet;
 import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 

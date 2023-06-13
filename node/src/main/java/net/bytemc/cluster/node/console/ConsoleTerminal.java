@@ -3,7 +3,6 @@ package net.bytemc.cluster.node.console;
 import lombok.Getter;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jline.reader.LineReader;
 import org.jline.reader.impl.LineReaderImpl;
@@ -24,7 +23,7 @@ public final class ConsoleTerminal {
 
     private final Terminal terminal;
     private final LineReaderImpl lineReader;
-    private String prompt;
+    private final String prompt;
 
     private final boolean supportAnsiSupport;
     private final Lock disallowLog = new ReentrantLock(true);

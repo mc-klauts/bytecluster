@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 public final class ThreadHelper {
 
-    public static ThreadHelper HANDLER = new ThreadHelper();
+    public static final ThreadHelper HANDLER = new ThreadHelper();
 
     public ThreadHelper await(long seconds) {
         try {

@@ -2,13 +2,12 @@ package net.bytemc.cluster.node.cluster;
 
 import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.node.configuration.RuntimeConfiguration;
-import net.bytemc.cluster.node.logger.NodeLogger;
 import net.bytemc.cluster.node.network.NettyServer;
 import org.jetbrains.annotations.NotNull;
 
 public final class ClusterNetwork {
 
-    private NettyServer nettyServer;
+    private final NettyServer nettyServer;
 
     public ClusterNetwork(@NotNull RuntimeConfiguration configuration) {
         this.nettyServer = new NettyServer();

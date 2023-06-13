@@ -9,7 +9,7 @@ import java.nio.file.Path;
 @AllArgsConstructor
 public final class RuntimeConfiguration {
 
-    public static RuntimeConfiguration DEFAULT_CONFIGURATION = new RuntimeConfiguration(8879,
+    public static final RuntimeConfiguration DEFAULT_CONFIGURATION = new RuntimeConfiguration(8879,
             new NodePath(
                     Path.of("storage"),
                     Path.of("temp"),

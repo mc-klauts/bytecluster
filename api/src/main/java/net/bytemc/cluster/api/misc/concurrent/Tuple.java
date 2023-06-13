@@ -2,7 +2,6 @@ package net.bytemc.cluster.api.misc.concurrent;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

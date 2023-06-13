@@ -11,9 +11,9 @@
     <modules>
         <module>api</module>
         <module>wrapper</module>
+        <module>plugin</module>
         <module>node</module>
         <module>launcher</module>
-        <module>plugin</module>
     </modules>
 
     <properties>

@@ -24,7 +24,6 @@ public final class LocalCloudService extends AbstractCloudService {
     private Process process;
 
     // duplicate this entry, because not allow to modify the original api source code
-    @Getter
     @Setter
     private CloudServiceState state = CloudServiceState.OPEN;
 

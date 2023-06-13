@@ -6,7 +6,6 @@ import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 import net.bytemc.cluster.node.Node;
-import net.bytemc.cluster.node.logger.NodeLogger;
 import net.bytemc.cluster.node.misc.FileHelper;
 import net.bytemc.cluster.node.misc.PortHelper;
 

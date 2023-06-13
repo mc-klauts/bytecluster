@@ -12,7 +12,7 @@ import java.util.Map;
 
 public abstract class AbstractEventHandler implements EventHandler {
 
-    private Map<Class<? extends CloudEvent>, List<CloudEventElement>> cloudEventMethods = new HashMap<>();
+    private final Map<Class<? extends CloudEvent>, List<CloudEventElement>> cloudEventMethods = new HashMap<>();
 
     @Override
     public <T> void registerListener(@NotNull Object event) {

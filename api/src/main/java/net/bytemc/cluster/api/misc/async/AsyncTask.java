@@ -1,7 +1,6 @@
 package net.bytemc.cluster.api.misc.async;
 
 import java.util.concurrent.*;
-import java.util.function.Function;
 
 //todo @cloudnet
 public final class AsyncTask<T> extends CompletableFuture<T> {

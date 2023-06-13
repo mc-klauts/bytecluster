@@ -12,7 +12,6 @@ import io.netty5.util.concurrent.Future;
 import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.misc.TaskFuture;
 import net.bytemc.cluster.api.network.ConnectionUtils;
-import net.bytemc.cluster.node.logger.NodeLogger;
 import net.bytemc.cluster.node.network.listener.ApiQueryResponseHandler;
 import net.bytemc.cluster.node.network.netty.NettyNetworkServerInitializer;
 import net.bytemc.cluster.node.network.netty.NettyOptionSettingChannelInitializer;

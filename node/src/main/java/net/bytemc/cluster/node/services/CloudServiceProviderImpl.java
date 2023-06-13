@@ -2,7 +2,6 @@ package net.bytemc.cluster.node.services;
 
 import io.netty5.channel.Channel;
 import lombok.Getter;
-import net.bytemc.cluster.api.misc.TaskFuture;
 import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 import net.bytemc.cluster.api.service.*;

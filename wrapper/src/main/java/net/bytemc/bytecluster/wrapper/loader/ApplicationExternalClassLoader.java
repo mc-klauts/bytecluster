@@ -1,7 +1,6 @@
 package net.bytemc.bytecluster.wrapper.loader;
 
 import lombok.Getter;
-import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;

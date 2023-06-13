@@ -8,7 +8,6 @@ import net.bytemc.cluster.api.network.Packet;
 import net.bytemc.cluster.api.network.codec.ClusterChannelInboundHandler;
 import net.bytemc.cluster.api.network.packets.ServiceIdentifiyPacket;
 import net.bytemc.cluster.node.Node;
-import net.bytemc.cluster.node.logger.NodeLogger;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
 
 public final class NettyNetworkHandler extends ClusterChannelInboundHandler {

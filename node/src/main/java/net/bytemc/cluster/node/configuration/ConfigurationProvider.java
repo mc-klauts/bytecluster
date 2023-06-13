@@ -2,7 +2,6 @@ package net.bytemc.cluster.node.configuration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.node.configuration.layouts.PathSerializer;
 
 import java.io.*;

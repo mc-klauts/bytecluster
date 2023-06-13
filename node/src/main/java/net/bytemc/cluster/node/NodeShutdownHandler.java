@@ -1,7 +1,6 @@
 package net.bytemc.cluster.node;
 
 import net.bytemc.cluster.api.logging.Logger;
-import net.bytemc.cluster.node.logger.NodeLogger;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
 import org.jetbrains.annotations.NotNull;
 

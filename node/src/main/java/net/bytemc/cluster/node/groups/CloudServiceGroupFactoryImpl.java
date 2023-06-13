@@ -3,7 +3,6 @@ package net.bytemc.cluster.node.groups;
 import java.util.Objects;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudServiceGroupFactory;
-import net.bytemc.cluster.node.configuration.ConfigurationHelper;
 import net.bytemc.cluster.node.configuration.ConfigurationProvider;
 
 import java.nio.file.Files;
@@ -15,7 +14,8 @@ import org.jetbrains.annotations.NotNull;
 
 public final class CloudServiceGroupFactoryImpl implements CloudServiceGroupFactory {
 
-    private static Path GROUPS_STORAGE_PATH = Path.of("groups");
+    //todo
+    private static final Path GROUPS_STORAGE_PATH = Path.of("groups");
 
     public CloudServiceGroupFactoryImpl() {
         FileHelper.createDirectoryIfNotExists(GROUPS_STORAGE_PATH);

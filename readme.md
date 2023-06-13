@@ -24,3 +24,4 @@
 - [ ] static services
 - [ ] message channel
 - [ ] dependency loader
+- [ ] rename jars

@@ -32,7 +32,7 @@ public final class Node extends Cluster {
     @Setter
     private boolean running = true;
 
-    private Logger logger;
+    private final Logger logger;
 
     private final RuntimeConfiguration runtimeConfiguration;
     private final CloudServiceGroupProvider serviceGroupProvider;
@@ -42,7 +42,7 @@ public final class Node extends Cluster {
     private final ConsoleTerminal consoleTerminal;
     private final ClusterNetwork clusterNetwork;
 
-    private EventHandler eventHandler;
+    private final EventHandler eventHandler;
 
     public Node() {
         instance = this;

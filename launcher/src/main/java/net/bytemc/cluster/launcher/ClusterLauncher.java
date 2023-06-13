@@ -12,23 +12,23 @@ import java.util.Objects;
 
 public final class ClusterLauncher {
 
-    public ClusterLauncher(String args[]) {
+    public ClusterLauncher(String[] args) {
 
         try {
 
-            final var path = Path.of("storage", "node.jar");
-            final var wrapperPath = Path.of("storage", "wrapper.jar");
+            final var path = Path.of("storage");
 
-            final var storage = path.getParent();
-
-            if (!Files.exists(storage)) {
-                Files.createDirectory(storage);
+            if (!Files.exists(path)) {
+                Files.createDirectory(path);
             }
 
-            Files.copy(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResourceAsStream("node.jar")), path, StandardCopyOption.REPLACE_EXISTING);
-            Files.copy(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResourceAsStream("wrapper.jar")), wrapperPath, StandardCopyOption.REPLACE_EXISTING);
+            var classLoader = ClassLoader.getSystemClassLoader();
+            Files.copy(Objects.requireNonNull(classLoader.getResourceAsStream("node.jar")), path.resolve("node.jar"), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(Objects.requireNonNull(classLoader.getResourceAsStream("wrapper.jar")), path.resolve("wrapper.jar"), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(Objects.requireNonNull(classLoader.getResourceAsStream("bytecluster-plugin.jar")), path.resolve("bytecluster-plugin.jar"), StandardCopyOption.REPLACE_EXISTING);
 
-            BoostrapUrlLoader loader = new BoostrapUrlLoader(new URL[]{path.toUri().toURL()}, ClassLoader.getSystemClassLoader());
+
+            BoostrapUrlLoader loader = new BoostrapUrlLoader(new URL[]{path.resolve("node.jar").toUri().toURL()}, classLoader);
 
             Thread.currentThread().setContextClassLoader(loader);
             loader.loadClass("net.bytemc.cluster.node.NodeLauncher").getMethod("main", String[].class).invoke(null, (Object) args);
