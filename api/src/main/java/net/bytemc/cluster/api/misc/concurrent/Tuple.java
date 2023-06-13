@@ -1,4 +1,4 @@
-package net.bytemc.cluster.api.misc;
+package net.bytemc.cluster.api.misc.concurrent;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

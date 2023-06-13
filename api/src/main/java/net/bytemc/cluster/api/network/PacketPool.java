@@ -3,8 +3,10 @@ package net.bytemc.cluster.api.network;
 import io.netty5.channel.Channel;
 import net.bytemc.cluster.api.event.CallEventPacket;
 import net.bytemc.cluster.api.event.SubscribeEventPacket;
-import net.bytemc.cluster.api.misc.ListHelper;
+import net.bytemc.cluster.api.misc.concurrent.ListHelper;
 import net.bytemc.cluster.api.network.packets.ServiceIdentifiyPacket;
+import net.bytemc.cluster.api.network.packets.services.CollectionServiceRequest;
+import net.bytemc.cluster.api.network.packets.services.CollectionServiceResponse;
 import net.bytemc.cluster.api.network.packets.services.SingletonServiceRequest;
 import net.bytemc.cluster.api.network.packets.services.SingletonServiceResponse;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +31,9 @@ public final class PacketPool {
                 // api packets
                 SingletonServiceResponse.class,
                 SingletonServiceRequest.class,
+
+                CollectionServiceRequest.class,
+                CollectionServiceResponse.class,
 
                 // event system basics
                 CallEventPacket.class,

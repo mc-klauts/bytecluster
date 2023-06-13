@@ -1,7 +1,7 @@
 package net.bytemc.cluster.api.event;
 
 import net.bytemc.cluster.api.logging.Logger;
-import net.bytemc.cluster.api.misc.ListHelper;
+import net.bytemc.cluster.api.misc.concurrent.ListHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;

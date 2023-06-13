@@ -25,6 +25,19 @@ public abstract class AbstractCloudService implements CloudService {
     public String getName() {
         return groupName + "-" + id;
     }
+
+    @Override
+    public String toString() {
+        return "AbstractCloudService{" +
+                "hostname='" + hostname + '\'' +
+                ", groupName='" + groupName + '\'' +
+                ", motd='" + motd + '\'' +
+                ", port=" + port +
+                ", id=" + id +
+                ", maxPlayers=" + maxPlayers +
+                ", state=" + state +
+                '}';
+    }
 }
 
 

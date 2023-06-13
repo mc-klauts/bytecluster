@@ -3,6 +3,7 @@ package net.bytemc.cluster.node.services;
 import io.netty5.channel.Channel;
 import lombok.Getter;
 import net.bytemc.cluster.api.misc.TaskFuture;
+import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 import net.bytemc.cluster.api.service.*;
 
@@ -39,37 +40,33 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Contract(pure = true)
     @Override
-    public @Nullable TaskFuture<Collection<CloudService>> findServicesAsync() {
-        return null;
-    }
-
-    @Contract(pure = true)
-    @Override
     public @NotNull Collection<CloudService> findServices() {
         return this.services.values();
     }
 
     @Override
+    public AsyncTask<Collection<CloudService>> findServicesAsync() {
+        return AsyncTask.completeWork(findServices());
+    }
+
+    @Override
     public Collection<CloudService> findServices(CloudServiceFilter filter) {
-        //todo
-        return null;
-    }
-
-    @Contract(pure = true)
-    @Override
-    public @Nullable TaskFuture<CloudService> findServiceAsync(String name) {
         return null;
     }
 
     @Override
-    public @NotNull CloudService findService(String name) {
-        return this.services.get(name);
+    public AsyncTask<Collection<CloudService>> findServicesAsync(CloudServiceFilter filter) {
+        return null;
     }
 
-    @Contract(pure = true)
+    @Override @Nullable
+    public CloudService findService(String name) {
+        return findServices().stream().filter(it -> it.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+    }
+
     @Override
-    public @Nullable TaskFuture<Collection<CloudService>> findServicesAsync(String group) {
-        return null;
+    public AsyncTask<CloudService> findServiceAsync(String name) {
+        return AsyncTask.completeWork(findService(name));
     }
 
     @Override
@@ -78,9 +75,18 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     }
 
     @Override
+    public AsyncTask<Collection<CloudService>> findServicesAsync(String group) {
+        return AsyncTask.completeWork(findServices(group));
+    }
+
+    @Override
     public Optional<CloudService> findFallback() {
-        //todo
         return Optional.empty();
+    }
+
+    @Override
+    public AsyncTask<Optional<CloudService>> findFallbackAsync() {
+        return AsyncTask.completeWork(findFallback());
     }
 
     @Override
@@ -112,7 +118,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     public void addServiceConnection(Channel channel, CloudService service) {
         this.serviceChannels.put(channel, service);
 
-        if(service instanceof LocalCloudService localCloudService) {
+        if (service instanceof LocalCloudService localCloudService) {
             localCloudService.setChannel(channel);
         }
     }

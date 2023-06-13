@@ -15,6 +15,7 @@ import net.bytemc.cluster.api.network.Packet;
 import net.bytemc.cluster.api.network.PacketPool;
 import net.bytemc.cluster.api.network.QueryPacket;
 import net.bytemc.cluster.api.network.packets.ServiceIdentifiyPacket;
+import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 
@@ -60,6 +61,17 @@ public final class Wrapper extends Cluster {
     }
 
     public void connect() {
-        this.client.connect().onComplete(s -> WrapperLauncher.getWrapperThread().start()).onCancel(s -> System.exit(-1));
+        this.client.connect().onComplete(s -> {
+            /*
+            Cluster.getInstance().getServiceProvider().findServicesAsync().whenComplete((cloudServices, throwable) -> {
+                for (CloudService service : cloudServices) {
+                    System.out.println(service.toString());
+                }
+            });
+
+             */
+
+            WrapperLauncher.getWrapperThread().start();
+        }).onCancel(s -> System.exit(-1));
     }
 }

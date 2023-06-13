@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.bytemc.bytecluster.wrapper.loader.ApplicationExternalClassLoader;
 import net.bytemc.cluster.api.Cluster;
+import net.bytemc.cluster.api.service.CloudService;
 
 import java.lang.instrument.Instrumentation;
 import java.nio.file.Files;
@@ -50,6 +51,12 @@ public class WrapperLauncher {
             instrumentation.appendToSystemClassLoaderSearch(new JarFile(applicationFile.toFile()));
             final var mainClass = Class.forName(main, true, classLoader);
             wrapperThread = new Thread(() -> {
+
+
+                for (CloudService service : Cluster.getInstance().getServiceProvider().findServices()) {
+                    System.out.println(service.toString());
+                }
+
                 try {
                     mainClass.getMethod("main", String[].class).invoke(null, (Object) arguments.toArray(new String[0]));
                 } catch (Exception exception) {

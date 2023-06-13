@@ -1,15 +1,9 @@
 package net.bytemc.bytecluster.wrapper.network;
 
 import io.netty5.channel.ChannelHandlerContext;
-import io.netty5.channel.SimpleChannelInboundHandler;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import net.bytemc.cluster.api.network.Packet;
-import net.bytemc.cluster.api.network.QueryPacket;
 import net.bytemc.cluster.api.network.codec.ClusterChannelInboundHandler;
 import net.bytemc.cluster.api.network.packets.ServiceIdentifiyPacket;
-
-import java.io.IOException;
 
 @RequiredArgsConstructor
 public final class NettyNetworkClientHandler extends ClusterChannelInboundHandler {

@@ -22,4 +22,5 @@
 - [ ] queue check
 - [ ] memory calculation
 - [ ] static services
+- [ ] message channel
 - [ ] dependency loader
