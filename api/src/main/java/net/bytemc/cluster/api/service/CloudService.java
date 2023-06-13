@@ -34,4 +34,5 @@ public interface CloudService {
     default TaskFuture<CloudServiceGroup> getGroupAsync() {
         return TaskFuture.instantly(getGroup());
     }
+
 }

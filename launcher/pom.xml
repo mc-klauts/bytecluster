@@ -31,6 +31,12 @@
                     <include>wrapper.jar</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>${basedir}/../plugin/target</directory>
+                <includes>
+                    <include>bytecluster-plugin.jar</include>
+                </includes>
+            </resource>
         </resources>
         <plugins>
             <plugin>

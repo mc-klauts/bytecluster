@@ -21,3 +21,5 @@
 - [ ] auto forwarding-secret
 - [ ] queue check
 - [ ] memory calculation
+- [ ] static services
+- [ ] dependency loader

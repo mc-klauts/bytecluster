@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.bytemc.cluster.api.service.filter.CloudServiceFilter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,6 +47,12 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     @Override
     public @NotNull Collection<CloudService> findServices() {
         return this.services.values();
+    }
+
+    @Override
+    public Collection<CloudService> findServices(CloudServiceFilter filter) {
+        //todo
+        return null;
     }
 
     @Contract(pure = true)

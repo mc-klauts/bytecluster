@@ -9,6 +9,7 @@ import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceFactory;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 import net.bytemc.cluster.api.service.CloudServiceState;
+import net.bytemc.cluster.api.service.filter.CloudServiceFilter;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -17,11 +18,19 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Override
     public TaskFuture<Collection<CloudService>> findServicesAsync() {
+        //todo
         return null;
     }
 
     @Override
     public Collection<CloudService> findServices() {
+        //todo
+        return null;
+    }
+
+    @Override
+    public Collection<CloudService> findServices(CloudServiceFilter filter) {
+        //todo
         return null;
     }
 
@@ -34,26 +43,31 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Override
     public CloudService findService(String name) {
+        //todo
         return null;
     }
 
     @Override
     public TaskFuture<Collection<CloudService>> findServicesAsync(String group) {
+        //todo
         return null;
     }
 
     @Override
     public Collection<CloudService> findServices(String group) {
+        //todo
         return null;
     }
 
     @Override
     public Optional<CloudService> findFallback() {
+        //todo
         return Optional.empty();
     }
 
     @Override
     public CloudServiceFactory getFactory() {
+        //todo
         return null;
     }
 
