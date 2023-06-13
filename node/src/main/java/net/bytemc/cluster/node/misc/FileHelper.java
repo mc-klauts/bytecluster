@@ -5,7 +5,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.function.Function;
 
 public final class FileHelper {
 
@@ -34,6 +36,27 @@ public final class FileHelper {
                     Files.delete(path);
                 } catch (IOException ignore) {}
             });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void replaceLine(final Path file, final Function<String, String> replace) {
+        final var lines = new ArrayList<String>();
+
+        try (final var bufferedReader = Files.newBufferedReader(file)) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                lines.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (final var writer = Files.newBufferedWriter(file)) {
+            for (final var line : lines) {
+                writer.write(replace.apply(line) + "\n");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

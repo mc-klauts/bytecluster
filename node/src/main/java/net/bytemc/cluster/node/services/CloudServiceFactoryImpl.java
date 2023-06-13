@@ -7,10 +7,12 @@ import net.bytemc.cluster.api.service.CloudServiceFactory;
 import net.bytemc.cluster.api.service.CloudServiceState;
 import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.node.misc.FileHelper;
+import net.bytemc.cluster.node.misc.VelocityForwardingSecretHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,14 +55,17 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
     public void start(@NotNull CloudService service) {
 
         if (service instanceof LocalCloudService cloudService) {
+
             var nodePath = Node.getInstance().getRuntimeConfiguration().getNodePath();
+            var serviceDirectory = cloudService.getDirectory();
+
             FileHelper.createDirectoryIfNotExists(nodePath.getServerRunningPath().resolve(service.getName()));
 
             try {
                 Files.copy(service.getGroup().getGroupType().getPath(nodePath.getStoragePath()), service.getGroup().getGroupType().getPath(((LocalCloudService) service).getDirectory()));
 
-                FileHelper.createDirectoryIfNotExists(cloudService.getDirectory().resolve("plugins"));
-                Files.copy(nodePath.getStoragePath().resolve("bytecluster-plugin.jar"), cloudService.getDirectory().resolve("plugins").resolve("bytecluster-plugin.jar"));
+                FileHelper.createDirectoryIfNotExists(serviceDirectory.resolve("plugins"));
+                Files.copy(nodePath.getStoragePath().resolve("bytecluster-plugin.jar"), serviceDirectory.resolve("plugins").resolve("bytecluster-plugin.jar"));
             } catch (IOException e) {
                 Logger.error("Cannot copy service runtime file. Service is now closed.", e);
                 cloudService.setState(CloudServiceState.STOPPED);
@@ -68,14 +73,31 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
                 return;
             }
 
-            Logger.info("Told local node to start service " + cloudService.getName());
+            if (cloudService.getGroup().getGroupType() == CloudGroupType.VELOCITY) {
+                // copy important service files
+                // velocity.toml
+                final var velocityFile = serviceDirectory.resolve("velocity.toml");
+                if (Files.notExists(velocityFile)) {
+                    try (final var inputStream = this.getClass().getClassLoader().getResourceAsStream("velocity.toml")) {
+                        assert inputStream != null;
+                        Files.copy(inputStream, velocityFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
 
+                // change port in velocity configuration
+                FileHelper.replaceLine(velocityFile, line -> line.startsWith("bind = ") ? "bind = \"0.0.0.0:" + service.getPort() + "\"" : line);
+                VelocityForwardingSecretHelper.generate(serviceDirectory);
+            }
+
+            Logger.info("Told local node to start service " + cloudService.getName());
 
             try {
                 var process = new ProcessBuilder(arguments(cloudService))
-                        .redirectError(cloudService.getDirectory().resolve("wrapper.error").toFile())
-                        .redirectOutput(cloudService.getDirectory().resolve("wrapper.output").toFile())
-                        .directory(cloudService.getDirectory().toFile())
+                        .redirectError(serviceDirectory.resolve("wrapper.error").toFile())
+                        .redirectOutput(serviceDirectory.resolve("wrapper.output").toFile())
+                        .directory(serviceDirectory.toFile())
                         .start();
                 cloudService.setProcess(process);
             } catch (IOException e) {
