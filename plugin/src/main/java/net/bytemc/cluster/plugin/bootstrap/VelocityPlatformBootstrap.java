@@ -8,6 +8,7 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.bytemc.cluster.api.Cluster;
+import net.bytemc.cluster.api.service.filter.CloudServiceFilter;
 import net.bytemc.cluster.plugin.velocity.VelocityListener;
 import net.bytemc.cluster.plugin.velocity.VelocityProxyServerListener;
 
@@ -30,8 +31,8 @@ public final class VelocityPlatformBootstrap {
         this.proxyServer.getAllServers().forEach(server -> this.proxyServer.unregisterServer(server.getServerInfo()));
 
         //register all default fallbacks
-        for (var service : Cluster.getInstance().getServiceProvider().findServices()) {
-            this.proxyServer.registerServer(new ServerInfo(service.getName(), new InetSocketAddress("127.0.0.1", service.getPort())));
+        for (var service : Cluster.getInstance().getServiceProvider().findServices(CloudServiceFilter.NON_PROXIES)) {
+            this.proxyServer.registerServer(new ServerInfo(service.getName(), new InetSocketAddress(service.getHostname(), service.getPort())));
         }
     }
 }

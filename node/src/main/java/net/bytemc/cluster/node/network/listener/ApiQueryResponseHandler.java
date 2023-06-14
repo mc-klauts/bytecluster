@@ -21,10 +21,11 @@ public final class ApiQueryResponseHandler {
                 case ALL -> {
                     return new CollectionServiceResponse(Cluster.getInstance().getServiceProvider().findServices());
                 }
+                case NON_PROXIES -> {
+                    return new CollectionServiceResponse(Cluster.getInstance().getServiceProvider().findServices().stream().filter(it -> !it.getGroup().getGroupType().isProxy()).toList());
+                }
             }
             return null;
         });
-
-
     }
 }

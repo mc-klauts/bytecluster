@@ -6,10 +6,7 @@ import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 import net.bytemc.cluster.api.service.*;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.bytemc.cluster.api.service.filter.CloudServiceFilter;
@@ -58,7 +55,8 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
         return null;
     }
 
-    @Override @Nullable
+    @Override
+    @Nullable
     public CloudService findService(String name) {
         return findServices().stream().filter(it -> it.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
@@ -80,7 +78,11 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Override
     public Optional<CloudService> findFallback() {
-        return Optional.empty();
+        return findServices()
+                .stream()
+                .filter(it -> it.getState() == CloudServiceState.ONLINE && it.getGroup().isFallback())
+                .sorted((o1, o2) -> Integer.valueOf(o1.getPlayers()).compareTo(o2.getPlayers()))
+                .findFirst();
     }
 
     @Override
