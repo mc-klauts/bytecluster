@@ -9,6 +9,7 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.bytemc.cluster.api.command.annotations.CommandArgument;
+import net.bytemc.cluster.api.command.argument.ArgumentTransformerFactory;
 import net.bytemc.cluster.api.command.interfaces.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,8 +36,7 @@ public final class IndexedCommandMethod {
             if (commandArgument == null) {
                 return;
             }
-            objects[i + 1] = commandArgument.transformer().getArgumentTransformer()
-                .transform(writtenArgument);
+            objects[i + 1] = ArgumentTransformerFactory.getOrCreate(commandArgument.transformer()).transform(writtenArgument);
         }
 
         if (objects.length < this.method.getParameters().length - 1) {

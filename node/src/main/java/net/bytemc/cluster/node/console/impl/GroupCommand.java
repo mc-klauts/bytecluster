@@ -4,7 +4,10 @@ import java.util.Collection;
 import net.bytemc.cluster.api.command.annotations.Command;
 import net.bytemc.cluster.api.command.annotations.CommandArgument;
 import net.bytemc.cluster.api.command.annotations.SubCommand;
-import net.bytemc.cluster.api.command.argument.ArgumentTransformerType;
+import net.bytemc.cluster.api.command.argument.transformers.BooleanArgumentTransformer;
+import net.bytemc.cluster.api.command.argument.transformers.CloudGroupTypeTransformer;
+import net.bytemc.cluster.api.command.argument.transformers.IntArgumentTransformer;
+import net.bytemc.cluster.api.command.argument.transformers.StringArgumentTransformer;
 import net.bytemc.cluster.api.command.interfaces.CommandSender;
 import net.bytemc.cluster.api.service.CloudGroupType;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
@@ -36,10 +39,10 @@ public final class GroupCommand {
     @SubCommand(name = "create", example = "group create <name> <group_type> <memory> <fallback>")
     private void createGroup(
         CommandSender commandSender,
-        @CommandArgument(name = "name", transformer = ArgumentTransformerType.STRING) String name,
-        @CommandArgument(name = "group_type", transformer = ArgumentTransformerType.CLOUD_GROUP_TYPE) CloudGroupType type,
-        @CommandArgument(name = "memory", transformer = ArgumentTransformerType.INT) int memory,
-        @CommandArgument(name = "fallback", transformer = ArgumentTransformerType.BOOLEAN) boolean fallback
+        @CommandArgument(name = "name", transformer = StringArgumentTransformer.class) String name,
+        @CommandArgument(name = "group_type", transformer = CloudGroupTypeTransformer.class) CloudGroupType type,
+        @CommandArgument(name = "memory", transformer = IntArgumentTransformer.class) int memory,
+        @CommandArgument(name = "fallback", transformer = BooleanArgumentTransformer.class) boolean fallback
     ) {
         final CloudServiceGroupProvider cloudServiceGroupProvider = Node.getInstance()
             .getServiceGroupProvider();
@@ -56,7 +59,7 @@ public final class GroupCommand {
     @SubCommand(name = "remove", example = "group remove <name>")
     private void removeGroup(
         @NotNull CommandSender commandSender,
-        @CommandArgument(name = "name", transformer = ArgumentTransformerType.STRING) String name
+        @CommandArgument(name = "name", transformer = StringArgumentTransformer.class) String name
     ) {
         final CloudServiceGroupProvider cloudServiceGroupProvider = Node.getInstance()
             .getServiceGroupProvider();
@@ -72,7 +75,7 @@ public final class GroupCommand {
     @SubCommand(name = "info", example = "group info <name>")
     private void groupInfo(
         CommandSender commandSender,
-        @CommandArgument(name = "name", transformer = ArgumentTransformerType.STRING) String name
+        @CommandArgument(name = "name", transformer = StringArgumentTransformer.class) String name
     ) {
         final CloudServiceGroupProvider cloudServiceGroupProvider = Node.getInstance()
             .getServiceGroupProvider();
