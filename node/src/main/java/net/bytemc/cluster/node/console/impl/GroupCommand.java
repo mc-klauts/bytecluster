@@ -68,4 +68,26 @@ public final class GroupCommand {
         cloudServiceGroupProvider.removeGroup(name);
         commandSender.sendMessage("Successfully removed group " + name);
     }
+
+    @SubCommand(name = "info", example = "group info <name>")
+    private void groupInfo(
+        CommandSender commandSender,
+        @CommandArgument(name = "name", transformer = ArgumentTransformerType.STRING) String name
+    ) {
+        final CloudServiceGroupProvider cloudServiceGroupProvider = Node.getInstance()
+            .getServiceGroupProvider();
+        if (!cloudServiceGroupProvider.exists(name)) {
+            commandSender.sendMessage("There is no group with this name");
+            return;
+        }
+
+        final CloudServiceGroup group = cloudServiceGroupProvider.findGroup(name);
+        commandSender.sendMessage("Information about group " + name);
+        commandSender.sendMessage("- Name: " + group.getName());
+        commandSender.sendMessage("- Type: " + group.getGroupType());
+        commandSender.sendMessage("- Max. memory" + group.getMaxMemory());
+        commandSender.sendMessage("- Min. online count" + group.getMinOnlineCount());
+        commandSender.sendMessage("- Max. online count" + group.getMaxOnlineCount());
+        commandSender.sendMessage("- Fallback" + group.isFallback());
+    }
 }
