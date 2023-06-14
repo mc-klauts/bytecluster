@@ -39,7 +39,7 @@ public final class IndexedCommandMethod {
             objects[i + 1] = ArgumentTransformerFactory.getOrCreate(commandArgument.transformer()).transform(writtenArgument);
         }
 
-        if (objects.length < this.method.getParameters().length - 1) {
+        if (objects.length <= this.method.getParameters().length - 1) {
             commandSender.sendMessage(this.example);
             return;
         }

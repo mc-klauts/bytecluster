@@ -88,9 +88,9 @@ public final class GroupCommand {
         commandSender.sendMessage("Information about group " + name);
         commandSender.sendMessage("- Name: " + group.getName());
         commandSender.sendMessage("- Type: " + group.getGroupType());
-        commandSender.sendMessage("- Max. memory" + group.getMaxMemory());
-        commandSender.sendMessage("- Min. online count" + group.getMinOnlineCount());
-        commandSender.sendMessage("- Max. online count" + group.getMaxOnlineCount());
-        commandSender.sendMessage("- Fallback" + group.isFallback());
+        commandSender.sendMessage("- Max. memory: " + group.getMaxMemory());
+        commandSender.sendMessage("- Min. online count: " + group.getMinOnlineCount());
+        commandSender.sendMessage("- Max. online count: " + group.getMaxOnlineCount());
+        commandSender.sendMessage("- Fallback: " + group.isFallback());
     }
 }
