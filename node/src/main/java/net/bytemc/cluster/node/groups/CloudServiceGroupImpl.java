@@ -2,11 +2,13 @@ package net.bytemc.cluster.node.groups;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import net.bytemc.cluster.api.service.CloudGroupType;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 
 @Getter
 @AllArgsConstructor
+@ToString
 public final class CloudServiceGroupImpl implements CloudServiceGroup {
 
     private String name;
