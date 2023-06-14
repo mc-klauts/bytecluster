@@ -16,28 +16,17 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public final class IndexedCommandMethod {
 
+    private final Map<Integer, CommandArgument> commandArguments = new HashMap<>();
     private final Object ownerClass;
     private final Method method;
     private final String callName;
     private final String example;
-    private final Map<Integer, CommandArgument> commandArguments = new HashMap<>();
-
-    public void loadArguments() {
-        for (int i = 1; i < this.method.getParameters().length; i++) {
-            final Parameter parameter = this.method.getParameters()[i];
-            if (parameter.isAnnotationPresent(CommandArgument.class)) {
-                final CommandArgument commandArgumentAnnotation = parameter.getAnnotation(
-                    CommandArgument.class);
-                this.commandArguments.put(i - 1, commandArgumentAnnotation);
-            }
-        }
-    }
 
     public void invoke(
         CommandSender commandSender,
         @NotNull List<String> arguments
     ) {
-        Object[] objects = new Object[arguments.toArray().length + 1];
+        final Object[] objects = new Object[arguments.toArray().length + 1];
         objects[0] = commandSender;
 
         for (int i = 0; i < arguments.size(); i++) {
@@ -59,6 +48,17 @@ public final class IndexedCommandMethod {
             this.method.invoke(ownerClass, objects);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void loadArguments() {
+        for (int i = 1; i < this.method.getParameters().length; i++) {
+            final Parameter parameter = this.method.getParameters()[i];
+            if (parameter.isAnnotationPresent(CommandArgument.class)) {
+                final CommandArgument commandArgumentAnnotation = parameter.getAnnotation(
+                    CommandArgument.class);
+                this.commandArguments.put(i - 1, commandArgumentAnnotation);
+            }
         }
     }
 }

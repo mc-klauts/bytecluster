@@ -1,6 +1,7 @@
 package net.bytemc.cluster.node.console;
 
 import lombok.AllArgsConstructor;
+import net.bytemc.cluster.api.command.interfaces.CommandSender;
 import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.node.console.command.SimpleCommandSender;
 import org.fusesource.jansi.Ansi;
@@ -12,6 +13,7 @@ import org.jline.reader.UserInterruptException;
 public final class ConsoleThread extends Thread {
 
     private ConsoleTerminal terminal;
+    private final CommandSender commandSender = new SimpleCommandSender();
 
     @Override
     public void run() {
@@ -21,7 +23,7 @@ public final class ConsoleThread extends Thread {
         String line;
         while (!Thread.currentThread().isInterrupted() && (line = this.readLine()) != null) {
             this.terminal.writeEmpty(() -> Ansi.ansi().reset().cursorUp(1).eraseLine().toString());
-            Node.getInstance().getCommandExecutor().tryExecution(new SimpleCommandSender(), line);
+            Node.getInstance().getCommandExecutor().tryExecution(this.commandSender, line);
         }
     }
 

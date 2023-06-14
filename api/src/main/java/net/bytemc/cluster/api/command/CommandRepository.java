@@ -8,14 +8,14 @@ import org.jetbrains.annotations.NotNull;
 
 public final class CommandRepository {
 
-    @Getter private final Map<Class<?>, InternalCommand> commandMap = new HashMap<>();
+    @Getter
+    private final Map<Class<?>, InternalCommand> commandMap = new HashMap<>();
 
     @SneakyThrows
     public void registerCommand(@NotNull Class<?> clazz) {
         final Object clazzInstance = clazz.newInstance();
         final InternalCommand command = new InternalCommand(clazzInstance);
-
-        command.initialize();
+        command.index();
         this.commandMap.put(clazz, command);
     }
 

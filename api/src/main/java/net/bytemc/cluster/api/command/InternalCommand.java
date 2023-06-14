@@ -38,20 +38,18 @@ public final class InternalCommand {
         }
 
         final List<String> arguments = new ArrayList<>(List.of(splitText));
-        final String callArg = arguments.get(0);
-        arguments.remove(0);
+        final String callArg = arguments.remove(0);
         if (!this.callNames.contains(callArg)) {
             return false;
         }
-        if (this.commandMethodMap.isEmpty()) {
+        if (this.commandMethodMap.isEmpty() || splitText.length < 2) {
             if (this.defaultMethod != null) {
                 this.defaultMethod.invoke(this.commandInstance, commandSender);
             }
         }
 
         if (splitText.length >= 2) {
-            final String methodCall = arguments.get(0);
-            arguments.remove(0);
+            final String methodCall = arguments.remove(0);
             final IndexedCommandMethod indexedCommandMethod = this.commandMethodMap.get(methodCall);
             if (indexedCommandMethod == null) {
                 this.sendHelpTopic(commandSender);
@@ -63,17 +61,20 @@ public final class InternalCommand {
         return true;
     }
 
-    public void sendHelpTopic(CommandSender commandSender) {
+    private void sendHelpTopic(CommandSender commandSender) {
         if (this.commandInstance.getClass().isAnnotationPresent(CommandHelpTopic.class)) {
             final CommandHelpTopic commandHelpTopicAnnotation = this.commandInstance.getClass()
                 .getAnnotation(CommandHelpTopic.class);
+
             for (String message : commandHelpTopicAnnotation.messages()) {
                 commandSender.sendMessage(message);
             }
+        } else {
+            commandSender.sendMessage("No help for this command.");
         }
     }
 
-    public void initialize() {
+    public void index() {
         if (commandInstance == null) {
             return;
         }
