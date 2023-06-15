@@ -23,12 +23,12 @@ public final class ClusterLauncher {
             }
 
             var classLoader = ClassLoader.getSystemClassLoader();
-            Files.copy(Objects.requireNonNull(classLoader.getResourceAsStream("node.jar")), path.resolve("node.jar"), StandardCopyOption.REPLACE_EXISTING);
-            Files.copy(Objects.requireNonNull(classLoader.getResourceAsStream("wrapper.jar")), path.resolve("wrapper.jar"), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(Objects.requireNonNull(classLoader.getResourceAsStream("bytecluster-node.jar")), path.resolve("bytecluster-node.jar"), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(Objects.requireNonNull(classLoader.getResourceAsStream("bytecluster-wrapper.jar")), path.resolve("bytecluster-wrapper.jar"), StandardCopyOption.REPLACE_EXISTING);
             Files.copy(Objects.requireNonNull(classLoader.getResourceAsStream("bytecluster-plugin.jar")), path.resolve("bytecluster-plugin.jar"), StandardCopyOption.REPLACE_EXISTING);
 
 
-            BoostrapUrlLoader loader = new BoostrapUrlLoader(new URL[]{path.resolve("node.jar").toUri().toURL()}, classLoader);
+            BoostrapUrlLoader loader = new BoostrapUrlLoader(new URL[]{path.resolve("bytecluster-node.jar").toUri().toURL()}, classLoader);
 
             Thread.currentThread().setContextClassLoader(loader);
             loader.loadClass("net.bytemc.cluster.node.NodeLauncher").getMethod("main", String[].class).invoke(null, (Object) args);

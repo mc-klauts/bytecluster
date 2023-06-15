@@ -27,7 +27,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     @Override
     public AsyncTask<Collection<CloudService>> findServicesAsync() {
         var tasks = new AsyncTask<Collection<CloudService>>();
-        Wrapper.getInstance().sendQueryPacket(new CollectionServiceRequest(CollectionServiceRequest.Filter.ALL), CollectionServiceResponse.class, (packet) -> {
+        Wrapper.getInstance().sendQueryPacket(new CollectionServiceRequest(CloudServiceFilter.ALL), CollectionServiceResponse.class, (packet) -> {
             tasks.complete(packet.getServices());
         });
         return tasks;
@@ -41,8 +41,9 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     @Override
     @NotNull
     public AsyncTask<Collection<CloudService>> findServicesAsync(CloudServiceFilter filter) {
-        //todo
-        return null;
+        var tasks = new AsyncTask<Collection<CloudService>>();
+        Wrapper.getInstance().sendQueryPacket(new CollectionServiceRequest(filter), CollectionServiceResponse.class, (packet) -> tasks.complete(packet.getServices()));
+        return tasks;
     }
 
 

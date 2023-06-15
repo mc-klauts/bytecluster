@@ -78,7 +78,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>node</finalName>
+                    <finalName>bytecluster-node</finalName>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <shadedArtifactAttached>true</shadedArtifactAttached>
                     <filters>

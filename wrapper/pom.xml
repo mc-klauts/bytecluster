@@ -68,7 +68,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>wrapper</finalName>
+                    <finalName>bytecluster-wrapper</finalName>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <shadedArtifactAttached>true</shadedArtifactAttached>
                 </configuration>

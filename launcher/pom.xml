@@ -22,13 +22,13 @@
             <resource>
                 <directory>${basedir}/../node/target</directory>
                 <includes>
-                    <include>node.jar</include>
+                    <include>bytecluster-node.jar</include>
                 </includes>
             </resource>
             <resource>
                 <directory>${basedir}/../wrapper/target</directory>
                 <includes>
-                    <include>wrapper.jar</include>
+                    <include>bytecluster-wrapper.jar</include>
                 </includes>
             </resource>
             <resource>

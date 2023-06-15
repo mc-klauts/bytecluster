@@ -35,7 +35,8 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
 
     static {
         try {
-            WRAPPER_MAIN_CLASS = new JarInputStream(Files.newInputStream(Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath().resolve("wrapper.jar"))).getManifest().getMainAttributes().getValue("Main-Class");
+            WRAPPER_MAIN_CLASS = new JarInputStream(Files.newInputStream(Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath().resolve("bytecluster-wrapper.jar")))
+                    .getManifest().getMainAttributes().getValue("Main-Class");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -141,7 +142,7 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
     }
 
     private @NotNull List<String> arguments(@NotNull LocalCloudService service) {
-        final var wrapper = Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath().resolve("wrapper.jar").toAbsolutePath();
+        final var wrapper = Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath().resolve("bytecluster-wrapper.jar").toAbsolutePath();
         final var group = service.getGroup();
         final var arguments = new ArrayList<String>();
         arguments.add("java");
