@@ -3,16 +3,9 @@ package net.bytemc.cluster.api.command.argument.transformers;
 import net.bytemc.cluster.api.command.argument.ArgumentTransformer;
 import net.bytemc.cluster.api.service.CloudGroupType;
 
-public final class CloudGroupTypeTransformer implements
-    ArgumentTransformer<CloudGroupType> {
+import java.lang.reflect.Parameter;
 
-    @Override
-    public CloudGroupType transform(String input) {
-        if (!this.isValid(input)) {
-            return CloudGroupType.VELOCITY;
-        }
-        return CloudGroupType.valueOf(input.toUpperCase());
-    }
+public final class CloudGroupTypeTransformer implements ArgumentTransformer<CloudGroupType> {
 
     private boolean isValid(String input) {
         for (CloudGroupType value : CloudGroupType.values()) {
@@ -21,5 +14,13 @@ public final class CloudGroupTypeTransformer implements
             }
         }
         return false;
+    }
+
+    @Override
+    public CloudGroupType transform(Parameter parameter, String input) {
+        if (!this.isValid(input)) {
+            return CloudGroupType.VELOCITY;
+        }
+        return CloudGroupType.valueOf(input.toUpperCase());
     }
 }
