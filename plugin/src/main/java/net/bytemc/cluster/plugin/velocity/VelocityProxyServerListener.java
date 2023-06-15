@@ -4,7 +4,6 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import lombok.AllArgsConstructor;
 import net.bytemc.cluster.api.event.SubscribeEvent;
 import net.bytemc.cluster.api.event.services.CloudServiceConnectEvent;
-import net.bytemc.cluster.api.event.services.CloudServiceShutdownEvent;
 
 @AllArgsConstructor
 public final class VelocityProxyServerListener {
@@ -13,8 +12,6 @@ public final class VelocityProxyServerListener {
 
     @SubscribeEvent
     public void handleCloudServiceConnect(CloudServiceConnectEvent event) {
-        System.out.println("#######");
-        System.out.println(event.getService().getName());
         //todo
         /*
         Cluster.getInstance().getServiceGroupProvider().getGroupAsync(event.getService().group()).whenComplete((serviceGroup, throwable) -> {

@@ -25,9 +25,13 @@ public interface CloudServiceProvider {
 
     AsyncTask<Collection<CloudService>> findServicesAsync(String group);
 
+    Optional<String> findFallbackId();
+
+    AsyncTask<Optional<String>> findFallbackIdAsync();
+
     Optional<CloudService> findFallback();
 
-    AsyncTask<Optional<CloudService> >findFallbackAsync();
+    AsyncTask<Optional<CloudService>> findFallbackAsync();
 
     CloudServiceFactory getFactory();
 

@@ -1,10 +1,8 @@
 package net.bytemc.cluster.node.network.listener;
 
 import net.bytemc.cluster.api.Cluster;
-import net.bytemc.cluster.api.network.packets.services.CollectionServiceRequest;
-import net.bytemc.cluster.api.network.packets.services.CollectionServiceResponse;
-import net.bytemc.cluster.api.network.packets.services.SingletonServiceRequest;
-import net.bytemc.cluster.api.network.packets.services.SingletonServiceResponse;
+import net.bytemc.cluster.api.network.packets.services.*;
+import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.node.Node;
 
 public final class ApiQueryResponseHandler {
@@ -27,5 +25,10 @@ public final class ApiQueryResponseHandler {
             }
             return null;
         });
+
+        pool.addQueryModification(FindFallbackServiceRequest.class, (packet) -> {
+            return new FindFallbackServiceResponse(Cluster.getInstance().getServiceProvider().findFallback().stream().map(CloudService::getName).findFirst());
+        });
+
     }
 }

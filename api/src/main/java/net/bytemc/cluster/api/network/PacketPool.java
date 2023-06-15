@@ -5,10 +5,7 @@ import net.bytemc.cluster.api.event.CallEventPacket;
 import net.bytemc.cluster.api.event.SubscribeEventPacket;
 import net.bytemc.cluster.api.misc.concurrent.ListHelper;
 import net.bytemc.cluster.api.network.packets.ServiceIdentifiyPacket;
-import net.bytemc.cluster.api.network.packets.services.CollectionServiceRequest;
-import net.bytemc.cluster.api.network.packets.services.CollectionServiceResponse;
-import net.bytemc.cluster.api.network.packets.services.SingletonServiceRequest;
-import net.bytemc.cluster.api.network.packets.services.SingletonServiceResponse;
+import net.bytemc.cluster.api.network.packets.services.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -34,6 +31,9 @@ public final class PacketPool {
 
                 CollectionServiceRequest.class,
                 CollectionServiceResponse.class,
+
+                FindFallbackServiceRequest.class,
+                FindFallbackServiceResponse.class,
 
                 // event system basics
                 CallEventPacket.class,

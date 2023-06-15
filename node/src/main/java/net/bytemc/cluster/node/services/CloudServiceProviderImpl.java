@@ -77,12 +77,21 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     }
 
     @Override
+    public Optional<String> findFallbackId() {
+        return findFallback().stream().map(CloudService::getName).findFirst();
+    }
+
+    @Override
+    public AsyncTask<Optional<String>> findFallbackIdAsync() {
+        return AsyncTask.completeWork(findFallbackId());
+    }
+
+    @Override
     public Optional<CloudService> findFallback() {
         return findServices()
                 .stream()
                 .filter(it -> it.getState() == CloudServiceState.ONLINE && it.getGroup().isFallback())
-                .sorted((o1, o2) -> Integer.valueOf(o1.getPlayers()).compareTo(o2.getPlayers()))
-                .findFirst();
+                .min(Comparator.comparingInt(CloudService::getPlayers));
     }
 
     @Override
