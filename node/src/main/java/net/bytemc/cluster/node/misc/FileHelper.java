@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.function.Function;
@@ -57,6 +58,28 @@ public final class FileHelper {
             for (final var line : lines) {
                 writer.write(replace.apply(line) + "\n");
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void copyDirectory(final @NotNull Path from, final @NotNull Path to) {
+        try (final var pathStream = Files.walk(from)) {
+            pathStream.forEach(path -> {
+                final var resolvedTo = to.resolve(from.relativize(path));
+
+                try {
+                    if (Files.isDirectory(path)) {
+                        if (!Files.exists(resolvedTo)) {
+                            Files.createDirectory(resolvedTo);
+                        }
+                    } else {
+                        Files.copy(path, resolvedTo, StandardCopyOption.REPLACE_EXISTING);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }

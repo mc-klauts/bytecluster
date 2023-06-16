@@ -61,6 +61,11 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
 
             FileHelper.createDirectoryIfNotExists(nodePath.getServerRunningPath().resolve(service.getName()));
 
+            // copy template before copy runtime files
+            Node.getInstance().getTemplateHandler().copyTemplate("GLOBAL", cloudService);
+            Node.getInstance().getTemplateHandler().copyTemplate("EVERY_" + (cloudService.getGroup().getGroupType().isProxy() ? "PROXY" : "SERVER"), cloudService);
+            Node.getInstance().getTemplateHandler().copyTemplate(cloudService.getGroupName(), cloudService);
+
             try {
                 Files.copy(service.getGroup().getGroupType().getPath(nodePath.getStoragePath()), service.getGroup().getGroupType().getPath(((LocalCloudService) service).getDirectory()));
 

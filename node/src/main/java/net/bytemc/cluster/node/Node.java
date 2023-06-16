@@ -20,6 +20,7 @@ import net.bytemc.cluster.node.event.CloudEventHandlerImpl;
 import net.bytemc.cluster.node.groups.CloudServiceGroupProviderImpl;
 import net.bytemc.cluster.node.logger.NodeLogger;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
+import net.bytemc.cluster.node.templates.ServiceTemplateHandler;
 
 import java.nio.file.Path;
 
@@ -43,6 +44,7 @@ public final class Node extends Cluster {
     private final ClusterNetwork clusterNetwork;
 
     private final EventHandler eventHandler;
+    private final ServiceTemplateHandler templateHandler;
 
     public Node() {
         instance = this;
@@ -51,8 +53,8 @@ public final class Node extends Cluster {
         commandRepository.registerCommand(ClearScreenCommand.class);
         commandRepository.registerCommand(ShutdownCommand.class);
         commandRepository.registerCommand(GroupCommand.class);
-        this.commandExecutor = new CommandExecutor();
 
+        this.commandExecutor = new CommandExecutor();
         this.logger = new NodeLogger();
 
         this.eventHandler = new CloudEventHandlerImpl();
@@ -65,6 +67,7 @@ public final class Node extends Cluster {
 
         Logger.info("Loading following groups: " + String.join(", ", serviceGroupProvider.findGroups().stream().map(it -> it.getName()).toList()));
 
+        this.templateHandler = new ServiceTemplateHandler();
         this.serviceProvider = new CloudServiceProviderImpl(this.serviceGroupProvider);
         this.clusterNetwork = new ClusterNetwork(this.runtimeConfiguration);
 

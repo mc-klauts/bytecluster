@@ -7,8 +7,10 @@ import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.network.Packet;
 import net.bytemc.cluster.api.network.codec.ClusterChannelInboundHandler;
 import net.bytemc.cluster.api.network.packets.ServiceIdentifiyPacket;
+import net.bytemc.cluster.api.service.CloudServiceState;
 import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
+import net.bytemc.cluster.node.services.LocalCloudService;
 
 public final class NettyNetworkHandler extends ClusterChannelInboundHandler {
 
@@ -29,6 +31,11 @@ public final class NettyNetworkHandler extends ClusterChannelInboundHandler {
                 return;
             }
             serviceHandler.addServiceConnection(ctx.channel(), service);
+
+            if(service instanceof LocalCloudService localCloudService) {
+                localCloudService.setState(CloudServiceState.ONLINE);
+            }
+
             Logger.info("Service " + serviceIdentifiyPacket.getId() + " is online and connected to the node.");
 
             // call on all instances of the node

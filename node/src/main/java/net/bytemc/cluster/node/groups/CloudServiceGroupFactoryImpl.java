@@ -3,6 +3,7 @@ package net.bytemc.cluster.node.groups;
 import java.util.Objects;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudServiceGroupFactory;
+import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.node.configuration.ConfigurationProvider;
 
 import java.nio.file.Files;
@@ -35,6 +36,9 @@ public final class CloudServiceGroupFactoryImpl implements CloudServiceGroupFact
             return false;
         }
         ConfigurationProvider.write(GROUPS_STORAGE_PATH.resolve(cloudServiceGroup.getName()), cloudServiceGroup);
+
+        //create template folder for new group
+        Node.getInstance().getTemplateHandler().createTemplate(cloudServiceGroup.getName());
         return true;
     }
 
