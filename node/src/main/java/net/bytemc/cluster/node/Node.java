@@ -5,6 +5,7 @@ import lombok.Setter;
 import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.command.CommandExecutor;
 import net.bytemc.cluster.api.command.CommandRepository;
+import net.bytemc.cluster.api.dependency.DependencyHandler;
 import net.bytemc.cluster.api.event.EventHandler;
 import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
@@ -16,6 +17,7 @@ import net.bytemc.cluster.node.console.ConsoleTerminal;
 import net.bytemc.cluster.node.console.impl.ClearScreenCommand;
 import net.bytemc.cluster.node.console.impl.GroupCommand;
 import net.bytemc.cluster.node.console.impl.ShutdownCommand;
+import net.bytemc.cluster.node.dependency.DependencyHandlerImpl;
 import net.bytemc.cluster.node.event.CloudEventHandlerImpl;
 import net.bytemc.cluster.node.groups.CloudServiceGroupProviderImpl;
 import net.bytemc.cluster.node.logger.NodeLogger;
@@ -36,6 +38,8 @@ public final class Node extends Cluster {
     private final Logger logger;
 
     private final RuntimeConfiguration runtimeConfiguration;
+    private final DependencyHandler dependencyHandler;
+
     private final CloudServiceGroupProvider serviceGroupProvider;
     private final CloudServiceProvider serviceProvider;
 
@@ -54,6 +58,10 @@ public final class Node extends Cluster {
         commandRepository.registerCommand(ShutdownCommand.class);
         commandRepository.registerCommand(GroupCommand.class);
 
+
+        this.runtimeConfiguration = ConfigurationHelper.readConfiguration(Path.of("config.json"), RuntimeConfiguration.DEFAULT_CONFIGURATION);
+        this.dependencyHandler = new DependencyHandlerImpl();
+
         this.commandExecutor = new CommandExecutor();
         this.logger = new NodeLogger();
 
@@ -62,7 +70,6 @@ public final class Node extends Cluster {
 
         Logger.info("Initializing networkservice...");
 
-        this.runtimeConfiguration = ConfigurationHelper.readConfiguration(Path.of("config.json"), RuntimeConfiguration.DEFAULT_CONFIGURATION);
         this.serviceGroupProvider = new CloudServiceGroupProviderImpl();
 
         Logger.info("Loading following groups: " + String.join(", ", serviceGroupProvider.findGroups().stream().map(it -> it.getName()).toList()));

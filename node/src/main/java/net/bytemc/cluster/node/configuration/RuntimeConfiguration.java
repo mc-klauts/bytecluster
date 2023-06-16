@@ -13,7 +13,8 @@ public final class RuntimeConfiguration {
             new NodePath(
                     Path.of("storage"),
                     Path.of("temp"),
-                    Path.of("templates")));
+                    Path.of("templates"),
+                    Path.of("dependencies")));
 
     private int port;
     private NodePath nodePath;
