@@ -1,15 +1,16 @@
-package net.bytemc.cluster.api.player.events;
+package net.bytemc.cluster.api.network.packets.player;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.bytemc.cluster.api.event.AbstractCommunicatableEvent;
+import net.bytemc.cluster.api.network.Packet;
 import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 
 import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
-public final class CloudPlayerSwitchEvent extends AbstractCommunicatableEvent {
+@Packet.Info(id = 32)
+public final class CloudPlayerSwitchPacket extends Packet {
 
     private UUID uniqueId;
     private String previousServer;

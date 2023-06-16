@@ -3,11 +3,13 @@ package net.bytemc.cluster.api.player;
 import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.service.CloudService;
 
+import java.util.UUID;
+
 public interface CloudPlayer {
 
     String getName();
 
-    String getUniqueID();
+    UUID getUniqueId();
 
     void sendMessage(String message);
 
@@ -29,7 +31,9 @@ public interface CloudPlayer {
 
     void sendToServer(String serverId);
 
-    void sendToServer(CloudService service);
+    default void sendToServer(CloudService service){
+        this.sendToServer(service.getName());
+    }
 
 }
 

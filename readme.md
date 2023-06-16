@@ -11,13 +11,13 @@
 
 - [ ] ip whitelist for node cluster
 - [ ] module folder and module loader
+- [ ] player api / server switch
 - [ ] message channel
 - [ ] spigot 1.20 support
 - [ ] queue check
 - [ ] memory calculation
 - [ ] static services
 - [ ] message channel
-- [ ] startup time
 
 ### Complete
 
