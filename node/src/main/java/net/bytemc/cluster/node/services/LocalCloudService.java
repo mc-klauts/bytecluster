@@ -37,8 +37,7 @@ public final class LocalCloudService extends AbstractCloudService {
 
     @Override
     public int getPlayers() {
-        //todo
-        return 0;
+        return Cluster.getInstance().getPlayerHandler().findPlayers().stream().map(it -> it.getCurrentServerId().equals(getName())).toList().size();
     }
 
     @Override

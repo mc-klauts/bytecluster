@@ -1,11 +1,12 @@
 package net.bytemc.cluster.api;
 
 import lombok.Getter;
-import net.bytemc.cluster.api.dependency.DependencyHandler;
 import net.bytemc.cluster.api.event.EventHandler;
 import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.command.CommandRepository;
 import net.bytemc.cluster.api.network.PacketPool;
+import net.bytemc.cluster.api.player.CloudPlayer;
+import net.bytemc.cluster.api.player.CloudPlayerHandler;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 
@@ -33,6 +34,6 @@ public abstract class Cluster {
 
     public abstract CloudServiceProvider getServiceProvider();
 
-    public abstract DependencyHandler getDependencyHandler();
+    public abstract CloudPlayerHandler getPlayerHandler();
 
 }

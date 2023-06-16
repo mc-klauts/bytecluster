@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import net.bytemc.cluster.node.misc.FileHelper;
+import net.bytemc.cluster.api.misc.FileHelper;
 import org.jetbrains.annotations.NotNull;
 
 public final class CloudServiceGroupFactoryImpl implements CloudServiceGroupFactory {

@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import net.bytemc.cluster.node.misc.FileHelper;
+import net.bytemc.cluster.api.misc.FileHelper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

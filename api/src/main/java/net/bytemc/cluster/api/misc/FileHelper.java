@@ -1,4 +1,4 @@
-package net.bytemc.cluster.node.misc;
+package net.bytemc.cluster.api.misc;
 
 import org.jetbrains.annotations.NotNull;
 

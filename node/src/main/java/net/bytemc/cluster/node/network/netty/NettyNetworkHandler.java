@@ -32,12 +32,10 @@ public final class NettyNetworkHandler extends ClusterChannelInboundHandler {
             }
             serviceHandler.addServiceConnection(ctx.channel(), service);
 
-            if(service instanceof LocalCloudService localCloudService) {
+            if (service instanceof LocalCloudService localCloudService) {
                 localCloudService.setState(CloudServiceState.ONLINE);
             }
-
-            Logger.info("Service " + serviceIdentifiyPacket.getId() + " is online and connected to the node.");
-
+            Logger.info("Service " + serviceIdentifiyPacket.getId() + " is online and connected to the node&8.");
             // call on all instances of the node
             Cluster.getInstance().getEventHandler().call(new CloudServiceConnectEvent(service));
         } else {

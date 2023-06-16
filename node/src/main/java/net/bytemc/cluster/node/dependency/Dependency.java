@@ -1,8 +1,7 @@
-package net.bytemc.cluster.api.dependency;
+package net.bytemc.cluster.node.dependency;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.bytemc.cluster.api.Cluster;
 
 import java.io.File;
 import java.io.IOException;

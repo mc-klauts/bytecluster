@@ -1,18 +1,18 @@
 package net.bytemc.bytecluster.wrapper;
 
 import lombok.Getter;
-import net.bytemc.bytecluster.wrapper.dependency.WrapperDependencyHandler;
 import net.bytemc.bytecluster.wrapper.event.WrapperEventHandler;
 import net.bytemc.bytecluster.wrapper.logging.WrapperLogging;
+import net.bytemc.bytecluster.wrapper.player.WrapperCloudPlayerHandlerImpl;
 import net.bytemc.bytecluster.wrapper.services.CloudServiceProviderImpl;
 import net.bytemc.bytecluster.wrapper.network.NettyClient;
 import net.bytemc.bytecluster.wrapper.groups.CloudServiceGroupProviderImpl;
 import net.bytemc.cluster.api.Cluster;
-import net.bytemc.cluster.api.dependency.DependencyHandler;
 import net.bytemc.cluster.api.event.EventHandler;
 import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.network.Packet;
 import net.bytemc.cluster.api.network.QueryPacket;
+import net.bytemc.cluster.api.player.CloudPlayerHandler;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 
@@ -29,18 +29,17 @@ public final class Wrapper extends Cluster {
     private final EventHandler eventHandler;
     private final CloudServiceGroupProvider serviceGroupProvider;
     private final CloudServiceProvider serviceProvider;
-    private final DependencyHandler dependencyHandler;
+    private final CloudPlayerHandler playerHandler;
     private final NettyClient client;
 
     public Wrapper(String id) {
         instance = this;
 
         this.logger = new WrapperLogging();
-
-        this.dependencyHandler = new WrapperDependencyHandler();
         this.eventHandler = new WrapperEventHandler();
         this.serviceGroupProvider = new CloudServiceGroupProviderImpl();
         this.serviceProvider = new CloudServiceProviderImpl();
+        this.playerHandler = new WrapperCloudPlayerHandlerImpl();
 
         this.client = new NettyClient(id);
     }

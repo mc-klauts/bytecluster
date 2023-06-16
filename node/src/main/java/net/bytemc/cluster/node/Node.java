@@ -5,7 +5,6 @@ import lombok.Setter;
 import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.command.CommandExecutor;
 import net.bytemc.cluster.api.command.CommandRepository;
-import net.bytemc.cluster.api.dependency.DependencyHandler;
 import net.bytemc.cluster.api.event.EventHandler;
 import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
@@ -17,10 +16,12 @@ import net.bytemc.cluster.node.console.ConsoleTerminal;
 import net.bytemc.cluster.node.console.impl.ClearScreenCommand;
 import net.bytemc.cluster.node.console.impl.GroupCommand;
 import net.bytemc.cluster.node.console.impl.ShutdownCommand;
+import net.bytemc.cluster.node.dependency.DependencyHandler;
 import net.bytemc.cluster.node.dependency.DependencyHandlerImpl;
 import net.bytemc.cluster.node.event.CloudEventHandlerImpl;
 import net.bytemc.cluster.node.groups.CloudServiceGroupProviderImpl;
 import net.bytemc.cluster.node.logger.NodeLogger;
+import net.bytemc.cluster.node.player.PlayerHandlerImpl;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
 import net.bytemc.cluster.node.templates.ServiceTemplateHandler;
 
@@ -49,6 +50,7 @@ public final class Node extends Cluster {
 
     private final EventHandler eventHandler;
     private final ServiceTemplateHandler templateHandler;
+    private final PlayerHandlerImpl playerHandler;
 
     public Node() {
         instance = this;
@@ -71,6 +73,7 @@ public final class Node extends Cluster {
         Logger.info("Initializing networkservice...");
 
         this.serviceGroupProvider = new CloudServiceGroupProviderImpl();
+        this.playerHandler = new PlayerHandlerImpl();
 
         Logger.info("Loading following groups: " + String.join(", ", serviceGroupProvider.findGroups().stream().map(it -> it.getName()).toList()));
 

@@ -1,10 +1,9 @@
 package net.bytemc.cluster.node.templates;
 
 import net.bytemc.cluster.api.Cluster;
-import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.node.Node;
-import net.bytemc.cluster.node.misc.FileHelper;
+import net.bytemc.cluster.api.misc.FileHelper;
 import net.bytemc.cluster.node.services.LocalCloudService;
 
 import java.io.IOException;

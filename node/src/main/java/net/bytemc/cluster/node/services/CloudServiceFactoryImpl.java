@@ -6,7 +6,7 @@ import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceFactory;
 import net.bytemc.cluster.api.service.CloudServiceState;
 import net.bytemc.cluster.node.Node;
-import net.bytemc.cluster.node.misc.FileHelper;
+import net.bytemc.cluster.api.misc.FileHelper;
 import net.bytemc.cluster.node.misc.VelocityForwardingSecretHelper;
 import org.jetbrains.annotations.NotNull;
 

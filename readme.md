@@ -17,7 +17,7 @@
 - [ ] memory calculation
 - [ ] static services
 - [ ] message channel
-- [ ] dependency loader
+- [ ] startup time
 
 ### Complete
 
@@ -28,3 +28,4 @@
 - [x] automatic sub-Server entry on proxy
 - [x] manage player fallback
 - [x] rename jars
+- [x] dependency loader
