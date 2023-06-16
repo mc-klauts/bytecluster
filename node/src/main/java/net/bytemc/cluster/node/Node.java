@@ -58,9 +58,9 @@ public final class Node extends Cluster {
         commandRepository.registerCommand(ShutdownCommand.class);
         commandRepository.registerCommand(GroupCommand.class);
 
+        this.dependencyHandler = new DependencyHandlerImpl();
 
         this.runtimeConfiguration = ConfigurationHelper.readConfiguration(Path.of("config.json"), RuntimeConfiguration.DEFAULT_CONFIGURATION);
-        this.dependencyHandler = new DependencyHandlerImpl();
 
         this.commandExecutor = new CommandExecutor();
         this.logger = new NodeLogger();
