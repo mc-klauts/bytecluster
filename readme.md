@@ -10,18 +10,21 @@
 ### Todo
 
 - [ ] ip whitelist for node cluster
-- [x] proxy configuration
-- [x] automatic sub-Server entry on proxy
-- [ ] manage player fallback
 - [ ] module folder and module loader
-- [ ] better command system
 - [ ] message channel
 - [ ] spigot 1.20 support
-- [ ] minestom support
-- [x] auto forwarding-secret
 - [ ] queue check
 - [ ] memory calculation
 - [ ] static services
 - [ ] message channel
 - [ ] dependency loader
-- [ ] rename jars
+
+### Complete
+
+- [x] minestom support
+- [x] auto forwarding-secret
+- [x] better command system
+- [x] proxy configuration
+- [x] automatic sub-Server entry on proxy
+- [x] manage player fallback
+- [x] rename jars
