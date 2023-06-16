@@ -14,10 +14,27 @@ import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
 import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.node.groups.CloudServiceGroupImpl;
+import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
 import org.jetbrains.annotations.NotNull;
 
 @Command(name = "group")
 public final class GroupCommand {
+
+    @SubCommand(name = "start", example = "")
+    private void startServer(
+        CommandSender commandSender,
+        @CommandArgument(name = "template", transformer = StringArgumentTransformer.class) String template
+    ) {
+        final CloudServiceGroupProvider cloudServiceGroupProvider = Node.getInstance()
+            .getServiceGroupProvider();
+        if (!cloudServiceGroupProvider.exists(template)) {
+            commandSender.sendMessage("There is no group with this name");
+            return;
+        }
+
+        ((CloudServiceProviderImpl) Node.getInstance().getServiceProvider()).getQueue()
+            .addTask(cloudServiceGroupProvider.findGroup(template), 1);
+    }
 
     @SubCommand(name = "list", example = "group list")
     private void listGroups(CommandSender commandSender) {
@@ -34,7 +51,6 @@ public final class GroupCommand {
             commandSender.sendMessage("- " + group.getName());
         }
     }
-
 
     @SubCommand(name = "create", example = "group create <name> <group_type> <memory> <fallback>")
     private void createGroup(
