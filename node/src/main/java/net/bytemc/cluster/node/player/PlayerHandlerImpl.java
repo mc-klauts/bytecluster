@@ -36,7 +36,7 @@ public final class PlayerHandlerImpl implements CloudPlayerHandler {
 
     @Override
     public AsyncTask<Collection<CloudPlayer>> findPlayersAsync() {
-        return AsyncTask.completeWork(findPlayers());
+        return AsyncTask.directly(findPlayers());
     }
 
     @Override
@@ -46,7 +46,7 @@ public final class PlayerHandlerImpl implements CloudPlayerHandler {
 
     @Override
     public AsyncTask<Optional<CloudPlayer>> findPlayerAsync(UUID uuid) {
-        return AsyncTask.completeWork(findPlayer(uuid));
+        return AsyncTask.directly(findPlayer(uuid));
     }
 
     @Override
@@ -56,7 +56,7 @@ public final class PlayerHandlerImpl implements CloudPlayerHandler {
 
     @Override
     public AsyncTask<Optional<CloudPlayer>> findPlayerAsync(String username) {
-        return AsyncTask.completeWork(findPlayer(username));
+        return AsyncTask.directly(findPlayer(username));
     }
 
     @Override
@@ -66,7 +66,7 @@ public final class PlayerHandlerImpl implements CloudPlayerHandler {
 
     @Override
     public AsyncTask<Integer> getOnlineCountAsync() {
-        return AsyncTask.completeWork(getOnlineCount());
+        return AsyncTask.directly(getOnlineCount());
     }
 
     @Override

@@ -7,7 +7,7 @@ public class TestListener {
 
     @SubscribeEvent
     public void hanlde(CloudPlayerConnectEvent event) {
-        event.getCloudPlayer().sendTablist("Polo ist fett", "foort test");
+
     }
 
 }

@@ -43,7 +43,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Override
     public AsyncTask<Collection<CloudService>> findServicesAsync() {
-        return AsyncTask.completeWork(findServices());
+        return AsyncTask.directly(findServices());
     }
 
     @Override
@@ -64,7 +64,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Override
     public AsyncTask<CloudService> findServiceAsync(String name) {
-        return AsyncTask.completeWork(findService(name));
+        return AsyncTask.directly(findService(name));
     }
 
     @Override
@@ -74,7 +74,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Override
     public AsyncTask<Collection<CloudService>> findServicesAsync(String group) {
-        return AsyncTask.completeWork(findServices(group));
+        return AsyncTask.directly(findServices(group));
     }
 
     @Override
@@ -84,7 +84,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Override
     public AsyncTask<Optional<String>> findFallbackIdAsync() {
-        return AsyncTask.completeWork(findFallbackId());
+        return AsyncTask.directly(findFallbackId());
     }
 
     @Override
@@ -97,13 +97,20 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Override
     public AsyncTask<Optional<CloudService>> findFallbackAsync() {
-        return AsyncTask.completeWork(findFallback());
+        return AsyncTask.directly(findFallback());
     }
 
     @Override
     public CloudService getCloudServiceByBuffer(PacketBuffer buffer) {
-        //todo
-        return null;
+
+        int id = buffer.readInt();
+        var hostname = buffer.readString();
+        var groupName = buffer.readString();
+        var motd = buffer.readString();
+        var maxPlayers = buffer.readInt();
+        var port = buffer.readInt();
+
+        return this.services.get(groupName + "-" + id);
     }
 
     public void queue() {

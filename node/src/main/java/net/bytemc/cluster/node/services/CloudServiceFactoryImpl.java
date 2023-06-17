@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -67,7 +68,7 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
             Node.getInstance().getTemplateHandler().copyTemplate(cloudService.getGroupName(), cloudService);
 
             try {
-                Files.copy(service.getGroup().getGroupType().getPath(nodePath.getStoragePath()), service.getGroup().getGroupType().getPath(((LocalCloudService) service).getDirectory()));
+                Files.copy(service.getGroup().getGroupType().getPath(nodePath.getStoragePath()), service.getGroup().getGroupType().getPath(((LocalCloudService) service).getDirectory()), StandardCopyOption.REPLACE_EXISTING);
 
                 if (cloudService.getGroup().getGroupType() == CloudGroupType.MINESTOM) {
                     FileHelper.createDirectoryIfNotExists(serviceDirectory.resolve("extensions"));

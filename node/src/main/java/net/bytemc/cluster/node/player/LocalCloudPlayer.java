@@ -2,6 +2,8 @@ package net.bytemc.cluster.node.player;
 
 import lombok.Setter;
 import net.bytemc.cluster.api.misc.async.AsyncTask;
+import net.bytemc.cluster.api.network.packets.player.CloudPlayerRequestKickPacket;
+import net.bytemc.cluster.api.network.packets.player.CloudPlayerSendMessagePacket;
 import net.bytemc.cluster.api.network.packets.player.CloudPlayerTablistPacket;
 import net.bytemc.cluster.api.player.AbstractCloudPlayer;
 import net.bytemc.cluster.api.service.CloudService;
@@ -27,12 +29,12 @@ public final class LocalCloudPlayer extends AbstractCloudPlayer {
 
     @Override
     public void sendMessage(String message) {
-        //todo
+        ((LocalCloudService) getCurrentProxy()).sendPacket(new CloudPlayerSendMessagePacket(this.getUniqueId(), message));
     }
 
     @Override
     public void kick(String reason) {
-        //todo
+        ((LocalCloudService) getCurrentProxy()).sendPacket(new CloudPlayerRequestKickPacket(this.getUniqueId(), reason));
     }
 
     @Override
@@ -47,7 +49,7 @@ public final class LocalCloudPlayer extends AbstractCloudPlayer {
 
     @Override
     public AsyncTask<CloudService> getCurrentProxyAsync() {
-        return AsyncTask.completeWork(this.currentProxy);
+        return AsyncTask.directly(this.currentProxy);
     }
 
     @Override
@@ -62,7 +64,7 @@ public final class LocalCloudPlayer extends AbstractCloudPlayer {
 
     @Override
     public AsyncTask<CloudService> getCurrentServerAsync() {
-        return AsyncTask.completeWork(this.currentProxy);
+        return AsyncTask.directly(this.currentProxy);
     }
 
     @Override

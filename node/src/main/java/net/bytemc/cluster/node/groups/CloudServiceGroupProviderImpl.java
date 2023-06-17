@@ -29,7 +29,7 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
     @Contract(pure = true)
     @Override
     public @Nullable AsyncTask<Collection<CloudServiceGroup>> findGroupsAsync() {
-        return AsyncTask.completeWork(groups.values());
+        return AsyncTask.directly(groups.values());
     }
 
     @Contract(pure = true)
@@ -81,6 +81,6 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
 
     @Override
     public @NotNull AsyncTask<Boolean> existsAsync(String id) {
-        return AsyncTask.completeWork(this.exists(id));
+        return AsyncTask.directly(this.exists(id));
     }
 }

@@ -9,24 +9,21 @@ import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
-@Packet.Info(id = 40)
-public final class CloudPlayerTablistPacket extends Packet {
+@Packet.Info(id = 41)
+public final class CloudPlayerRequestKickPacket extends Packet {
 
     private UUID uuid;
-    private String header;
-    private String footer;
+    private String reason;
 
     @Override
     public void read(PacketBuffer reader) {
         this.uuid = reader.readUUID();
-        this.header = reader.readString();
-        this.footer = reader.readString();
+        this.reason = reader.readString();
     }
 
     @Override
     public void write(PacketBuffer writer) {
         writer.writeUUID(uuid);
-        writer.writeString(header);
-        writer.writeString(footer);
+        writer.writeString(reason);
     }
 }
