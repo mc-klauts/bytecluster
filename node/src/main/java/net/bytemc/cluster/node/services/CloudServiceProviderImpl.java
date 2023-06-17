@@ -25,14 +25,15 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     // extra separated map for faster access
     private final Map<Channel, CloudService> serviceChannels = new HashMap<>();
 
-    public CloudServiceProviderImpl(@NotNull CloudServiceGroupProvider groupProvider) {
-        for (var group : groupProvider.findGroups()) {
+    public void runProcess(CloudServiceGroupProvider provider) {
+        for (var group : provider.findGroups()) {
             if (group.getMinOnlineCount() <= 0) {
                 continue;
             }
             this.queue.addTask(group, group.getMinOnlineCount());
         }
     }
+
 
     @Contract(pure = true)
     @Override

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 public final class ConfigurationProvider {
 
-    private static final Gson DEFAULT_GSON = new GsonBuilder()
+    public static final Gson DEFAULT_GSON = new GsonBuilder()
             .setPrettyPrinting()
             .serializeNulls()
             .registerTypeHierarchyAdapter(Path.class, new PathSerializer())

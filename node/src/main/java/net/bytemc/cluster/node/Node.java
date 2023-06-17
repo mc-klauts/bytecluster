@@ -22,6 +22,7 @@ import net.bytemc.cluster.node.dependency.DependencyHandlerImpl;
 import net.bytemc.cluster.node.event.CloudEventHandlerImpl;
 import net.bytemc.cluster.node.groups.CloudServiceGroupProviderImpl;
 import net.bytemc.cluster.node.logger.NodeLogger;
+import net.bytemc.cluster.node.modules.CloudModuleHandler;
 import net.bytemc.cluster.node.player.PlayerHandlerImpl;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
 import net.bytemc.cluster.node.templates.ServiceTemplateHandler;
@@ -53,6 +54,8 @@ public final class Node extends Cluster {
     private final ServiceTemplateHandler templateHandler;
     private final PlayerHandlerImpl playerHandler;
 
+    private final CloudModuleHandler moduleHandler;
+
     public Node() {
         instance = this;
 
@@ -80,14 +83,15 @@ public final class Node extends Cluster {
         Logger.info("Loading following groups: " + String.join(", ", serviceGroupProvider.findGroups().stream().map(it -> it.getName()).toList()));
 
         this.templateHandler = new ServiceTemplateHandler();
-        this.serviceProvider = new CloudServiceProviderImpl(this.serviceGroupProvider);
+        this.serviceProvider = new CloudServiceProviderImpl();
         this.clusterNetwork = new ClusterNetwork(this.runtimeConfiguration);
 
-        // if user close the cluster without the shutdown command
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            NodeShutdownHandler.shutdown(this);
-        }));
+        this.moduleHandler = new CloudModuleHandler();
 
+        // if user close the cluster without the shutdown command
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> NodeShutdownHandler.shutdown(this)));
+
+        ((CloudServiceProviderImpl) this.serviceProvider).runProcess(this.serviceGroupProvider);
         ((CloudServiceProviderImpl) this.serviceProvider).queue();
     }
 }
