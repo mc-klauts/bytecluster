@@ -171,10 +171,7 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
         }
         arguments.add(applicationFile.toAbsolutePath().toString());
         arguments.add(Boolean.toString(preLoadClasses));
-
         arguments.add(service.getName());
-
-        //todo i dont know but i think this is the ip of the node
         arguments.add("127.0.0.1");
         arguments.add(String.valueOf(Node.getInstance().getRuntimeConfiguration().getPort()));
         arguments.add(String.valueOf(service.getPort()));

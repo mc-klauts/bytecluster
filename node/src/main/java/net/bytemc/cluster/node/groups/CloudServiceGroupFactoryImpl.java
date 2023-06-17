@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 
 public final class CloudServiceGroupFactoryImpl implements CloudServiceGroupFactory {
 
-    //todo
     private static final Path GROUPS_STORAGE_PATH = Path.of("groups");
 
     public CloudServiceGroupFactoryImpl() {

@@ -11,12 +11,12 @@
 ### Todo
 
 - [ ] ip whitelist for node cluster
-- [ ] module folder and module loader
 - [ ] message channel
 - [ ] spigot 1.20 support
 - [ ] memory calculation
 - [ ] static services
 - [ ] message channel
+- [ ] System.setOut(); <- move and setErr();
 
 ### Complete
 
@@ -30,3 +30,4 @@
 - [x] dependency loader
 - [x] queue check
 - [x] player api / server switch
+- [x] module folder and module loader
