@@ -78,6 +78,8 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
                     Files.copy(STORAGE_PATH.resolve("bytecluster-plugin.jar"), serviceDirectory.resolve("plugins").resolve("bytecluster-plugin.jar"));
                 }
 
+                Node.getInstance().getModuleHandler().copyModuleFiles(cloudService);
+
             } catch (IOException e) {
                 Logger.error("Cannot copy service runtime file. Service is now closed.", e);
                 service.shutdown();

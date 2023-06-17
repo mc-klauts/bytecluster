@@ -14,7 +14,6 @@
 - [ ] memory calculation
 - [ ] static services
 - [ ] message channel
-- [ ] System.setOut(); <- move and setErr();
 
 ### Complete
 
@@ -30,3 +29,4 @@
 - [x] queue check
 - [x] player api / server switch
 - [x] module folder and module loader
+- [x] System.setOut(); <- move and setErr();

@@ -2,17 +2,22 @@ package net.bytemc.cluster.node.modules;
 
 import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.misc.FileHelper;
+import net.bytemc.cluster.api.service.CloudGroupType;
+import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.node.configuration.ConfigurationProvider;
 import net.bytemc.cluster.node.exception.ModuleLoadException;
 import net.bytemc.cluster.node.modules.content.LoadedModuleFileContent;
 import net.bytemc.cluster.node.modules.content.ModuleContentInfo;
+import net.bytemc.cluster.node.modules.content.ModuleCopyType;
 import net.bytemc.cluster.node.modules.loader.ModuleClassLoader;
+import net.bytemc.cluster.node.services.LocalCloudService;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +34,18 @@ public final class CloudModuleHandler {
     public CloudModuleHandler() {
         FileHelper.createDirectoryIfNotExists(MODULE_PATH);
         this.loadModules();
+    }
+
+    public void unloadAllModules() {
+        for (LoadedModule module : this.loadedModules) {
+            module.getModule().onDisable();
+            try {
+                module.getClassLoader().close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        this.loadedModules.clear();
     }
 
     public void loadModules() {
@@ -51,12 +68,32 @@ public final class CloudModuleHandler {
         }
     }
 
+    public void copyModuleFiles(LocalCloudService cloudService) {
+        for (LoadedModule loadedModule : loadedModules) {
+
+            var type = loadedModule.getInfo().getModuleCopyType();
+            if (type == ModuleCopyType.NONE) continue;
+
+            if (type == ModuleCopyType.ALL ||
+                    (type == ModuleCopyType.FALLBACK && cloudService.getGroup().isFallback()) ||
+                    (type == ModuleCopyType.SERVER && !cloudService.getGroup().getGroupType().isProxy()) ||
+                    (type == ModuleCopyType.PROXY && cloudService.getGroup().getGroupType().isProxy())) {
+
+                try {
+                    Files.copy(loadedModule.getFile().toPath(), cloudService.getDirectory().resolve(cloudService.getGroup().getGroupType() == CloudGroupType.MINESTOM ? "extensions" : "plugins").resolve(loadedModule.getFile().getName()));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
     private CloudModule loadModuleClassInstance(ClassLoader classLoader, String mainClassName) throws Exception {
         return loadModuleClass(classLoader, mainClassName).getConstructor().newInstance();
     }
 
     private Class<? extends CloudModule> loadModuleClass(ClassLoader classLoader, String mainClassName) throws ClassNotFoundException {
-        return  classLoader.loadClass(mainClassName).asSubclass(CloudModule.class);
+        return classLoader.loadClass(mainClassName).asSubclass(CloudModule.class);
     }
 
     public ModuleContentInfo getInfoFromFile(File file, String path) {

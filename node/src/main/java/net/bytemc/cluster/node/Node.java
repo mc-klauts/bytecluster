@@ -13,10 +13,7 @@ import net.bytemc.cluster.node.cluster.ClusterNetwork;
 import net.bytemc.cluster.node.configuration.ConfigurationHelper;
 import net.bytemc.cluster.node.configuration.RuntimeConfiguration;
 import net.bytemc.cluster.node.console.ConsoleTerminal;
-import net.bytemc.cluster.node.console.impl.ClearScreenCommand;
-import net.bytemc.cluster.node.console.impl.GroupCommand;
-import net.bytemc.cluster.node.console.impl.ServiceCommand;
-import net.bytemc.cluster.node.console.impl.ShutdownCommand;
+import net.bytemc.cluster.node.console.impl.*;
 import net.bytemc.cluster.node.dependency.DependencyHandler;
 import net.bytemc.cluster.node.dependency.DependencyHandlerImpl;
 import net.bytemc.cluster.node.event.CloudEventHandlerImpl;
@@ -68,11 +65,8 @@ public final class Node extends Cluster {
 
         this.logger = new NodeLogger();
 
-        final CommandRepository commandRepository = Cluster.getInstance().getCommandRepository();
-        commandRepository.registerCommand(ClearScreenCommand.class);
-        commandRepository.registerCommand(ShutdownCommand.class);
-        commandRepository.registerCommand(GroupCommand.class);
-        commandRepository.registerCommand(ServiceCommand.class);
+        final var commandRepository = Cluster.getInstance().getCommandRepository();
+        commandRepository.registerCommands(ClearScreenCommand.class, ShutdownCommand.class, GroupCommand.class, ServiceCommand.class, ReloadCommand.class);
 
         this.runtimeConfiguration = ConfigurationHelper.readConfiguration(Path.of("config.json"), RuntimeConfiguration.DEFAULT_CONFIGURATION);
 

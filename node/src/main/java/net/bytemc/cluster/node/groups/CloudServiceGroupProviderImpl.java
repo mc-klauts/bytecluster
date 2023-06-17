@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
 import net.bytemc.cluster.api.misc.FileHelper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +24,10 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
     private final Map<String, CloudServiceGroup> groups = new HashMap<>();
 
     public CloudServiceGroupProviderImpl() {
+        this.loadAllGroups();
+    }
+
+    private void loadAllGroups() {
         factory.loadGroups().forEach(cloudServiceGroup -> groups.put(cloudServiceGroup.getName(), cloudServiceGroup));
     }
 
@@ -82,5 +87,10 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
     @Override
     public @NotNull AsyncTask<Boolean> existsAsync(String id) {
         return AsyncTask.directly(this.exists(id));
+    }
+
+    public void reload() {
+        this.groups.clear();
+        this.loadAllGroups();
     }
 }
