@@ -46,6 +46,7 @@ public final class PacketPool {
                 CloudPlayerAmountResponse.class,
                 CollectionCloudPlayerRequest.class,
                 CollectionCloudPlayerResponse.class,
+                CloudPlayerTablistPacket.class,
 
                 // event system basics
                 CallEventPacket.class,

@@ -4,6 +4,7 @@ import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.network.packets.player.CloudPlayerConnectPacket;
 import net.bytemc.cluster.api.network.packets.player.CloudPlayerDisconnectPacket;
 import net.bytemc.cluster.api.network.packets.player.CloudPlayerSwitchPacket;
+import net.bytemc.cluster.api.player.events.CloudPlayerConnectEvent;
 import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
 
@@ -14,7 +15,7 @@ public final class PlayerPacketListener {
             var proxyName = ((CloudServiceProviderImpl) Node.getInstance().getServiceProvider()).getServiceByConnection(channel).getName();
 
             Node.getInstance().getPlayerHandler().registerCloudPlayer(packet.getUuid(), packet.getUsername(), packet.getCurrentServer(), proxyName);
-            //todo call events
+            Node.getInstance().getEventHandler().call(new CloudPlayerConnectEvent(Node.getInstance().getPlayerHandler().findPlayer(packet.getUuid()).get()));
         });
 
         Node.getInstance().getPacketPool().registerListener(CloudPlayerDisconnectPacket.class, (channel, packet) -> {

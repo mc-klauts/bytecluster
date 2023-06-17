@@ -41,7 +41,7 @@ public final class PlayerHandlerImpl implements CloudPlayerHandler {
 
     @Override
     public Optional<CloudPlayer> findPlayer(UUID uuid) {
-        return Optional.ofNullable(this.cachedCloudPlayer.get(cachedCloudPlayer));
+        return Optional.ofNullable(this.cachedCloudPlayer.get(uuid));
     }
 
     @Override
