@@ -22,6 +22,7 @@ import net.bytemc.cluster.node.dependency.DependencyHandlerImpl;
 import net.bytemc.cluster.node.event.CloudEventHandlerImpl;
 import net.bytemc.cluster.node.groups.CloudServiceGroupProviderImpl;
 import net.bytemc.cluster.node.logger.NodeLogger;
+import net.bytemc.cluster.node.logger.NodeOutputPrintStream;
 import net.bytemc.cluster.node.modules.CloudModuleHandler;
 import net.bytemc.cluster.node.player.PlayerHandlerImpl;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
@@ -59,21 +60,25 @@ public final class Node extends Cluster {
     public Node() {
         instance = this;
 
+        this.dependencyHandler = new DependencyHandlerImpl();
+        this.consoleTerminal = new ConsoleTerminal();
+
+        System.setErr(new NodeOutputPrintStream());
+        System.setOut(new NodeOutputPrintStream());
+
+        this.logger = new NodeLogger();
+
         final CommandRepository commandRepository = Cluster.getInstance().getCommandRepository();
         commandRepository.registerCommand(ClearScreenCommand.class);
         commandRepository.registerCommand(ShutdownCommand.class);
         commandRepository.registerCommand(GroupCommand.class);
         commandRepository.registerCommand(ServiceCommand.class);
 
-        this.dependencyHandler = new DependencyHandlerImpl();
-
         this.runtimeConfiguration = ConfigurationHelper.readConfiguration(Path.of("config.json"), RuntimeConfiguration.DEFAULT_CONFIGURATION);
 
         this.commandExecutor = new CommandExecutor();
-        this.logger = new NodeLogger();
 
         this.eventHandler = new CloudEventHandlerImpl();
-        this.consoleTerminal = new ConsoleTerminal();
 
         Logger.info("Initializing networkservice...");
 
@@ -90,7 +95,6 @@ public final class Node extends Cluster {
 
         // if user close the cluster without the shutdown command
         Runtime.getRuntime().addShutdownHook(new Thread(() -> NodeShutdownHandler.shutdown(this)));
-
 
         ((CloudServiceProviderImpl) this.serviceProvider).runProcess(this.serviceGroupProvider);
         ((CloudServiceProviderImpl) this.serviceProvider).queue();

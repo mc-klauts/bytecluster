@@ -123,8 +123,12 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
             localService.setState(CloudServiceState.STOPPED);
             synchronized (this) {
                 if (localService.getProcess() != null && localService.getProcess().toHandle().isAlive()) {
-                    service.executeCommand("close");
-                    service.executeCommand("stop");
+
+                    if (service.getGroup().getGroupType() == CloudGroupType.MINESTOM) {
+                        service.executeCommand("close");
+                    } else {
+                        service.executeCommand("stop");
+                    }
 
                     try {
                         if (localService.getProcess().waitFor(5, TimeUnit.SECONDS)) {
