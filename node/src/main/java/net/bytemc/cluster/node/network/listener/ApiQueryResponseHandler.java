@@ -1,9 +1,13 @@
 package net.bytemc.cluster.node.network.listener;
 
 import net.bytemc.cluster.api.Cluster;
+import net.bytemc.cluster.api.network.packets.player.SingletonPlayerRequest;
+import net.bytemc.cluster.api.network.packets.player.SingletonPlayerResponse;
 import net.bytemc.cluster.api.network.packets.services.*;
 import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.node.Node;
+
+import java.util.UUID;
 
 public final class ApiQueryResponseHandler {
 
@@ -30,5 +34,12 @@ public final class ApiQueryResponseHandler {
             return new FindFallbackServiceResponse(Cluster.getInstance().getServiceProvider().findFallback().stream().map(CloudService::getName).findFirst());
         });
 
+        pool.addQueryModification(SingletonPlayerRequest.class, (packet) -> {
+            if (packet.getIdentifier() instanceof UUID uuid) {
+                return new SingletonPlayerResponse(Cluster.getInstance().getPlayerHandler().findPlayer(uuid).orElse(null));
+            } else {
+                return new SingletonPlayerResponse(Cluster.getInstance().getPlayerHandler().findPlayer((String) packet.getIdentifier()).orElse(null));
+            }
+        });
     }
 }

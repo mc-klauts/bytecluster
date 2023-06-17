@@ -2,6 +2,7 @@ package net.bytemc.cluster.node.player;
 
 import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.misc.async.AsyncTask;
+import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 import net.bytemc.cluster.api.player.CloudPlayer;
 import net.bytemc.cluster.api.player.CloudPlayerHandler;
 
@@ -66,5 +67,15 @@ public final class PlayerHandlerImpl implements CloudPlayerHandler {
     @Override
     public AsyncTask<Integer> getOnlineCountAsync() {
         return AsyncTask.completeWork(getOnlineCount());
+    }
+
+    @Override
+    public CloudPlayer getCloudPlayerFromBuffer(PacketBuffer buffer) {
+        return new LocalCloudPlayer(
+                buffer.readString(),
+                buffer.readUUID(),
+                Cluster.getInstance().getServiceProvider().findService(buffer.readString()),
+                Cluster.getInstance().getServiceProvider().findService(buffer.readString())
+        );
     }
 }

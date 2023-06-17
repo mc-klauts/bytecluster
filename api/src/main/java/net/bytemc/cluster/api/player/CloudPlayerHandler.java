@@ -1,6 +1,7 @@
 package net.bytemc.cluster.api.player;
 
 import net.bytemc.cluster.api.misc.async.AsyncTask;
+import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -23,5 +24,7 @@ public interface CloudPlayerHandler {
     int getOnlineCount();
 
     AsyncTask<Integer> getOnlineCountAsync();
+
+    CloudPlayer getCloudPlayerFromBuffer(PacketBuffer buffer);
 
 }

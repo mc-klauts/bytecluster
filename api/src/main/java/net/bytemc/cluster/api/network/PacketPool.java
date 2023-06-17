@@ -5,9 +5,7 @@ import net.bytemc.cluster.api.event.CallEventPacket;
 import net.bytemc.cluster.api.event.SubscribeEventPacket;
 import net.bytemc.cluster.api.misc.concurrent.ListHelper;
 import net.bytemc.cluster.api.network.packets.ServiceIdentifiyPacket;
-import net.bytemc.cluster.api.network.packets.player.CloudPlayerConnectPacket;
-import net.bytemc.cluster.api.network.packets.player.CloudPlayerDisconnectPacket;
-import net.bytemc.cluster.api.network.packets.player.CloudPlayerSwitchPacket;
+import net.bytemc.cluster.api.network.packets.player.*;
 import net.bytemc.cluster.api.network.packets.services.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,6 +40,8 @@ public final class PacketPool {
                 CloudPlayerConnectPacket.class,
                 CloudPlayerDisconnectPacket.class,
                 CloudPlayerSwitchPacket.class,
+                SingletonPlayerRequest.class,
+                SingletonPlayerResponse.class,s
 
                 // event system basics
                 CallEventPacket.class,
