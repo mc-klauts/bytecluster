@@ -3,6 +3,7 @@ package net.bytemc.cluster.node.network.netty;
 import io.netty5.channel.ChannelHandlerContext;
 import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.event.services.CloudServiceConnectEvent;
+import net.bytemc.cluster.api.event.services.CloudServiceShutdownEvent;
 import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.network.Packet;
 import net.bytemc.cluster.api.network.codec.ClusterChannelInboundHandler;
@@ -49,12 +50,7 @@ public final class NettyNetworkHandler extends ClusterChannelInboundHandler {
         var service = serviceHandler.getServiceByConnection(ctx.channel());
 
         if (service != null && service instanceof LocalCloudService cloudService) {
-
-            cloudService.setState(CloudServiceState.STOPPED);
-
-            service.shutdown();
-            serviceHandler.removeService(service.getName());
-
+            cloudService.shutdown();
             Logger.info("Service " + service.getName() + " is offline and disconnected from the node&8.");
         }
     }

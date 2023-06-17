@@ -11,10 +11,8 @@
 
 - [ ] ip whitelist for node cluster
 - [ ] module folder and module loader
-- [ ] player api / server switch
 - [ ] message channel
 - [ ] spigot 1.20 support
-- [ ] queue check
 - [ ] memory calculation
 - [ ] static services
 - [ ] message channel
@@ -29,3 +27,5 @@
 - [x] manage player fallback
 - [x] rename jars
 - [x] dependency loader
+- [x] queue check
+- [x] player api / server switch

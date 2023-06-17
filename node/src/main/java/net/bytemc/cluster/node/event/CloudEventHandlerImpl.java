@@ -40,4 +40,12 @@ public final class CloudEventHandlerImpl extends AbstractEventHandler {
             }
         }
     }
+
+    public void removeCloudService(CloudService cloudService) {
+        for (Class<? extends CloudEvent> packet : subscribedServices.keySet()) {
+            List<CloudService> services = subscribedServices.get(packet);
+            services.remove(cloudService);
+            this.subscribedServices.put(packet, services);
+        }
+    }
 }

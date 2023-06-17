@@ -1,16 +1,17 @@
 package net.bytemc.cluster.api.service;
 
 import net.bytemc.cluster.api.misc.TaskFuture;
+import net.bytemc.cluster.api.misc.async.AsyncTask;
 
 import java.util.Collection;
 
 public interface CloudServiceGroupProvider {
 
-    TaskFuture<Collection<CloudServiceGroup>> findGroupsAsync();
+    AsyncTask<Collection<CloudServiceGroup>> findGroupsAsync();
 
     Collection<CloudServiceGroup> findGroups();
 
-    TaskFuture<CloudServiceGroup> findGroupAsync(String id);
+    AsyncTask<CloudServiceGroup> findGroupAsync(String id);
 
     CloudServiceGroup findGroup(String id);
 
@@ -20,6 +21,6 @@ public interface CloudServiceGroupProvider {
 
     boolean exists(String id);
 
-    TaskFuture<Boolean> existsAsync(String id);
+    AsyncTask<Boolean> existsAsync(String id);
 
 }

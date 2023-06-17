@@ -2,6 +2,7 @@ package net.bytemc.cluster.node.groups;
 
 import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.misc.TaskFuture;
+import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudServiceGroupFactory;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
@@ -27,8 +28,8 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
 
     @Contract(pure = true)
     @Override
-    public @Nullable TaskFuture<Collection<CloudServiceGroup>> findGroupsAsync() {
-        return null;
+    public @Nullable AsyncTask<Collection<CloudServiceGroup>> findGroupsAsync() {
+        return AsyncTask.completeWork(groups.values());
     }
 
     @Contract(pure = true)
@@ -39,7 +40,7 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
 
     @Contract(pure = true)
     @Override
-    public @Nullable TaskFuture<CloudServiceGroup> findGroupAsync(String name) {
+    public @Nullable AsyncTask<CloudServiceGroup> findGroupAsync(String name) {
         return null;
     }
 
@@ -79,7 +80,7 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
     }
 
     @Override
-    public @NotNull TaskFuture<Boolean> existsAsync(String id) {
-        return TaskFuture.instantly(this.exists(id));
+    public @NotNull AsyncTask<Boolean> existsAsync(String id) {
+        return AsyncTask.completeWork(this.exists(id));
     }
 }

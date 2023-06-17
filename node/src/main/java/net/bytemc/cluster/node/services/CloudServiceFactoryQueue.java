@@ -1,6 +1,7 @@
 package net.bytemc.cluster.node.services;
 
 import lombok.RequiredArgsConstructor;
+import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
@@ -40,6 +41,14 @@ public final class CloudServiceFactoryQueue {
                 var service = new LocalCloudService("127.0.0.1", group.getName(), "Default template motd", PortHelper.getNextPort(group), findId(group), 10);
                 ((CloudServiceProviderImpl) Node.getInstance().getServiceProvider()).addService(service);
                 cloudServiceProvider.getFactory().start(service);
+            }
+        }
+    }
+
+    public void checkQueue() {
+        for (CloudServiceGroup group : Cluster.getInstance().getServiceGroupProvider().findGroups()) {
+            if(group.getMinOnlineCount() > cloudServiceProvider.findServices(group.getName()).size()) {
+                addTask(group, group.getMinOnlineCount() - cloudServiceProvider.findServices(group.getName()).size());
             }
         }
     }

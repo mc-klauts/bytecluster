@@ -4,11 +4,13 @@ import io.netty5.channel.Channel;
 import lombok.Getter;
 import lombok.Setter;
 import net.bytemc.cluster.api.Cluster;
+import net.bytemc.cluster.api.event.services.CloudServiceShutdownEvent;
 import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.network.Packet;
 import net.bytemc.cluster.api.service.AbstractCloudService;
 import net.bytemc.cluster.api.service.CloudServiceState;
 import net.bytemc.cluster.node.Node;
+import net.bytemc.cluster.node.event.CloudEventHandlerImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,7 +57,26 @@ public final class LocalCloudService extends AbstractCloudService {
 
     @Override
     public void shutdown() {
-        Cluster.getInstance().getServiceProvider().getFactory().stop(this);
+        if (state != CloudServiceState.STOPPED) {
+            setState(CloudServiceState.STOPPED);
+            Cluster.getInstance().getServiceProvider().getFactory().stop(this);
+            CloudServiceProviderImpl serviceProvider = (CloudServiceProviderImpl) Cluster.getInstance().getServiceProvider();
+
+            if (channel != null) {
+                serviceProvider.getServiceChannels().remove(this.channel);
+            }
+
+            // unregister events
+            ((CloudEventHandlerImpl) Node.getInstance().getEventHandler()).removeCloudService(this);
+
+            Cluster.getInstance().getEventHandler().call(new CloudServiceShutdownEvent(this));
+
+            serviceProvider.removeService(getName());
+
+            if (Node.getInstance().isRunning()) {
+                ((CloudServiceProviderImpl) Cluster.getInstance().getServiceProvider()).getQueue().checkQueue();
+            }
+        }
     }
 
     public @NotNull Path getDirectory() {

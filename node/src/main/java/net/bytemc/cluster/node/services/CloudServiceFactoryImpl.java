@@ -79,7 +79,6 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
 
             } catch (IOException e) {
                 Logger.error("Cannot copy service runtime file. Service is now closed.", e);
-                cloudService.setState(CloudServiceState.STOPPED);
                 service.shutdown();
                 return;
             }
