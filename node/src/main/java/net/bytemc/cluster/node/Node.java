@@ -91,7 +91,6 @@ public final class Node extends Cluster {
         // if user close the cluster without the shutdown command
         Runtime.getRuntime().addShutdownHook(new Thread(() -> NodeShutdownHandler.shutdown(this)));
 
-        this.eventHandler.registerListener(new TestListener());
 
         ((CloudServiceProviderImpl) this.serviceProvider).runProcess(this.serviceGroupProvider);
         ((CloudServiceProviderImpl) this.serviceProvider).queue();

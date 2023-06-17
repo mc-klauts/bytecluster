@@ -10,8 +10,6 @@
 
 ### Todo
 
-- [ ] ip whitelist for node cluster
-- [ ] message channel
 - [ ] spigot 1.20 support
 - [ ] memory calculation
 - [ ] static services
@@ -20,6 +18,7 @@
 
 ### Complete
 
+- [x] ip whitelist for node cluster
 - [x] minestom support
 - [x] auto forwarding-secret
 - [x] better command system
