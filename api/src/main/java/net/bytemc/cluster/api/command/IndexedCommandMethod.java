@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.bytemc.cluster.api.command.annotations.CommandArgument;
 import net.bytemc.cluster.api.command.argument.ArgumentTransformerFactory;
+import net.bytemc.cluster.api.command.autocompletion.TabCompleter;
 import net.bytemc.cluster.api.command.interfaces.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +23,7 @@ public final class IndexedCommandMethod {
     private final Method method;
     private final String callName;
     private final String example;
+    private final TabCompleter tabCompleter;
 
     public void invoke(
         CommandSender commandSender,
