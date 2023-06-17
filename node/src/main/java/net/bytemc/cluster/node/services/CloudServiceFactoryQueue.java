@@ -10,6 +10,7 @@ import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.api.misc.FileHelper;
 import net.bytemc.cluster.node.misc.PortHelper;
 
+import java.nio.file.Path;
 import java.util.*;
 
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @RequiredArgsConstructor
 public final class CloudServiceFactoryQueue {
 
+    public static Path TEMP_PATH = Path.of("temp");
     private final CloudServiceProvider cloudServiceProvider;
     private final Queue<CloudServiceGroup> tasks = new LinkedList<>();
 
@@ -54,7 +56,7 @@ public final class CloudServiceFactoryQueue {
     }
 
     public void shutdown() {
-        FileHelper.deleteDirectory(Node.getInstance().getRuntimeConfiguration().getNodePath().getServerRunningPath());
+        FileHelper.deleteDirectory(TEMP_PATH);
     }
 
     private int findId(@NotNull CloudServiceGroup group) {

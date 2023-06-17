@@ -16,4 +16,6 @@ public interface CloudServiceGroup {
 
     boolean isFallback();
 
+    String getBootstrapNodes();
+
 }

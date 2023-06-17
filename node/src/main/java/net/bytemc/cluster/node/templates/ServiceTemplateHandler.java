@@ -8,11 +8,14 @@ import net.bytemc.cluster.node.services.LocalCloudService;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 public final class ServiceTemplateHandler {
 
+    private static Path TEMPLATE_PATH = Path.of("templates");
+
     public ServiceTemplateHandler() {
-        FileHelper.createDirectoryIfNotExists(Node.getInstance().getRuntimeConfiguration().getNodePath().getTemplatePath());
+        FileHelper.createDirectoryIfNotExists(TEMPLATE_PATH);
 
         this.createTemplate("GLOBAL");
         this.createTemplate("EVERY_SERVER");
@@ -26,7 +29,7 @@ public final class ServiceTemplateHandler {
     public void createTemplate(String id) {
         if (!isTemplateExists(id)) {
             try {
-                Files.createDirectory(Node.getInstance().getRuntimeConfiguration().getNodePath().getTemplatePath().resolve(id));
+                Files.createDirectory(TEMPLATE_PATH.resolve(id));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -34,10 +37,10 @@ public final class ServiceTemplateHandler {
     }
 
     private boolean isTemplateExists(String id) {
-        return Files.exists(Node.getInstance().getRuntimeConfiguration().getNodePath().getTemplatePath().resolve(id));
+        return Files.exists(TEMPLATE_PATH.resolve(id));
     }
 
     public void copyTemplate(String id, LocalCloudService service) {
-        FileHelper.copyDirectory(Node.getInstance().getRuntimeConfiguration().getNodePath().getTemplatePath().resolve(id), service.getDirectory());
+        FileHelper.copyDirectory(TEMPLATE_PATH.resolve(id), service.getDirectory());
     }
 }

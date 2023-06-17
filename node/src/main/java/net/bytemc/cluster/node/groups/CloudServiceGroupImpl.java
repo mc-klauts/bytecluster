@@ -22,6 +22,9 @@ public final class CloudServiceGroupImpl implements CloudServiceGroup {
     private int maxMemory;
     private boolean fallback;
 
+    private int defaultStartPort;
+    private String bootstrapNodes;
+
     @Override
     public void shutdownAllServices() {
         for (var service : Cluster.getInstance().getServiceProvider().findServices(this.name)) {
