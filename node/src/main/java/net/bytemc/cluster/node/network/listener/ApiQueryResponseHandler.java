@@ -1,8 +1,7 @@
 package net.bytemc.cluster.node.network.listener;
 
 import net.bytemc.cluster.api.Cluster;
-import net.bytemc.cluster.api.network.packets.player.SingletonPlayerRequest;
-import net.bytemc.cluster.api.network.packets.player.SingletonPlayerResponse;
+import net.bytemc.cluster.api.network.packets.player.*;
 import net.bytemc.cluster.api.network.packets.services.*;
 import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.node.Node;
@@ -40,6 +39,14 @@ public final class ApiQueryResponseHandler {
             } else {
                 return new SingletonPlayerResponse(Cluster.getInstance().getPlayerHandler().findPlayer((String) packet.getIdentifier()).orElse(null));
             }
+        });
+
+        pool.addQueryModification(CloudPlayerAmountRequest.class, (packet) -> {
+            return new CloudPlayerAmountResponse(Cluster.getInstance().getPlayerHandler().getOnlineCount());
+        });
+
+        pool.addQueryModification(CollectionCloudPlayerRequest.class, (packet) -> {
+            return new CollectionCloudPlayerResponse(Cluster.getInstance().getPlayerHandler().findPlayers());
         });
     }
 }

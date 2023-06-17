@@ -41,7 +41,11 @@ public final class PacketPool {
                 CloudPlayerDisconnectPacket.class,
                 CloudPlayerSwitchPacket.class,
                 SingletonPlayerRequest.class,
-                SingletonPlayerResponse.class,s
+                SingletonPlayerResponse.class,
+                CloudPlayerAmountRequest.class,
+                CloudPlayerAmountResponse.class,
+                CollectionCloudPlayerRequest.class,
+                CollectionCloudPlayerResponse.class,
 
                 // event system basics
                 CallEventPacket.class,

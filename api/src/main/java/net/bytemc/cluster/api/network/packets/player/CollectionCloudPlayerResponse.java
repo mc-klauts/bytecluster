@@ -1,4 +1,4 @@
-package net.bytemc.cluster.api.network.packets.services;
+package net.bytemc.cluster.api.network.packets.player;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,33 +6,33 @@ import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.network.Packet;
 import net.bytemc.cluster.api.network.PacketBufferHelper;
 import net.bytemc.cluster.api.network.buffer.PacketBuffer;
-import net.bytemc.cluster.api.service.CloudService;
+import net.bytemc.cluster.api.player.CloudPlayer;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Getter
 @AllArgsConstructor
-@Packet.Info(id = 13)
-public final class CollectionServiceResponse extends Packet {
+@Packet.Info(id = 38)
+public final class CollectionCloudPlayerResponse extends Packet {
 
-    private Collection<CloudService> services;
+    private Collection<CloudPlayer> players;
 
     @Override
     public void read(PacketBuffer reader) {
         int length = reader.readInt();
-        var services = new ArrayList<CloudService>();
+        var playerPool = new ArrayList<CloudPlayer>();
         for (var i = 0; i < length; i++) {
-            services.add(Cluster.getInstance().getServiceProvider().getCloudServiceByBuffer(reader));
+            playerPool.add(Cluster.getInstance().getPlayerHandler().getCloudPlayerFromBuffer(reader));
         }
-        this.services = services;
+        this.players = playerPool;
     }
 
     @Override
     public void write(PacketBuffer writer) {
-        writer.writeInt(services.size());
-        for (var service : this.services) {
-            PacketBufferHelper.writeService(writer, service);
+        writer.writeInt(players.size());
+        for (var player : this.players) {
+            PacketBufferHelper.writeCloudPlayer(writer, player);
         }
     }
 }

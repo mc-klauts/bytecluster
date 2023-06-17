@@ -11,7 +11,7 @@ public interface CloudPlayerHandler {
 
     Collection<CloudPlayer> findPlayers();
 
-    AsyncTask<CloudPlayer> findPlayersAsync();
+    AsyncTask<Collection<CloudPlayer>> findPlayersAsync();
 
     Optional<CloudPlayer> findPlayer(UUID uuid);
 

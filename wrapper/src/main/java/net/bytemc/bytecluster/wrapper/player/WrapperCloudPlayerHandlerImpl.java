@@ -3,16 +3,9 @@ package net.bytemc.bytecluster.wrapper.player;
 import net.bytemc.bytecluster.wrapper.Wrapper;
 import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.network.buffer.PacketBuffer;
-import net.bytemc.cluster.api.network.packets.player.SingletonPlayerRequest;
-import net.bytemc.cluster.api.network.packets.player.SingletonPlayerResponse;
-import net.bytemc.cluster.api.network.packets.services.CollectionServiceRequest;
-import net.bytemc.cluster.api.network.packets.services.CollectionServiceResponse;
-import net.bytemc.cluster.api.network.packets.services.SingletonServiceRequest;
+import net.bytemc.cluster.api.network.packets.player.*;
 import net.bytemc.cluster.api.player.CloudPlayer;
 import net.bytemc.cluster.api.player.CloudPlayerHandler;
-import net.bytemc.cluster.api.service.CloudService;
-import net.bytemc.cluster.api.service.filter.CloudServiceFilter;
-
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,14 +14,16 @@ public final class WrapperCloudPlayerHandlerImpl implements CloudPlayerHandler {
 
     @Override
     public Collection<CloudPlayer> findPlayers() {
-        //todo
-        return null;
+        return this.findPlayersAsync().getSync(null);
     }
 
     @Override
-    public AsyncTask<CloudPlayer> findPlayersAsync() {
-        //todo
-        return null;
+    public AsyncTask<Collection<CloudPlayer>> findPlayersAsync() {
+        var tasks = new AsyncTask<Collection<CloudPlayer>>();
+        Wrapper.getInstance().sendQueryPacket(new CollectionCloudPlayerRequest(), CollectionCloudPlayerResponse.class, (packet) -> {
+            tasks.complete(packet.getPlayers());
+        });
+        return tasks;
     }
 
     @Override
@@ -66,8 +61,9 @@ public final class WrapperCloudPlayerHandlerImpl implements CloudPlayerHandler {
 
     @Override
     public AsyncTask<Integer> getOnlineCountAsync() {
-        //todo
-        return null;
+        var tasks = new AsyncTask<Integer>();
+        Wrapper.getInstance().sendQueryPacket(new CloudPlayerAmountRequest(), CloudPlayerAmountResponse.class, (packet) -> tasks.complete(packet.getOnlineCount()));
+        return tasks;
     }
 
     @Override
