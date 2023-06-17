@@ -45,6 +45,17 @@ public final class NettyNetworkHandler extends ClusterChannelInboundHandler {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
+        var serviceHandler = ((CloudServiceProviderImpl) Node.getInstance().getServiceProvider());
+        var service = serviceHandler.getServiceByConnection(ctx.channel());
 
+        if (service != null && service instanceof LocalCloudService cloudService) {
+
+            cloudService.setState(CloudServiceState.STOPPED);
+
+            service.shutdown();
+            serviceHandler.removeService(service.getName());
+
+            Logger.info("Service " + service.getName() + " is offline and disconnected from the node&8.");
+        }
     }
 }

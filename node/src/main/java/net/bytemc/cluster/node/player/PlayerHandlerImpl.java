@@ -35,7 +35,7 @@ public final class PlayerHandlerImpl implements CloudPlayerHandler {
     }
 
     @Override
-    public AsyncTask<CloudPlayer> findPlayersAsync() {
+    public AsyncTask<Collection<CloudPlayer>> findPlayersAsync() {
         return AsyncTask.completeWork(findPlayers());
     }
 

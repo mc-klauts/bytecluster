@@ -15,6 +15,7 @@ import net.bytemc.cluster.node.configuration.RuntimeConfiguration;
 import net.bytemc.cluster.node.console.ConsoleTerminal;
 import net.bytemc.cluster.node.console.impl.ClearScreenCommand;
 import net.bytemc.cluster.node.console.impl.GroupCommand;
+import net.bytemc.cluster.node.console.impl.ServiceCommand;
 import net.bytemc.cluster.node.console.impl.ShutdownCommand;
 import net.bytemc.cluster.node.dependency.DependencyHandler;
 import net.bytemc.cluster.node.dependency.DependencyHandlerImpl;
@@ -59,6 +60,7 @@ public final class Node extends Cluster {
         commandRepository.registerCommand(ClearScreenCommand.class);
         commandRepository.registerCommand(ShutdownCommand.class);
         commandRepository.registerCommand(GroupCommand.class);
+        commandRepository.registerCommand(ServiceCommand.class);
 
         this.dependencyHandler = new DependencyHandlerImpl();
 

@@ -20,26 +20,23 @@ import org.jetbrains.annotations.NotNull;
 @Command(name = "group")
 public final class GroupCommand {
 
-    @SubCommand(name = "start", example = "")
+    @SubCommand(name = "start", example = "group start <name>")
     private void startServer(
         CommandSender commandSender,
         @CommandArgument(name = "template", transformer = StringArgumentTransformer.class) String template
     ) {
-        final CloudServiceGroupProvider cloudServiceGroupProvider = Node.getInstance()
-            .getServiceGroupProvider();
+        final var cloudServiceGroupProvider = Node.getInstance().getServiceGroupProvider();
         if (!cloudServiceGroupProvider.exists(template)) {
             commandSender.sendMessage("There is no group with this name");
             return;
         }
 
-        ((CloudServiceProviderImpl) Node.getInstance().getServiceProvider()).getQueue()
-            .addTask(cloudServiceGroupProvider.findGroup(template), 1);
+        ((CloudServiceProviderImpl) Node.getInstance().getServiceProvider()).getQueue().addTask(cloudServiceGroupProvider.findGroup(template), 1);
     }
 
     @SubCommand(name = "list", example = "group list")
     private void listGroups(CommandSender commandSender) {
-        final Collection<CloudServiceGroup> groups = Node.getInstance().getServiceGroupProvider()
-            .findGroups();
+        final var groups = Node.getInstance().getServiceGroupProvider().findGroups();
         if (groups.isEmpty()) {
             commandSender.sendMessage("No groups available. Try to create one.");
             commandSender.sendMessage("For more help use group create");
@@ -60,8 +57,7 @@ public final class GroupCommand {
         @CommandArgument(name = "memory", transformer = IntArgumentTransformer.class) int memory,
         @CommandArgument(name = "fallback", transformer = BooleanArgumentTransformer.class) boolean fallback
     ) {
-        final CloudServiceGroupProvider cloudServiceGroupProvider = Node.getInstance()
-            .getServiceGroupProvider();
+        final var cloudServiceGroupProvider = Node.getInstance().getServiceGroupProvider();
         if (cloudServiceGroupProvider.exists(name)) {
             commandSender.sendMessage("Group with this name already exists");
             return;
@@ -77,8 +73,7 @@ public final class GroupCommand {
         @NotNull CommandSender commandSender,
         @CommandArgument(name = "name", transformer = StringArgumentTransformer.class) String name
     ) {
-        final CloudServiceGroupProvider cloudServiceGroupProvider = Node.getInstance()
-            .getServiceGroupProvider();
+        final var cloudServiceGroupProvider = Node.getInstance().getServiceGroupProvider();
         if (!cloudServiceGroupProvider.exists(name)) {
             commandSender.sendMessage("There is no group with this name");
             return;
@@ -93,8 +88,7 @@ public final class GroupCommand {
         CommandSender commandSender,
         @CommandArgument(name = "name", transformer = StringArgumentTransformer.class) String name
     ) {
-        final CloudServiceGroupProvider cloudServiceGroupProvider = Node.getInstance()
-            .getServiceGroupProvider();
+        final var cloudServiceGroupProvider = Node.getInstance().getServiceGroupProvider();
         if (!cloudServiceGroupProvider.exists(name)) {
             commandSender.sendMessage("There is no group with this name");
             return;
