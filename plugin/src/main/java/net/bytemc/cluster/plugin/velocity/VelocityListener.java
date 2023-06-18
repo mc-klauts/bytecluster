@@ -43,14 +43,11 @@ public final class VelocityListener {
                 return;
             }
             Wrapper.getInstance().sendPacket(new CloudPlayerConnectPacket(event.getPlayer().getUsername(), event.getPlayer().getUniqueId(), currentServer.getServerInfo().getName()));
-            //todo call local event
         } else {
             // switch server
             Wrapper.getInstance().sendPacket(new CloudPlayerSwitchPacket(event.getPlayer().getUniqueId(),
                     event.getPreviousServer().getServerInfo().getName(),
                     event.getPlayer().getCurrentServer().get().getServerInfo().getName()));
-
-            //todo call local event
         }
     }
 
@@ -59,7 +56,6 @@ public final class VelocityListener {
         if(event.getLoginStatus() == DisconnectEvent.LoginStatus.SUCCESSFUL_LOGIN || event.getLoginStatus() == DisconnectEvent.LoginStatus.PRE_SERVER_JOIN) {
             // only the single
             Wrapper.getInstance().sendPacket(new CloudPlayerDisconnectPacket(event.getPlayer().getUniqueId()));
-            //todo call local event
         }
     }
 

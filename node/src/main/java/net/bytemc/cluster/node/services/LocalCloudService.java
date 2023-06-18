@@ -80,7 +80,7 @@ public final class LocalCloudService extends AbstractCloudService {
     }
 
     public @NotNull Path getDirectory() {
-        return Node.getInstance().getRuntimeConfiguration().getNodePath().getServerRunningPath().resolve(getName());
+        return CloudServiceFactoryQueue.TEMP_PATH.resolve(getName());
     }
 
     @Override

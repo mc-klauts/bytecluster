@@ -13,10 +13,17 @@ public final class CommandRepository {
 
     @SneakyThrows
     public void registerCommand(@NotNull Class<?> clazz) {
-        final Object clazzInstance = clazz.newInstance();
-        final InternalCommand command = new InternalCommand(clazzInstance);
+        final var clazzInstance = clazz.newInstance();
+        final var command = new InternalCommand(clazzInstance);
         command.index();
         this.commandMap.put(clazz, command);
+    }
+
+
+    public void registerCommands(@NotNull Class<?>... clazz) {
+        for (var aClass : clazz) {
+            this.registerCommand(aClass);
+        }
     }
 
     public void unregister(Class<?> clazz) {

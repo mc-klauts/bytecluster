@@ -13,15 +13,14 @@ import net.bytemc.cluster.node.cluster.ClusterNetwork;
 import net.bytemc.cluster.node.configuration.ConfigurationHelper;
 import net.bytemc.cluster.node.configuration.RuntimeConfiguration;
 import net.bytemc.cluster.node.console.ConsoleTerminal;
-import net.bytemc.cluster.node.console.impl.ClearScreenCommand;
-import net.bytemc.cluster.node.console.impl.GroupCommand;
-import net.bytemc.cluster.node.console.impl.ServiceCommand;
-import net.bytemc.cluster.node.console.impl.ShutdownCommand;
+import net.bytemc.cluster.node.console.impl.*;
 import net.bytemc.cluster.node.dependency.DependencyHandler;
 import net.bytemc.cluster.node.dependency.DependencyHandlerImpl;
 import net.bytemc.cluster.node.event.CloudEventHandlerImpl;
 import net.bytemc.cluster.node.groups.CloudServiceGroupProviderImpl;
 import net.bytemc.cluster.node.logger.NodeLogger;
+import net.bytemc.cluster.node.logger.NodeOutputPrintStream;
+import net.bytemc.cluster.node.modules.CloudModuleHandler;
 import net.bytemc.cluster.node.player.PlayerHandlerImpl;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
 import net.bytemc.cluster.node.templates.ServiceTemplateHandler;
@@ -53,24 +52,28 @@ public final class Node extends Cluster {
     private final ServiceTemplateHandler templateHandler;
     private final PlayerHandlerImpl playerHandler;
 
+    private final CloudModuleHandler moduleHandler;
+
     public Node() {
         instance = this;
 
-        final CommandRepository commandRepository = Cluster.getInstance().getCommandRepository();
-        commandRepository.registerCommand(ClearScreenCommand.class);
-        commandRepository.registerCommand(ShutdownCommand.class);
-        commandRepository.registerCommand(GroupCommand.class);
-        commandRepository.registerCommand(ServiceCommand.class);
-
         this.dependencyHandler = new DependencyHandlerImpl();
+        this.consoleTerminal = new ConsoleTerminal();
+
+        System.setErr(new NodeOutputPrintStream());
+        System.setOut(new NodeOutputPrintStream());
+
+        this.logger = new NodeLogger();
+
+        final var commandRepository = Cluster.getInstance().getCommandRepository();
+        commandRepository.registerCommands(ClearScreenCommand.class, ShutdownCommand.class, GroupCommand.class, ServiceCommand.class, ReloadCommand.class);
 
         this.runtimeConfiguration = ConfigurationHelper.readConfiguration(Path.of("config.json"), RuntimeConfiguration.DEFAULT_CONFIGURATION);
 
         this.commandExecutor = new CommandExecutor();
-        this.logger = new NodeLogger();
 
+        this.moduleHandler = new CloudModuleHandler();
         this.eventHandler = new CloudEventHandlerImpl();
-        this.consoleTerminal = new ConsoleTerminal();
 
         Logger.info("Initializing networkservice...");
 
@@ -79,15 +82,17 @@ public final class Node extends Cluster {
 
         Logger.info("Loading following groups: " + String.join(", ", serviceGroupProvider.findGroups().stream().map(it -> it.getName()).toList()));
 
+        this.moduleHandler.loadModules();
+
         this.templateHandler = new ServiceTemplateHandler();
-        this.serviceProvider = new CloudServiceProviderImpl(this.serviceGroupProvider);
+        this.serviceProvider = new CloudServiceProviderImpl();
         this.clusterNetwork = new ClusterNetwork(this.runtimeConfiguration);
 
-        // if user close the cluster without the shutdown command
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            NodeShutdownHandler.shutdown(this);
-        }));
 
+        // if user close the cluster without the shutdown command
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> NodeShutdownHandler.shutdown(this)));
+
+        ((CloudServiceProviderImpl) this.serviceProvider).runProcess(this.serviceGroupProvider);
         ((CloudServiceProviderImpl) this.serviceProvider).queue();
     }
 }

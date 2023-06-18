@@ -23,6 +23,8 @@ public final class MinestomExtension extends Extension {
         if (MojangAuth.isEnabled() && !VelocityProxy.isEnabled()) {
             Logger.warn("This player forwarding options is not compatible with Mojang auth support.");
         }
+
+        new ByteClusterExternalCloudCommand();
     }
 
     @Override

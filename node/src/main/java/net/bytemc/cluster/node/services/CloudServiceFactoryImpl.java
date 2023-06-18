@@ -12,6 +12,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.jar.JarInputStream;
 
 public final class CloudServiceFactoryImpl implements CloudServiceFactory {
 
+    private static final Path STORAGE_PATH = Path.of("storage");
     private static final List<String> VELOCITY_FLAGS = Arrays.asList(
             "-XX:+UseG1GC",
             "-XX:G1HeapRegionSize=4M",
@@ -34,7 +37,7 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
 
     static {
         try {
-            WRAPPER_MAIN_CLASS = new JarInputStream(Files.newInputStream(Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath().resolve("bytecluster-wrapper.jar")))
+            WRAPPER_MAIN_CLASS = new JarInputStream(Files.newInputStream(STORAGE_PATH.resolve("bytecluster-wrapper.jar")))
                     .getManifest().getMainAttributes().getValue("Main-Class");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -42,24 +45,22 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
     }
 
     public CloudServiceFactoryImpl() {
-        var runningPath = Node.getInstance().getRuntimeConfiguration().getNodePath().getServerRunningPath();
+        var runningPath = CloudServiceFactoryQueue.TEMP_PATH;
 
         if (Files.exists(runningPath)) {
             FileHelper.deleteDirectory(runningPath);
             Logger.info("Clean up on running service directory...");
         }
-        FileHelper.createDirectoryIfNotExists(Node.getInstance().getRuntimeConfiguration().getNodePath().getServerRunningPath());
+        FileHelper.createDirectoryIfNotExists(CloudServiceFactoryQueue.TEMP_PATH);
     }
 
     @Override
     public void start(@NotNull CloudService service) {
 
         if (service instanceof LocalCloudService cloudService) {
-
-            var nodePath = Node.getInstance().getRuntimeConfiguration().getNodePath();
             var serviceDirectory = cloudService.getDirectory();
 
-            FileHelper.createDirectoryIfNotExists(nodePath.getServerRunningPath().resolve(service.getName()));
+            FileHelper.createDirectoryIfNotExists(CloudServiceFactoryQueue.TEMP_PATH.resolve(service.getName()));
 
             // copy template before copy runtime files
             Node.getInstance().getTemplateHandler().copyTemplate("GLOBAL", cloudService);
@@ -67,15 +68,17 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
             Node.getInstance().getTemplateHandler().copyTemplate(cloudService.getGroupName(), cloudService);
 
             try {
-                Files.copy(service.getGroup().getGroupType().getPath(nodePath.getStoragePath()), service.getGroup().getGroupType().getPath(((LocalCloudService) service).getDirectory()));
+                Files.copy(service.getGroup().getGroupType().getPath(STORAGE_PATH), service.getGroup().getGroupType().getPath(((LocalCloudService) service).getDirectory()), StandardCopyOption.REPLACE_EXISTING);
 
                 if (cloudService.getGroup().getGroupType() == CloudGroupType.MINESTOM) {
                     FileHelper.createDirectoryIfNotExists(serviceDirectory.resolve("extensions"));
-                    Files.copy(nodePath.getStoragePath().resolve("bytecluster-plugin.jar"), serviceDirectory.resolve("extensions").resolve("bytecluster-plugin.jar"));
+                    Files.copy(STORAGE_PATH.resolve("bytecluster-plugin.jar"), serviceDirectory.resolve("extensions").resolve("bytecluster-plugin.jar"));
                 } else {
                     FileHelper.createDirectoryIfNotExists(serviceDirectory.resolve("plugins"));
-                    Files.copy(nodePath.getStoragePath().resolve("bytecluster-plugin.jar"), serviceDirectory.resolve("plugins").resolve("bytecluster-plugin.jar"));
+                    Files.copy(STORAGE_PATH.resolve("bytecluster-plugin.jar"), serviceDirectory.resolve("plugins").resolve("bytecluster-plugin.jar"));
                 }
+
+                Node.getInstance().getModuleHandler().copyModuleFiles(cloudService);
 
             } catch (IOException e) {
                 Logger.error("Cannot copy service runtime file. Service is now closed.", e);
@@ -122,8 +125,12 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
             localService.setState(CloudServiceState.STOPPED);
             synchronized (this) {
                 if (localService.getProcess() != null && localService.getProcess().toHandle().isAlive()) {
-                    service.executeCommand("close");
-                    service.executeCommand("stop");
+
+                    if (service.getGroup().getGroupType() == CloudGroupType.MINESTOM) {
+                        service.executeCommand("close");
+                    } else {
+                        service.executeCommand("stop");
+                    }
 
                     try {
                         if (localService.getProcess().waitFor(5, TimeUnit.SECONDS)) {
@@ -145,7 +152,7 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
     }
 
     private @NotNull List<String> arguments(@NotNull LocalCloudService service) {
-        final var wrapper = Node.getInstance().getRuntimeConfiguration().getNodePath().getStoragePath().resolve("bytecluster-wrapper.jar").toAbsolutePath();
+        final var wrapper = STORAGE_PATH.resolve("bytecluster-wrapper.jar").toAbsolutePath();
         final var group = service.getGroup();
         final var arguments = new ArrayList<String>();
         arguments.add("java");
@@ -170,10 +177,7 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
         }
         arguments.add(applicationFile.toAbsolutePath().toString());
         arguments.add(Boolean.toString(preLoadClasses));
-
         arguments.add(service.getName());
-
-        //todo i dont know but i think this is the ip of the node
         arguments.add("127.0.0.1");
         arguments.add(String.valueOf(Node.getInstance().getRuntimeConfiguration().getPort()));
         arguments.add(String.valueOf(service.getPort()));

@@ -3,6 +3,8 @@ package net.bytemc.cluster.api.service;
 import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.misc.TaskFuture;
 
+import java.util.List;
+
 public interface CloudService {
 
     String getName();

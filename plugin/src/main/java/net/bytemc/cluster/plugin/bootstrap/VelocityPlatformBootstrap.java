@@ -9,6 +9,7 @@ import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.service.filter.CloudServiceFilter;
 import net.bytemc.cluster.plugin.velocity.VelocityListener;
+import net.bytemc.cluster.plugin.velocity.VelocityPacketListener;
 import net.bytemc.cluster.plugin.velocity.VelocityProxyServerListener;
 
 import java.net.InetSocketAddress;
@@ -25,6 +26,8 @@ public final class VelocityPlatformBootstrap {
         Cluster.getInstance().getEventHandler().registerListener(new VelocityProxyServerListener(this.proxyServer));
 
         this.proxyServer.getEventManager().register(this, new VelocityListener(this.proxyServer));
+
+        new VelocityPacketListener(this.proxyServer);
 
         // unregister all default config configuration
         this.proxyServer.getAllServers().forEach(server -> this.proxyServer.unregisterServer(server.getServerInfo()));

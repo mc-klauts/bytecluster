@@ -54,4 +54,18 @@ public final class NettyNetworkHandler extends ClusterChannelInboundHandler {
             Logger.info("Service " + service.getName() + " is offline and disconnected from the node&8.");
         }
     }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+
+        var hostname = ctx.channel().remoteAddress().toString().split(":")[0].replace("/", "");
+
+        if(Node.getInstance().getRuntimeConfiguration().getAllowedHosts().contains(hostname)) {
+            //all fine
+            return;
+        }
+
+        ctx.close();
+        Logger.warn("A service tried to connect to the node, but the hostname is not allowed&8. &7(" + hostname + ")");
+    }
 }

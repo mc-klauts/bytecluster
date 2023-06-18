@@ -67,8 +67,7 @@ public final class GroupCommand {
             return;
         }
 
-        cloudServiceGroupProvider.addGroup(
-            new CloudServiceGroupImpl(name, type, 1, 1, memory, fallback));
+        cloudServiceGroupProvider.addGroup(new CloudServiceGroupImpl(name, type, 1, 1, memory, fallback, -1, "node-1"));
         commandSender.sendMessage("Created group " + name);
     }
 

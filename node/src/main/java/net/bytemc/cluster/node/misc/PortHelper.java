@@ -5,17 +5,15 @@ import net.bytemc.cluster.node.Node;
 
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+
+import net.bytemc.cluster.node.groups.CloudServiceGroupImpl;
 import org.jetbrains.annotations.NotNull;
 
 public final class PortHelper {
 
-    //todo
-    private static final int PORTS_BOUNCE_PROXY = 25565;
-    //todo
-    private static final int PORTS_BOUNCE = 25590;
 
     public static int getNextPort(@NotNull CloudServiceGroup service) {
-        var port = service.getGroupType().isProxy() ? PORTS_BOUNCE_PROXY : PORTS_BOUNCE;
+        var port = ((CloudServiceGroupImpl) service).getDefaultStartPort() == -1 ? (service.getGroupType().isProxy() ? Node.getInstance().getRuntimeConfiguration().getDefaultProxyPort() : Node.getInstance().getRuntimeConfiguration().getDefaultServerPort()) : ((CloudServiceGroupImpl) service).getDefaultStartPort();
         while (isPortUsed(port)) {
             port++;
         }
@@ -23,11 +21,11 @@ public final class PortHelper {
     }
 
     private static boolean isPortUsed(int port) {
+        var currentNodeName = Node.getInstance().getRuntimeConfiguration().getRuntimeNodeName();
         for (final var service : Node.getInstance().getServiceProvider().findServices()) {
-            //todo
-          //  if (service.getNode().equals(Base.getInstance().getNode().getName())) {
+            if (service.getGroup().getBootstrapNodes().equals(currentNodeName)) {
                 if (service.getPort() == port) return true;
-            //}
+            }
         }
         try (final var serverSocket = new ServerSocket()) {
             serverSocket.bind(new InetSocketAddress(port));

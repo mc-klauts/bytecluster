@@ -3,7 +3,9 @@ package net.bytemc.cluster.node.groups;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.service.CloudGroupType;
+import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 
 @Getter
@@ -20,8 +22,13 @@ public final class CloudServiceGroupImpl implements CloudServiceGroup {
     private int maxMemory;
     private boolean fallback;
 
+    private int defaultStartPort;
+    private String bootstrapNodes;
+
     @Override
     public void shutdownAllServices() {
-        //todo
+        for (var service : Cluster.getInstance().getServiceProvider().findServices(this.name)) {
+            service.shutdown();
+        }
     }
 }
