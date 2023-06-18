@@ -1,10 +1,13 @@
 package net.bytemc.cluster.node.modules;
 
+import lombok.Getter;
 import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.misc.FileHelper;
 import net.bytemc.cluster.api.service.CloudGroupType;
 import net.bytemc.cluster.api.service.CloudService;
+import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.node.configuration.ConfigurationProvider;
+import net.bytemc.cluster.node.event.CloudEventHandlerImpl;
 import net.bytemc.cluster.node.exception.ModuleLoadException;
 import net.bytemc.cluster.node.modules.content.LoadedModuleFileContent;
 import net.bytemc.cluster.node.modules.content.ModuleContentInfo;
@@ -29,16 +32,19 @@ public final class CloudModuleHandler {
 
     private static Path MODULE_PATH = Path.of("modules");
 
+    @Getter
     private List<LoadedModule> loadedModules = new CopyOnWriteArrayList<>();
 
     public CloudModuleHandler() {
         FileHelper.createDirectoryIfNotExists(MODULE_PATH);
-        this.loadModules();
     }
 
     public void unloadAllModules() {
         for (LoadedModule module : this.loadedModules) {
             module.getModule().onDisable();
+
+            ((CloudEventHandlerImpl)Node.getInstance().getEventHandler()).unregisterCloudModuleListener(module.getModule());
+
             try {
                 module.getClassLoader().close();
             } catch (IOException e) {

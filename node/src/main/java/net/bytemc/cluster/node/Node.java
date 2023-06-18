@@ -72,6 +72,7 @@ public final class Node extends Cluster {
 
         this.commandExecutor = new CommandExecutor();
 
+        this.moduleHandler = new CloudModuleHandler();
         this.eventHandler = new CloudEventHandlerImpl();
 
         Logger.info("Initializing networkservice...");
@@ -81,11 +82,12 @@ public final class Node extends Cluster {
 
         Logger.info("Loading following groups: " + String.join(", ", serviceGroupProvider.findGroups().stream().map(it -> it.getName()).toList()));
 
+        this.moduleHandler.loadModules();
+
         this.templateHandler = new ServiceTemplateHandler();
         this.serviceProvider = new CloudServiceProviderImpl();
         this.clusterNetwork = new ClusterNetwork(this.runtimeConfiguration);
 
-        this.moduleHandler = new CloudModuleHandler();
 
         // if user close the cluster without the shutdown command
         Runtime.getRuntime().addShutdownHook(new Thread(() -> NodeShutdownHandler.shutdown(this)));
