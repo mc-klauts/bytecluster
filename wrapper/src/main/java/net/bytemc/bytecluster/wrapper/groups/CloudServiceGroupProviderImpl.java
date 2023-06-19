@@ -4,8 +4,6 @@ import net.bytemc.bytecluster.wrapper.Wrapper;
 import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 import net.bytemc.cluster.api.network.packets.groups.*;
-import net.bytemc.cluster.api.network.packets.services.CloudServiceRequestPlayerAmountPacket;
-import net.bytemc.cluster.api.network.packets.services.CloudServiceResponsePlayerAmountPacket;
 import net.bytemc.cluster.api.service.CloudGroupType;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
@@ -68,8 +66,9 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
         int min = buffer.readInt();
         int max = buffer.readInt();
         int maxMemory = buffer.readInt();
+        int defaultPort = buffer.readInt();
         boolean fallback = buffer.readBoolean();
 
-        return new WrapperCloudServiceGroup(name, groupType, min, max, maxMemory, fallback, bootstrapNodes);
+        return new WrapperCloudServiceGroup(name, groupType, min, max, maxMemory, fallback, defaultPort, bootstrapNodes);
     }
 }

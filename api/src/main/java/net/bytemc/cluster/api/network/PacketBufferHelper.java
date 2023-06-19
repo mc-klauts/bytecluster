@@ -31,6 +31,7 @@ public final class PacketBufferHelper {
         packetBuffer.writeInt(cloudServiceGroup.getMinOnlineCount());
         packetBuffer.writeInt(cloudServiceGroup.getMaxOnlineCount());
         packetBuffer.writeInt(cloudServiceGroup.getMaxMemory());
+        packetBuffer.writeInt(cloudServiceGroup.getDefaultStartPort());
         packetBuffer.writeBoolean(cloudServiceGroup.isFallback());
     }
 

@@ -18,4 +18,6 @@ public interface CloudServiceGroup {
 
     String getBootstrapNodes();
 
+    int getDefaultStartPort();
+
 }

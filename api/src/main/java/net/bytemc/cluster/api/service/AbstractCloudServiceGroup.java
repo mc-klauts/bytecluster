@@ -13,6 +13,7 @@ public abstract class AbstractCloudServiceGroup implements CloudServiceGroup {
     private int maxOnlineCount;
     private int maxMemory;
     private boolean fallback;
+    private int defaultStartPort;
     private String bootstrapNodes;
 
 }

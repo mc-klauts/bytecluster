@@ -5,8 +5,8 @@ import net.bytemc.cluster.api.service.CloudGroupType;
 
 public final class WrapperCloudServiceGroup extends AbstractCloudServiceGroup {
 
-    public WrapperCloudServiceGroup(String name, CloudGroupType groupType, int minOnlineCount, int maxOnlineCount, int maxMemory, boolean fallback, String bootstrapNodes) {
-        super(name, groupType, minOnlineCount, maxOnlineCount, maxMemory, fallback, bootstrapNodes);
+    public WrapperCloudServiceGroup(String name, CloudGroupType groupType, int minOnlineCount, int maxOnlineCount, int maxMemory, boolean fallback, int defaultStartPort, String bootstrapNodes) {
+        super(name, groupType, minOnlineCount, maxOnlineCount, maxMemory, fallback, defaultStartPort, bootstrapNodes);
     }
 
     @Override

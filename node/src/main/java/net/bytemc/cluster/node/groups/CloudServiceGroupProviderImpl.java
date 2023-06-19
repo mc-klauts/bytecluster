@@ -100,9 +100,10 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
         int min = buffer.readInt();
         int max = buffer.readInt();
         int maxMemory = buffer.readInt();
+        int defaultStartPort = buffer.readInt();
         boolean fallback = buffer.readBoolean();
 
-        return new CloudServiceGroupImpl(name, groupType, min, max, maxMemory, fallback, bootstrapNodes);
+        return new CloudServiceGroupImpl(name, groupType, min, max, maxMemory, fallback, defaultStartPort, bootstrapNodes);
     }
 
     public void reload() {
