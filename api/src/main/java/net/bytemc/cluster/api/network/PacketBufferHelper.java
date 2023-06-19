@@ -3,6 +3,7 @@ package net.bytemc.cluster.api.network;
 import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 import net.bytemc.cluster.api.player.CloudPlayer;
 import net.bytemc.cluster.api.service.CloudService;
+import net.bytemc.cluster.api.service.CloudServiceGroup;
 
 public final class PacketBufferHelper {
 
@@ -22,4 +23,15 @@ public final class PacketBufferHelper {
         packetBuffer.writeString(cloudPlayer.getCurrentProxyId());
         packetBuffer.writeString(cloudPlayer.getCurrentServerId());
     }
+
+    public static void writeCloudServiceGroup(PacketBuffer packetBuffer, CloudServiceGroup cloudServiceGroup) {
+        packetBuffer.writeString(cloudServiceGroup.getName());
+        packetBuffer.writeString(cloudServiceGroup.getBootstrapNodes());
+        packetBuffer.writeEnum(cloudServiceGroup.getGroupType());
+        packetBuffer.writeInt(cloudServiceGroup.getMinOnlineCount());
+        packetBuffer.writeInt(cloudServiceGroup.getMaxOnlineCount());
+        packetBuffer.writeInt(cloudServiceGroup.getMaxMemory());
+        packetBuffer.writeBoolean(cloudServiceGroup.isFallback());
+    }
+
 }

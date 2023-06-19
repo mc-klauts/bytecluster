@@ -3,6 +3,8 @@ package net.bytemc.cluster.node.groups;
 import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.misc.TaskFuture;
 import net.bytemc.cluster.api.misc.async.AsyncTask;
+import net.bytemc.cluster.api.network.buffer.PacketBuffer;
+import net.bytemc.cluster.api.service.CloudGroupType;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudServiceGroupFactory;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
@@ -33,7 +35,7 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
 
     @Contract(pure = true)
     @Override
-    public @Nullable AsyncTask<Collection<CloudServiceGroup>> findGroupsAsync() {
+    public @NotNull AsyncTask<Collection<CloudServiceGroup>> findGroupsAsync() {
         return AsyncTask.directly(groups.values());
     }
 
@@ -46,8 +48,7 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
     @Contract(pure = true)
     @Override
     public @Nullable AsyncTask<CloudServiceGroup> findGroupAsync(String name) {
-        //todo
-        return null;
+        return AsyncTask.directly(this.groups.get(name));
     }
 
     @Contract(pure = true)
@@ -88,6 +89,19 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
     @Override
     public @NotNull AsyncTask<Boolean> existsAsync(String id) {
         return AsyncTask.directly(this.exists(id));
+    }
+
+    @Override
+    public CloudServiceGroup getCloudServiceGroupFromBuffer(PacketBuffer buffer) {
+        var name = buffer.readString();
+        var bootstrapNodes = buffer.readString();
+        var groupType = buffer.readEnum(CloudGroupType.class);
+        int min = buffer.readInt();
+        int max = buffer.readInt();
+        int maxMemory = buffer.readInt();
+        boolean fallback = buffer.readBoolean();
+
+        return new CloudServiceGroupImpl(name, groupType, min, max, maxMemory, fallback, bootstrapNodes);
     }
 
     public void reload() {

@@ -30,10 +30,10 @@ import java.util.stream.Collectors;
 
 public final class CloudModuleHandler {
 
-    private static Path MODULE_PATH = Path.of("modules");
+    private final static Path MODULE_PATH = Path.of("modules");
 
     @Getter
-    private List<LoadedModule> loadedModules = new CopyOnWriteArrayList<>();
+    private final List<LoadedModule> loadedModules = new CopyOnWriteArrayList<>();
 
     public CloudModuleHandler() {
         FileHelper.createDirectoryIfNotExists(MODULE_PATH);

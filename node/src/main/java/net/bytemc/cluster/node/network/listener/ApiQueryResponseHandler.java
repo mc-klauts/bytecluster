@@ -1,6 +1,10 @@
 package net.bytemc.cluster.node.network.listener;
 
 import net.bytemc.cluster.api.Cluster;
+import net.bytemc.cluster.api.network.packets.groups.CollectionGroupRequest;
+import net.bytemc.cluster.api.network.packets.groups.CollectionGroupResponse;
+import net.bytemc.cluster.api.network.packets.groups.SingletonGroupRequest;
+import net.bytemc.cluster.api.network.packets.groups.SingletonGroupResponse;
 import net.bytemc.cluster.api.network.packets.player.*;
 import net.bytemc.cluster.api.network.packets.services.*;
 import net.bytemc.cluster.api.service.CloudService;
@@ -51,6 +55,14 @@ public final class ApiQueryResponseHandler {
 
         pool.addQueryModification(CloudServiceRequestPlayerAmountPacket.class, (packet) -> {
             return new CloudServiceResponsePlayerAmountPacket(Cluster.getInstance().getServiceProvider().findService(packet.getServiceId()).getPlayers());
+        });
+
+        pool.addQueryModification(CollectionGroupRequest.class, (packet) -> {
+            return new CollectionGroupResponse(Cluster.getInstance().getServiceGroupProvider().findGroups());
+        });
+
+        pool.addQueryModification(SingletonGroupRequest.class, (packet) -> {
+            return new SingletonGroupResponse(Cluster.getInstance().getServiceGroupProvider().findGroup(packet.getName()));
         });
     }
 }

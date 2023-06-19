@@ -1,7 +1,7 @@
 package net.bytemc.cluster.api.service;
 
-import net.bytemc.cluster.api.misc.TaskFuture;
 import net.bytemc.cluster.api.misc.async.AsyncTask;
+import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 
 import java.util.Collection;
 
@@ -22,5 +22,7 @@ public interface CloudServiceGroupProvider {
     boolean exists(String id);
 
     AsyncTask<Boolean> existsAsync(String id);
+
+    CloudServiceGroup getCloudServiceGroupFromBuffer(PacketBuffer buffer);
 
 }

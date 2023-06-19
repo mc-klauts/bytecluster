@@ -4,30 +4,23 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import net.bytemc.cluster.api.Cluster;
+import net.bytemc.cluster.api.service.AbstractCloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudGroupType;
 import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 
 @Getter
-@AllArgsConstructor
 @ToString
-public final class CloudServiceGroupImpl implements CloudServiceGroup {
+public final class CloudServiceGroupImpl extends AbstractCloudServiceGroup {
 
-    private String name;
 
-    private CloudGroupType groupType;
-
-    private int minOnlineCount;
-    private int maxOnlineCount;
-    private int maxMemory;
-    private boolean fallback;
-
-    private int defaultStartPort;
-    private String bootstrapNodes;
+    public CloudServiceGroupImpl(String name, CloudGroupType groupType, int minOnlineCount, int maxOnlineCount, int maxMemory, boolean fallback, String bootstrapNodes) {
+        super(name, groupType, minOnlineCount, maxOnlineCount, maxMemory, fallback, bootstrapNodes);
+    }
 
     @Override
     public void shutdownAllServices() {
-        for (var service : Cluster.getInstance().getServiceProvider().findServices(this.name)) {
+        for (var service : Cluster.getInstance().getServiceProvider().findServices(this.getName())) {
             service.shutdown();
         }
     }
