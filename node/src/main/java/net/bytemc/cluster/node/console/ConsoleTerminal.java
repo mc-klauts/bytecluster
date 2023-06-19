@@ -51,6 +51,7 @@ public final class ConsoleTerminal {
             this.lineReader.option(LineReader.Option.AUTO_MENU_LIST, true);
             this.lineReader.option(LineReader.Option.AUTO_FRESH_LINE, true);
             this.lineReader.option(LineReader.Option.DISABLE_EVENT_EXPANSION, true);
+            this.lineReader.setCompleter(new ConsoleLineCompleter());
 
             this.clearScreen();
 

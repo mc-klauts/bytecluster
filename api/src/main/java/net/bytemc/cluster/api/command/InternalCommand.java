@@ -2,6 +2,7 @@ package net.bytemc.cluster.api.command;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,9 @@ import net.bytemc.cluster.api.command.annotations.Command;
 import net.bytemc.cluster.api.command.annotations.CommandHelpTopic;
 import net.bytemc.cluster.api.command.annotations.DefaultCommand;
 import net.bytemc.cluster.api.command.annotations.SubCommand;
+import net.bytemc.cluster.api.command.autocompletion.TabCompleter;
 import net.bytemc.cluster.api.command.interfaces.CommandSender;
+import net.bytemc.cluster.api.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public final class InternalCommand {
     private final List<String> callNames = new ArrayList<>();
     private final List<String> helpTopic = new ArrayList<>();
     private Method defaultMethod;
+    private TabCompleter tabCompleter;
 
     @SneakyThrows
     public boolean tryExecute(
@@ -74,6 +78,7 @@ public final class InternalCommand {
         }
     }
 
+    @SneakyThrows
     public void index() {
         if (commandInstance == null) {
             return;
@@ -87,6 +92,7 @@ public final class InternalCommand {
         final Command commandAnnotation = instancedClass.getAnnotation(Command.class);
         this.callNames.add(commandAnnotation.name());
         this.callNames.addAll(List.of(commandAnnotation.aliases()));
+        this.tabCompleter = commandAnnotation.tabCompleter().newInstance();
 
         for (Method declaredMethod : instancedClass.getDeclaredMethods()) {
             declaredMethod.setAccessible(true);
@@ -96,7 +102,8 @@ public final class InternalCommand {
                 final IndexedCommandMethod indexedCommandMethod = new IndexedCommandMethod(
                     this.commandInstance,
                     declaredMethod,
-                    subCommandAnnotation.name(), subCommandAnnotation.example());
+                    subCommandAnnotation.name(), subCommandAnnotation.example(),
+                    subCommandAnnotation.tabCompleter().newInstance());
                 indexedCommandMethod.loadArguments();
                 this.commandMethodMap.put(subCommandAnnotation.name(),
                     indexedCommandMethod);
@@ -104,5 +111,24 @@ public final class InternalCommand {
                 this.defaultMethod = declaredMethod;
             }
         }
+    }
+
+    public List<String> tryTabComplete(
+        CommandSender commandSender,
+        @NotNull String input
+    ) {
+        //   1     2
+        // group start
+        final String[] arguments = input.split(" ");
+        if (this.commandMethodMap.isEmpty() || arguments.length <= 1) {
+            return this.tabCompleter.complete(commandSender, input, arguments);
+        }
+
+        final String callMethod = arguments[1];
+        if (this.commandMethodMap.get(callMethod) != null) {
+            return this.commandMethodMap.get(callMethod).getTabCompleter()
+                .complete(commandSender, input, arguments);
+        }
+        return Collections.emptyList();
     }
 }
