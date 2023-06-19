@@ -1,13 +1,11 @@
 package net.bytemc.cluster.node.groups;
 
+import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.misc.TaskFuture;
 import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.network.buffer.PacketBuffer;
-import net.bytemc.cluster.api.service.CloudGroupType;
-import net.bytemc.cluster.api.service.CloudServiceGroup;
-import net.bytemc.cluster.api.service.CloudServiceGroupFactory;
-import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
+import net.bytemc.cluster.api.service.*;
 import net.bytemc.cluster.node.configuration.ConfigurationHelper;
 
 import java.nio.file.Path;
@@ -26,6 +24,7 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
     private final Map<String, CloudServiceGroup> groups = new HashMap<>();
 
     public CloudServiceGroupProviderImpl() {
+        new CloudServiceGroupPacketListener();
         this.loadAllGroups();
     }
 
@@ -76,6 +75,8 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
             Logger.warn("Group " + name + " does not exist.");
             return;
         }
+
+        this.groups.get(name).shutdownAllServices();
         FileHelper.deleteIfExists(Path.of("groups", name + ".json"));
         this.groups.remove(name);
         Logger.info("Successfully deleted group " + name + ".");

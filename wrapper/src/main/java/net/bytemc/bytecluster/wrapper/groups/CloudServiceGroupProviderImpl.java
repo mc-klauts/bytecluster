@@ -44,7 +44,7 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
 
     @Override
     public void removeGroup(String name) {
-        //todo
+        Wrapper.getInstance().sendPacket(new WrapperRequestRemoveGroupPacket(name));
     }
 
     @Override

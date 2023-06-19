@@ -6,7 +6,6 @@ import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 import net.bytemc.cluster.api.network.packets.services.*;
 import net.bytemc.cluster.api.service.CloudService;
-import net.bytemc.cluster.api.service.CloudServiceFactory;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 import net.bytemc.cluster.api.service.CloudServiceState;
 import net.bytemc.cluster.api.service.filter.CloudServiceFilter;
@@ -30,7 +29,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     @Override
     public AsyncTask<Collection<CloudService>> findServicesAsync() {
         var tasks = new AsyncTask<Collection<CloudService>>();
-        Wrapper.getInstance().sendQueryPacket(new CollectionServiceRequest(CloudServiceFilter.ALL), CollectionServiceResponse.class, (packet) -> {
+        Wrapper.getInstance().sendQueryPacket(new CollectionFilterServiceRequest(CloudServiceFilter.ALL), CollectionFilterServiceResponse.class, (packet) -> {
             tasks.complete(packet.getServices());
         });
         return tasks;
@@ -45,7 +44,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     @NotNull
     public AsyncTask<Collection<CloudService>> findServicesAsync(CloudServiceFilter filter) {
         var tasks = new AsyncTask<Collection<CloudService>>();
-        Wrapper.getInstance().sendQueryPacket(new CollectionServiceRequest(filter), CollectionServiceResponse.class, (packet) -> tasks.complete(packet.getServices()));
+        Wrapper.getInstance().sendQueryPacket(new CollectionFilterServiceRequest(filter), CollectionFilterServiceResponse.class, (packet) -> tasks.complete(packet.getServices()));
         return tasks;
     }
 
@@ -65,14 +64,15 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     @Contract(pure = true)
     @Override
     public @Nullable Collection<CloudService> findServices(String group) {
-        //todo
-        return null;
+        return findServicesAsync(group).getSync(null);
     }
 
+    @Contract(pure = true)
     @Override
-    public AsyncTask<Collection<CloudService>> findServicesAsync(String group) {
-        //todo
-        return null;
+    public @Nullable AsyncTask<Collection<CloudService>> findServicesAsync(String group) {
+        var tasks = new AsyncTask<Collection<CloudService>>();
+        Wrapper.getInstance().sendQueryPacket(new CollectionServiceRequest(), CollectionServiceResponse.class, (packet) -> tasks.complete(packet.getServices()));
+        return tasks;
     }
 
     @Override

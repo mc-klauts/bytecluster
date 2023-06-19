@@ -13,11 +13,10 @@ import java.util.Collection;
 
 @Getter
 @AllArgsConstructor
-@Packet.Info(id = 18)
-public class CollectionServiceResponse extends Packet {
+@Packet.Info(id = 13)
+public final class CollectionFilterServiceResponse extends Packet {
 
     private Collection<CloudService> services;
-
 
     @Override
     public void read(PacketBuffer reader) {

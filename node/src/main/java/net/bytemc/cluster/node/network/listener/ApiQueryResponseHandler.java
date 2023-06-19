@@ -18,13 +18,13 @@ public final class ApiQueryResponseHandler {
             return new SingletonServiceResponse(Cluster.getInstance().getServiceProvider().findService(packet.getId()));
         });
 
-        pool.addQueryModification(CollectionServiceRequest.class, (packet) -> {
+        pool.addQueryModification(CollectionFilterServiceRequest.class, (packet) -> {
             switch (packet.getServiceFilter()) {
                 case ALL -> {
-                    return new CollectionServiceResponse(Cluster.getInstance().getServiceProvider().findServices());
+                    return new CollectionFilterServiceResponse(Cluster.getInstance().getServiceProvider().findServices());
                 }
                 case NON_PROXIES -> {
-                    return new CollectionServiceResponse(Cluster.getInstance().getServiceProvider().findServices().stream().filter(it -> !it.getGroup().getGroupType().isProxy()).toList());
+                    return new CollectionFilterServiceResponse(Cluster.getInstance().getServiceProvider().findServices().stream().filter(it -> !it.getGroup().getGroupType().isProxy()).toList());
                 }
             }
             return null;

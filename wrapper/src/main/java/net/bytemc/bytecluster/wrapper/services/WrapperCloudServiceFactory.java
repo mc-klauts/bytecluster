@@ -12,6 +12,6 @@ public final class WrapperCloudServiceFactory implements CloudServiceFactory {
 
     @Override
     public void stop(CloudService service) {
-        //todo
+        service.shutdown();
     }
 }
