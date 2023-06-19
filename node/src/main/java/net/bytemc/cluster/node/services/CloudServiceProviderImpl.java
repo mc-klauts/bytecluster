@@ -25,6 +25,10 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
     // extra separated map for faster access
     private final Map<Channel, CloudService> serviceChannels = new HashMap<>();
 
+    public CloudServiceProviderImpl() {
+        new CloudServicePacketListener();
+    }
+
     public void runProcess(CloudServiceGroupProvider provider) {
         for (var group : provider.findGroups()) {
             if (group.getMinOnlineCount() <= 0) {
@@ -48,12 +52,28 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Override
     public Collection<CloudService> findServices(CloudServiceFilter filter) {
-        return null;
+        switch (filter) {
+            case NON_PROXIES -> {
+                return findServices().stream().filter(it -> !it.getGroup().getGroupType().isProxy()).toList();
+            }
+            case ALL -> {
+                return findServices();
+            }
+            case PROXIES -> {
+                return findServices().stream().filter(it -> it.getGroup().getGroupType().isProxy()).toList();
+            }
+            case FALLBACKS -> {
+                return findServices().stream().filter(it -> it.getGroup().isFallback()).toList();
+            }
+            default -> {
+                return Collections.emptyList();
+            }
+        }
     }
 
     @Override
     public AsyncTask<Collection<CloudService>> findServicesAsync(CloudServiceFilter filter) {
-        return null;
+        return AsyncTask.directly(findServices(filter));
     }
 
     @Override
@@ -109,6 +129,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
         var motd = buffer.readString();
         var maxPlayers = buffer.readInt();
         var port = buffer.readInt();
+        var state = buffer.readEnum(CloudServiceState.class);
 
         return this.services.get(groupName + "-" + id);
     }

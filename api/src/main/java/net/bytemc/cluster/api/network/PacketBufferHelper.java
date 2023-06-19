@@ -13,6 +13,7 @@ public final class PacketBufferHelper {
         packetBuffer.writeString(service.getMotd());
         packetBuffer.writeInt(service.getMaxPlayers());
         packetBuffer.writeInt(service.getPort());
+        packetBuffer.writeEnum(service.getState());
     }
 
     public static void writeCloudPlayer(PacketBuffer packetBuffer, CloudPlayer cloudPlayer) {

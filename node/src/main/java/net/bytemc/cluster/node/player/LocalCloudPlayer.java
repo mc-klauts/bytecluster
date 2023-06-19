@@ -4,6 +4,7 @@ import lombok.Setter;
 import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.network.packets.player.CloudPlayerRequestKickPacket;
 import net.bytemc.cluster.api.network.packets.player.CloudPlayerSendMessagePacket;
+import net.bytemc.cluster.api.network.packets.player.CloudPlayerSendServicePacket;
 import net.bytemc.cluster.api.network.packets.player.CloudPlayerTablistPacket;
 import net.bytemc.cluster.api.player.AbstractCloudPlayer;
 import net.bytemc.cluster.api.service.CloudService;
@@ -74,6 +75,6 @@ public final class LocalCloudPlayer extends AbstractCloudPlayer {
 
     @Override
     public void sendToServer(String serverId) {
-
+        ((LocalCloudService) getCurrentProxy()).sendPacket(new CloudPlayerSendServicePacket(getUniqueId(), serverId));
     }
 }

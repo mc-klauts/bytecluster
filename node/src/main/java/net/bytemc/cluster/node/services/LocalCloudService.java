@@ -6,6 +6,7 @@ import lombok.Setter;
 import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.event.services.CloudServiceShutdownEvent;
 import net.bytemc.cluster.api.logging.Logger;
+import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.network.Packet;
 import net.bytemc.cluster.api.service.AbstractCloudService;
 import net.bytemc.cluster.api.service.CloudServiceState;
@@ -40,6 +41,11 @@ public final class LocalCloudService extends AbstractCloudService {
     @Override
     public int getPlayers() {
         return Cluster.getInstance().getPlayerHandler().findPlayers().stream().map(it -> it.getCurrentServerId().equals(getName())).toList().size();
+    }
+
+    @Override
+    public AsyncTask<Integer> getPlayersAsync() {
+        return AsyncTask.directly(getPlayers());
     }
 
     @Override

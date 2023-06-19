@@ -1,5 +1,6 @@
 package net.bytemc.bytecluster.wrapper.services;
 
+import lombok.Getter;
 import net.bytemc.bytecluster.wrapper.Wrapper;
 import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.network.buffer.PacketBuffer;
@@ -17,6 +18,9 @@ import java.util.Collection;
 import java.util.Optional;
 
 public final class CloudServiceProviderImpl implements CloudServiceProvider {
+
+    @Getter
+    private final WrapperCloudServiceFactory factory = new WrapperCloudServiceFactory();
 
     @Override
     public Collection<CloudService> findServices() {
@@ -67,6 +71,7 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Override
     public AsyncTask<Collection<CloudService>> findServicesAsync(String group) {
+        //todo
         return null;
     }
 
@@ -84,33 +89,25 @@ public final class CloudServiceProviderImpl implements CloudServiceProvider {
 
     @Override
     public Optional<CloudService> findFallback() {
-        //todo
-        return null;
+        return findFallbackAsync().getSync(Optional.empty());
     }
 
     @Contract(pure = true)
     @Override
     public @Nullable AsyncTask<Optional<CloudService>> findFallbackAsync() {
-        return null;
-    }
-
-    @Override
-    public CloudServiceFactory getFactory() {
         //todo
         return null;
     }
 
     @Override
     public CloudService getCloudServiceByBuffer(PacketBuffer buffer) {
-
         int id = buffer.readInt();
         var hostname = buffer.readString();
         var groupName = buffer.readString();
         var motd = buffer.readString();
         var maxPlayers = buffer.readInt();
         var port = buffer.readInt();
-
-        //todo onlinestate
-        return new WrapperCloudService(hostname, groupName, motd, port, id, maxPlayers, CloudServiceState.ONLINE);
+        var state = buffer.readEnum(CloudServiceState.class);
+        return new WrapperCloudService(hostname, groupName, motd, port, id, maxPlayers, state);
     }
 }

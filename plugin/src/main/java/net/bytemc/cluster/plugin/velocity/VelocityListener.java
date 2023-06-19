@@ -59,8 +59,14 @@ public final class VelocityListener {
         }
     }
 
-    @Subscribe
+    @Subscribe(order = PostOrder.FIRST)
     public void handleKick(KickedFromServerEvent event) {
-        //todo
+        if (event.getPlayer().isActive()) {
+            Cluster.getInstance().getServiceProvider().findFallbackId().ifPresentOrElse(s -> {
+                event.setResult(KickedFromServerEvent.RedirectPlayer.create(this.proxyServer.getServer(s).get()));
+            }, () -> {
+                event.setResult(KickedFromServerEvent.DisconnectPlayer.create(Component.text("§cNo fallback server found!")));
+            });
+        }
     }
 }

@@ -49,6 +49,12 @@ public final class PacketPool {
                 CloudPlayerTablistPacket.class,
                 CloudPlayerRequestKickPacket.class,
                 CloudPlayerSendMessagePacket.class,
+                CloudPlayerSendServicePacket.class,
+
+                WrapperRequestServiceCommandPacket.class,
+                WrapperRequestServiceShutdownPacket.class,
+                CloudServiceRequestPlayerAmountPacket.class,
+                CloudServiceResponsePlayerAmountPacket.class,
 
                 // event system basics
                 CallEventPacket.class,

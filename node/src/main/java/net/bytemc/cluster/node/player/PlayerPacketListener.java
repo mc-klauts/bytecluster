@@ -9,6 +9,7 @@ import net.bytemc.cluster.api.player.events.CloudPlayerDisconnectEvent;
 import net.bytemc.cluster.api.player.events.CloudPlayerSwitchEvent;
 import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
+import net.bytemc.cluster.node.services.LocalCloudService;
 
 import java.util.Optional;
 
@@ -61,6 +62,10 @@ public final class PlayerPacketListener {
             if (player.isPresent()) {
                 player.get().kick(packet.getReason());
             }
+        });
+
+        pool.registerListener(CloudPlayerSendServicePacket.class, (channel, packet) -> {
+            Cluster.getInstance().getPlayerHandler().findPlayer(packet.getUuid()).ifPresent(player -> player.sendToServer(packet.getServiceId()));
         });
     }
 }

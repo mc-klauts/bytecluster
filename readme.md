@@ -14,6 +14,9 @@
 - [ ] memory calculation
 - [ ] static services
 - [ ] message channel
+- [ ] group commands
+- [ ] service commands
+- [ ] help command
 
 ### Complete
 

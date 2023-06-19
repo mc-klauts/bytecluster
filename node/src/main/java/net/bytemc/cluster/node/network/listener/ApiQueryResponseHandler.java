@@ -48,5 +48,9 @@ public final class ApiQueryResponseHandler {
         pool.addQueryModification(CollectionCloudPlayerRequest.class, (packet) -> {
             return new CollectionCloudPlayerResponse(Cluster.getInstance().getPlayerHandler().findPlayers());
         });
+
+        pool.addQueryModification(CloudServiceRequestPlayerAmountPacket.class, (packet) -> {
+            return new CloudServiceResponsePlayerAmountPacket(Cluster.getInstance().getServiceProvider().findService(packet.getServiceId()).getPlayers());
+        });
     }
 }

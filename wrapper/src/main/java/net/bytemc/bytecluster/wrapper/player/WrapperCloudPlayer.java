@@ -6,6 +6,7 @@ import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.network.packets.player.CloudPlayerRequestKickPacket;
 import net.bytemc.cluster.api.network.packets.player.CloudPlayerSendMessagePacket;
+import net.bytemc.cluster.api.network.packets.player.CloudPlayerSendServicePacket;
 import net.bytemc.cluster.api.network.packets.player.CloudPlayerTablistPacket;
 import net.bytemc.cluster.api.player.AbstractCloudPlayer;
 import net.bytemc.cluster.api.service.CloudService;
@@ -73,6 +74,6 @@ public final class WrapperCloudPlayer extends AbstractCloudPlayer {
 
     @Override
     public void sendToServer(String serverId) {
-        //todo
+        Wrapper.getInstance().sendPacket(new CloudPlayerSendServicePacket(getUniqueId(), serverId));
     }
 }

@@ -2,6 +2,7 @@ package net.bytemc.cluster.api.service;
 
 import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.misc.TaskFuture;
+import net.bytemc.cluster.api.misc.async.AsyncTask;
 
 import java.util.List;
 
@@ -18,6 +19,8 @@ public interface CloudService {
     String getGroupName();
 
     int getPlayers();
+
+    AsyncTask<Integer> getPlayersAsync();
 
     int getMaxPlayers();
 
