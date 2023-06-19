@@ -3,10 +3,7 @@ package net.bytemc.bytecluster.wrapper.groups;
 import net.bytemc.bytecluster.wrapper.Wrapper;
 import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.network.buffer.PacketBuffer;
-import net.bytemc.cluster.api.network.packets.groups.CollectionGroupRequest;
-import net.bytemc.cluster.api.network.packets.groups.CollectionGroupResponse;
-import net.bytemc.cluster.api.network.packets.groups.SingletonGroupRequest;
-import net.bytemc.cluster.api.network.packets.groups.SingletonGroupResponse;
+import net.bytemc.cluster.api.network.packets.groups.*;
 import net.bytemc.cluster.api.network.packets.services.CloudServiceRequestPlayerAmountPacket;
 import net.bytemc.cluster.api.network.packets.services.CloudServiceResponsePlayerAmountPacket;
 import net.bytemc.cluster.api.service.CloudGroupType;
@@ -52,13 +49,14 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
 
     @Override
     public boolean exists(String id) {
-        return false;
+        return existsAsync(id).getSync(null);
     }
 
     @Override
     public AsyncTask<Boolean> existsAsync(String id) {
-        //todo
-        return null;
+        var tasks = new AsyncTask<Boolean>();
+        Wrapper.getInstance().sendQueryPacket(new GroupExistRequest(id), GroupExistResponse.class, (packet) -> tasks.complete(packet.isExists()));
+        return tasks;
     }
 
     @Override
