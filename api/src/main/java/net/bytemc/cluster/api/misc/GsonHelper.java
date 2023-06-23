@@ -1,18 +1,27 @@
-package net.bytemc.cluster.node.configuration;
+package net.bytemc.cluster.api.misc;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.bytemc.cluster.node.configuration.layouts.PathSerializer;
-
-import java.io.*;
-import java.nio.file.Path;
+import net.bytemc.cluster.api.misc.gson.PathSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class ConfigurationProvider {
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
+
+public final class GsonHelper {
 
     public static final Gson DEFAULT_GSON = new GsonBuilder()
             .setPrettyPrinting()
+            .serializeNulls()
+            .registerTypeHierarchyAdapter(Path.class, new PathSerializer())
+            .disableHtmlEscaping()
+            .create();
+
+    public static final Gson SENDABLE_GSON = new GsonBuilder()
             .serializeNulls()
             .registerTypeHierarchyAdapter(Path.class, new PathSerializer())
             .disableHtmlEscaping()

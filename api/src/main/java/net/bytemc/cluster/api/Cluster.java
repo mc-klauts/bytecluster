@@ -7,6 +7,7 @@ import net.bytemc.cluster.api.command.CommandRepository;
 import net.bytemc.cluster.api.network.PacketPool;
 import net.bytemc.cluster.api.player.CloudPlayer;
 import net.bytemc.cluster.api.player.CloudPlayerHandler;
+import net.bytemc.cluster.api.properties.GlobalPropertyHandler;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 
@@ -35,5 +36,7 @@ public abstract class Cluster {
     public abstract CloudServiceProvider getServiceProvider();
 
     public abstract CloudPlayerHandler getPlayerHandler();
+
+    public abstract GlobalPropertyHandler getGlobalPropertyHandler();
 
 }

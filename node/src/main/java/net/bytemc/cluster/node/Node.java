@@ -7,6 +7,7 @@ import net.bytemc.cluster.api.command.CommandExecutor;
 import net.bytemc.cluster.api.command.CommandRepository;
 import net.bytemc.cluster.api.event.EventHandler;
 import net.bytemc.cluster.api.logging.Logger;
+import net.bytemc.cluster.api.properties.GlobalPropertyHandler;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 import net.bytemc.cluster.node.cluster.ClusterNetwork;
@@ -22,6 +23,7 @@ import net.bytemc.cluster.node.logger.NodeLogger;
 import net.bytemc.cluster.node.logger.NodeOutputPrintStream;
 import net.bytemc.cluster.node.modules.CloudModuleHandler;
 import net.bytemc.cluster.node.player.PlayerHandlerImpl;
+import net.bytemc.cluster.node.properties.GlobalPropertyHandlerImpl;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
 import net.bytemc.cluster.node.templates.ServiceTemplateHandler;
 
@@ -53,6 +55,7 @@ public final class Node extends Cluster {
     private final PlayerHandlerImpl playerHandler;
 
     private final CloudModuleHandler moduleHandler;
+    private final GlobalPropertyHandler globalPropertyHandler;
 
     public Node() {
         instance = this;
@@ -71,6 +74,7 @@ public final class Node extends Cluster {
         this.runtimeConfiguration = ConfigurationHelper.readConfiguration(Path.of("config.json"), RuntimeConfiguration.DEFAULT_CONFIGURATION);
 
         this.commandExecutor = new CommandExecutor();
+        this.globalPropertyHandler = new GlobalPropertyHandlerImpl();
 
         this.moduleHandler = new CloudModuleHandler();
         this.eventHandler = new CloudEventHandlerImpl();

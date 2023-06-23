@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.bytemc.bytecluster.wrapper.event.WrapperEventHandler;
 import net.bytemc.bytecluster.wrapper.logging.WrapperLogging;
 import net.bytemc.bytecluster.wrapper.player.WrapperCloudPlayerHandlerImpl;
+import net.bytemc.bytecluster.wrapper.property.WrapperGlobalPropertyHandler;
 import net.bytemc.bytecluster.wrapper.services.CloudServiceProviderImpl;
 import net.bytemc.bytecluster.wrapper.network.NettyClient;
 import net.bytemc.bytecluster.wrapper.groups.CloudServiceGroupProviderImpl;
@@ -13,6 +14,7 @@ import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.network.Packet;
 import net.bytemc.cluster.api.network.QueryPacket;
 import net.bytemc.cluster.api.player.CloudPlayerHandler;
+import net.bytemc.cluster.api.properties.GlobalPropertyHandler;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
 
@@ -30,6 +32,7 @@ public final class Wrapper extends Cluster {
     private final CloudServiceGroupProvider serviceGroupProvider;
     private final CloudServiceProvider serviceProvider;
     private final CloudPlayerHandler playerHandler;
+    private final GlobalPropertyHandler globalPropertyHandler;
     private final NettyClient client;
 
     public Wrapper(String id) {
@@ -40,7 +43,7 @@ public final class Wrapper extends Cluster {
         this.serviceGroupProvider = new CloudServiceGroupProviderImpl();
         this.serviceProvider = new CloudServiceProviderImpl();
         this.playerHandler = new WrapperCloudPlayerHandlerImpl();
-
+        this.globalPropertyHandler = new WrapperGlobalPropertyHandler();
         this.client = new NettyClient(id);
     }
 

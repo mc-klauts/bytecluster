@@ -1,4 +1,4 @@
-package net.bytemc.cluster.node.configuration.layouts;
+package net.bytemc.cluster.api.misc.gson;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;

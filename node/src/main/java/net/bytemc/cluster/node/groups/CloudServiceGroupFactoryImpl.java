@@ -1,10 +1,11 @@
 package net.bytemc.cluster.node.groups;
 
 import java.util.Objects;
+
+import net.bytemc.cluster.api.misc.GsonHelper;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudServiceGroupFactory;
 import net.bytemc.cluster.node.Node;
-import net.bytemc.cluster.node.configuration.ConfigurationProvider;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,7 +25,7 @@ public final class CloudServiceGroupFactoryImpl implements CloudServiceGroupFact
     @Override
     public List<CloudServiceGroup> loadGroups() {
         return Arrays.stream(Objects.requireNonNull(GROUPS_STORAGE_PATH.toFile().listFiles()))
-                .map(it -> ConfigurationProvider.read(GROUPS_STORAGE_PATH.resolve(it.getName()), CloudServiceGroupImpl.class))
+                .map(it -> GsonHelper.read(GROUPS_STORAGE_PATH.resolve(it.getName()), CloudServiceGroupImpl.class))
                 .map(cloudServiceGroup -> (CloudServiceGroup) cloudServiceGroup)
                 .toList();
     }
@@ -34,7 +35,7 @@ public final class CloudServiceGroupFactoryImpl implements CloudServiceGroupFact
         if (existInStorage(cloudServiceGroup)) {
             return false;
         }
-        ConfigurationProvider.write(GROUPS_STORAGE_PATH.resolve(cloudServiceGroup.getName()), cloudServiceGroup);
+        GsonHelper.write(GROUPS_STORAGE_PATH.resolve(cloudServiceGroup.getName()), cloudServiceGroup);
 
         //create template folder for new group
         Node.getInstance().getTemplateHandler().createTemplate(cloudServiceGroup.getName());

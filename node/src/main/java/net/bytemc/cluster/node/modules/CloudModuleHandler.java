@@ -3,10 +3,9 @@ package net.bytemc.cluster.node.modules;
 import lombok.Getter;
 import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.misc.FileHelper;
+import net.bytemc.cluster.api.misc.GsonHelper;
 import net.bytemc.cluster.api.service.CloudGroupType;
-import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.node.Node;
-import net.bytemc.cluster.node.configuration.ConfigurationProvider;
 import net.bytemc.cluster.node.event.CloudEventHandlerImpl;
 import net.bytemc.cluster.node.exception.ModuleLoadException;
 import net.bytemc.cluster.node.modules.content.LoadedModuleFileContent;
@@ -17,8 +16,6 @@ import net.bytemc.cluster.node.services.LocalCloudService;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -115,7 +112,7 @@ public final class CloudModuleHandler {
             var fileStream = jar.getInputStream(entry);
             var gsonText = FileHelper.loadFromInputStream(fileStream);
             jar.close();
-            var object = ConfigurationProvider.DEFAULT_GSON.fromJson(gsonText, ModuleContentInfo.class);
+            var object = GsonHelper.DEFAULT_GSON.fromJson(gsonText, ModuleContentInfo.class);
             if (object == null) {
                 throw new ModuleLoadException(file.getPath() + ": Invalid '" + path + "'.");
             }
