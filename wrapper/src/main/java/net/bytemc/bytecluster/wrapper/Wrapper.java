@@ -15,8 +15,10 @@ import net.bytemc.cluster.api.network.Packet;
 import net.bytemc.cluster.api.network.QueryPacket;
 import net.bytemc.cluster.api.player.CloudPlayerHandler;
 import net.bytemc.cluster.api.properties.GlobalPropertyHandler;
+import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.api.service.CloudServiceGroupProvider;
 import net.bytemc.cluster.api.service.CloudServiceProvider;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -26,6 +28,12 @@ public final class Wrapper extends Cluster {
 
     @Getter
     private static Wrapper instance;
+
+    @Nullable
+    private CloudService localService;
+
+    @Getter
+    private long bootTime = System.currentTimeMillis();
 
     private final Logger logger;
     private final EventHandler eventHandler;
@@ -62,11 +70,18 @@ public final class Wrapper extends Cluster {
     }
 
     public void connect() {
-        this.client.connect().onComplete(s -> {
+        this.client.connect().onComplete(s -> this.serviceProvider.findServiceAsync(this.client.getInstanceName()).whenComplete((service, throwable) -> {
+            this.localService = WrapperLocalCloudService.toSelfService(service);
 
             // it is important to use sync methods only in platform threads
-
             WrapperLauncher.getWrapperThread().start();
-        }).onCancel(s -> System.exit(-1));
+        }).exceptionally(throwable -> {
+            throwable.printStackTrace();
+            return null;
+        })).onCancel(s -> System.exit(-1));
+    }
+
+    public CloudService getLocalService() {
+        return localService;
     }
 }

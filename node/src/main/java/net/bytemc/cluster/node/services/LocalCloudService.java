@@ -6,8 +6,15 @@ import lombok.Setter;
 import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.event.services.CloudServiceShutdownEvent;
 import net.bytemc.cluster.api.logging.Logger;
+import net.bytemc.cluster.api.misc.GsonHelper;
 import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.network.Packet;
+import net.bytemc.cluster.api.network.QueryPacket;
+import net.bytemc.cluster.api.network.packets.properties.PropertyDeletePacket;
+import net.bytemc.cluster.api.network.packets.properties.PropertyRequestSharePacket;
+import net.bytemc.cluster.api.network.packets.properties.PropertySetPacket;
+import net.bytemc.cluster.api.network.packets.properties.PropertySharePacket;
+import net.bytemc.cluster.api.properties.Property;
 import net.bytemc.cluster.api.service.AbstractCloudService;
 import net.bytemc.cluster.api.service.CloudServiceState;
 import net.bytemc.cluster.node.Node;
@@ -18,6 +25,8 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 @Getter
 public final class LocalCloudService extends AbstractCloudService {
@@ -100,5 +109,53 @@ public final class LocalCloudService extends AbstractCloudService {
         } else {
             Logger.warn("Try to send " + packet.getClass().getSimpleName() + " to " + getName() + ", but the channel is not active.");
         }
+    }
+
+    public <T extends Packet, R extends Packet> void sendQueryPacket(Packet packet, Class<R> responseType, Consumer<R> response) {
+        var id = UUID.randomUUID();
+        Node.getInstance().getPacketPool().saveResponse(id, response);
+        this.sendPacket(new QueryPacket(id, packet));
+    }
+
+
+    @Override
+    public void removeProperty(String id) {
+        sendPacket(new PropertyDeletePacket(id));
+    }
+
+    @Override
+    public <T> T setProperty(String id, T value) {
+        sendPacket(new PropertySetPacket(id, GsonHelper.SENDABLE_GSON.toJson(value)));
+        return value;
+    }
+
+    @Override
+    public <T> AsyncTask<Property<T>> requestPropertyAsync(String id) {
+        var task = new AsyncTask<Property<T>>();
+       sendQueryPacket(new PropertyRequestSharePacket(id), PropertySharePacket.class, packet -> task.complete(new CloudServiceProperty<>(id, packet.getType(), packet.getPropertyAsString())));
+        return task;
+    }
+
+    @Override
+    public <T> Property<T> requestProperty(String id) {
+        return (Property<T>) this.requestPropertyAsync(id).getSync(null);
+    }
+
+    @Override
+    public double getCpuUsage() {
+        //todo
+        return 0;
+    }
+
+    @Override
+    public int getMemory() {
+        //todo
+        return 0;
+    }
+
+    @Override
+    public long getBootTime() {
+        //todo
+        return 0;
     }
 }

@@ -2,6 +2,7 @@ package net.bytemc.cluster.node.properties;
 
 import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.properties.GlobalPropertyHandler;
+import net.bytemc.cluster.api.properties.LocalProperty;
 import net.bytemc.cluster.api.properties.Property;
 
 import java.util.Map;

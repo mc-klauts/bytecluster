@@ -8,6 +8,7 @@ import io.netty5.channel.MultithreadEventLoopGroup;
 import io.netty5.channel.epoll.Epoll;
 import io.netty5.channel.epoll.EpollSocketChannel;
 import io.netty5.channel.socket.nio.NioSocketChannel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.bytemc.cluster.api.misc.TaskFuture;
 import net.bytemc.cluster.api.network.ConnectionUtils;
@@ -23,6 +24,8 @@ public final class NettyClient {
     private static final int CONNECTION_TIMEOUT_MILLIS = 5_000;
 
     private final EventLoopGroup eventLoopGroup = new MultithreadEventLoopGroup(ConnectionUtils.newEventLoopGroup(0));
+
+    @Getter
     private final String instanceName;
 
     @Nullable
