@@ -71,6 +71,11 @@ public class WrapperCloudService extends AbstractCloudService {
     }
 
     @Override
+    public AsyncTask<Integer> getMemoryAsync() {
+        return null;
+    }
+
+    @Override
     public long getBootTime() {
         return 0;
     }

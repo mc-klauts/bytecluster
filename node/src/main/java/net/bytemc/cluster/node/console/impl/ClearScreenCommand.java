@@ -1,5 +1,6 @@
 package net.bytemc.cluster.node.console.impl;
 
+import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.command.annotations.Command;
 import net.bytemc.cluster.api.command.annotations.DefaultCommand;
 import net.bytemc.cluster.api.command.interfaces.CommandSender;
@@ -13,5 +14,4 @@ public final class ClearScreenCommand {
     private void execute(@NotNull CommandSender commandSender) {
         Node.getInstance().getConsoleTerminal().clearScreen();
     }
-
 }

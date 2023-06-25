@@ -55,6 +55,8 @@ public final class PacketPool {
                 WrapperRequestRemoveGroupPacket.class,
                 CloudServiceRequestPlayerAmountPacket.class,
                 CloudServiceResponsePlayerAmountPacket.class,
+                CloudServiceMemoryPacket.class,
+                CloudServiceMemoryRequestPacket.class,
                 CallEventPacket.class,
                 SubscribeEventPacket.class
         );

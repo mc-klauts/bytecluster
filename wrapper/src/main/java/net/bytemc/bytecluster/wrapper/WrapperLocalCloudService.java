@@ -82,10 +82,13 @@ public final class WrapperLocalCloudService extends AbstractCloudService {
         return MemoryEvaluator.getCurrent();
     }
 
-    @Contract(pure = true)
-    public static @Nullable CloudService toSelfService(CloudService service) {
-        //todo
-        return null;
+    @Override
+    public AsyncTask<Integer> getMemoryAsync() {
+        return AsyncTask.directly(getMemory());
     }
 
+    @Contract(pure = true)
+    public static @Nullable CloudService toSelfService(CloudService service) {
+        return new WrapperLocalCloudService(service.getHostname(), service.getGroupName(), service.getMotd(), service.getPort(), service.getId(), service.getMaxPlayers(), service.getState());
+    }
 }

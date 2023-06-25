@@ -52,6 +52,10 @@ public final class Wrapper extends Cluster {
         this.serviceProvider = new CloudServiceProviderImpl();
         this.playerHandler = new WrapperCloudPlayerHandlerImpl();
         this.globalPropertyHandler = new WrapperGlobalPropertyHandler();
+
+        new WrapperPacketListener();
+
+        // connect to node
         this.client = new NettyClient(id);
     }
 

@@ -14,6 +14,8 @@ import net.bytemc.cluster.api.network.packets.properties.PropertyDeletePacket;
 import net.bytemc.cluster.api.network.packets.properties.PropertyRequestSharePacket;
 import net.bytemc.cluster.api.network.packets.properties.PropertySetPacket;
 import net.bytemc.cluster.api.network.packets.properties.PropertySharePacket;
+import net.bytemc.cluster.api.network.packets.services.CloudServiceMemoryPacket;
+import net.bytemc.cluster.api.network.packets.services.CloudServiceMemoryRequestPacket;
 import net.bytemc.cluster.api.properties.Property;
 import net.bytemc.cluster.api.service.AbstractCloudService;
 import net.bytemc.cluster.api.service.CloudServiceState;
@@ -144,13 +146,19 @@ public final class LocalCloudService extends AbstractCloudService {
     @Override
     public double getCpuUsage() {
         //todo
-        return 0;
+        return -1;
     }
 
     @Override
     public int getMemory() {
-        //todo
-        return 0;
+        return getMemoryAsync().getSync(null);
+    }
+
+    @Override
+    public AsyncTask<Integer> getMemoryAsync() {
+        var task = new AsyncTask<Integer>();
+        sendQueryPacket(new CloudServiceMemoryRequestPacket(getName()), CloudServiceMemoryPacket.class, packet -> task.complete(packet.getMemory()));
+        return task;
     }
 
     @Override
