@@ -6,6 +6,8 @@ public interface StatisticsHolder {
 
     double getCpuUsage();
 
+    AsyncTask<Double> getCpuUsageAsync();
+
     int getMemory();
 
     AsyncTask<Integer> getMemoryAsync();

@@ -53,7 +53,7 @@ public final class WrapperLocalCloudService extends AbstractCloudService {
 
     @Override
     public void removeProperty(String id) {
-        //todo
+        this.properties.remove(id);
     }
 
     @Override
@@ -75,6 +75,11 @@ public final class WrapperLocalCloudService extends AbstractCloudService {
     @Override
     public double getCpuUsage() {
         return CpuEvaluator.processCpuLoad();
+    }
+
+    @Override
+    public AsyncTask<Double> getCpuUsageAsync() {
+        return AsyncTask.directly(getCpuUsage());
     }
 
     @Override

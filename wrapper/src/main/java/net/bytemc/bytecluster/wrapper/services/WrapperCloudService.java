@@ -62,21 +62,31 @@ public class WrapperCloudService extends AbstractCloudService {
 
     @Override
     public double getCpuUsage() {
+        //todo
         return 0;
     }
 
     @Override
+    public AsyncTask<Double> getCpuUsageAsync() {
+        //todo
+        return null;
+    }
+
+    @Override
     public int getMemory() {
+        //todo
         return 0;
     }
 
     @Override
     public AsyncTask<Integer> getMemoryAsync() {
+        //todo
         return null;
     }
 
     @Override
     public long getBootTime() {
+        //todo
         return 0;
     }
 }

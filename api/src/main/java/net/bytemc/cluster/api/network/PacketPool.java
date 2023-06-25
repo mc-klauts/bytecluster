@@ -57,6 +57,8 @@ public final class PacketPool {
                 CloudServiceResponsePlayerAmountPacket.class,
                 CloudServiceMemoryPacket.class,
                 CloudServiceMemoryRequestPacket.class,
+                CloudServiceCpuPacket.class,
+                CloudServiceCpuRequestPacket.class,
                 CallEventPacket.class,
                 SubscribeEventPacket.class
         );

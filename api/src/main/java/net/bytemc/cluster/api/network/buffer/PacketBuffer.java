@@ -51,6 +51,17 @@ public final class PacketBuffer {
         return NettyUtils.readVarIntOrNull(buf);
     }
 
+    public double readDouble() {
+        return buf.readDouble();
+    }
+
+    public @NotNull PacketBuffer writeDouble(double input) {
+        buf.writeDouble(input);
+        return this;
+    }
+
+
+
     public @NotNull PacketBuffer writeInt(int input) {
         NettyUtils.writeVarInt(buf, input);
         return this;
