@@ -4,6 +4,10 @@ import lombok.Getter;
 import net.bytemc.cluster.api.misc.async.AsyncTask;
 import net.bytemc.cluster.api.misc.statistics.CpuEvaluator;
 import net.bytemc.cluster.api.misc.statistics.MemoryEvaluator;
+import net.bytemc.cluster.api.network.packets.services.CloudServiceRequestPlayerAmountPacket;
+import net.bytemc.cluster.api.network.packets.services.CloudServiceResponsePlayerAmountPacket;
+import net.bytemc.cluster.api.network.packets.services.WrapperRequestServiceCommandPacket;
+import net.bytemc.cluster.api.network.packets.services.WrapperRequestServiceShutdownPacket;
 import net.bytemc.cluster.api.properties.LocalProperty;
 import net.bytemc.cluster.api.properties.Property;
 import net.bytemc.cluster.api.service.AbstractCloudService;
@@ -31,24 +35,24 @@ public final class WrapperLocalCloudService extends AbstractCloudService {
 
     @Override
     public int getPlayers() {
-        //todo
-        return 0;
+        return getPlayersAsync().getSync(null);
     }
 
     @Override
     public AsyncTask<Integer> getPlayersAsync() {
-        //todo
-        return null;
+        var tasks = new AsyncTask<Integer>();
+        Wrapper.getInstance().sendQueryPacket(new CloudServiceRequestPlayerAmountPacket(getName()), CloudServiceResponsePlayerAmountPacket.class, (packet) -> tasks.complete(packet.getAmount()));
+        return tasks;
     }
 
     @Override
     public void executeCommand(String command) {
-        //todo
+        Wrapper.getInstance().sendPacket(new WrapperRequestServiceCommandPacket(getName(), command));
     }
 
     @Override
     public void shutdown() {
-        //todo
+        Wrapper.getInstance().sendPacket(new WrapperRequestServiceShutdownPacket(getName()));
     }
 
     @Override

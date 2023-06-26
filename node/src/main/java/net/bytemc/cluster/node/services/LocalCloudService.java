@@ -48,6 +48,8 @@ public final class LocalCloudService extends AbstractCloudService {
     @Setter
     private Channel channel;
 
+    private long bootTime = System.currentTimeMillis();
+
     public LocalCloudService(String hostname, String groupName, String motd, int port, int id, int maxPlayers) {
         super(hostname, groupName, motd, port, id, maxPlayers, null);
     }
@@ -168,11 +170,5 @@ public final class LocalCloudService extends AbstractCloudService {
         var task = new AsyncTask<Integer>();
         sendQueryPacket(new CloudServiceMemoryRequestPacket(getName()), CloudServiceMemoryPacket.class, packet -> task.complete(packet.getMemory()));
         return task;
-    }
-
-    @Override
-    public long getBootTime() {
-        //todo
-        return 0;
     }
 }
