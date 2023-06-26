@@ -12,7 +12,6 @@
 
 - [ ] spigot 1.20 support
 - [ ] memory calculation
-- [ ] static services
 - [ ] message channel
 - [ ] group commands
 - [ ] service commands
@@ -33,3 +32,4 @@
 - [x] player api / server switch
 - [x] module folder and module loader
 - [x] System.setOut(); <- move and setErr();
+- [x] static services
