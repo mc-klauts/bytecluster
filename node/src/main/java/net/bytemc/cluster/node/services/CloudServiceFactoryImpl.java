@@ -58,24 +58,28 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
     public void start(@NotNull CloudService service) {
 
         if (service instanceof LocalCloudService cloudService) {
-            var serviceDirectory = cloudService.getDirectory();
-
-            FileHelper.createDirectoryIfNotExists(CloudServiceFactoryQueue.TEMP_PATH.resolve(service.getName()));
 
             // copy template before copy runtime files
-            Node.getInstance().getTemplateHandler().copyTemplate("GLOBAL", cloudService);
-            Node.getInstance().getTemplateHandler().copyTemplate("EVERY_" + (cloudService.getGroup().getGroupType().isProxy() ? "PROXY" : "SERVER"), cloudService);
-            Node.getInstance().getTemplateHandler().copyTemplate(cloudService.getGroupName(), cloudService);
+            var serviceDirectory = cloudService.getDirectory();
+            if ((!Files.exists(serviceDirectory) && service.getGroup().isStaticService()) || !service.getGroup().isStaticService()) {
+
+                FileHelper.createDirectoryIfNotExists(serviceDirectory);
+
+                Node.getInstance().getTemplateHandler().copyTemplate("GLOBAL", cloudService);
+                Node.getInstance().getTemplateHandler().copyTemplate("EVERY_" + (cloudService.getGroup().getGroupType().isProxy() ? "PROXY" : "SERVER"), cloudService);
+                Node.getInstance().getTemplateHandler().copyTemplate(cloudService.getGroupName(), cloudService);
+            }
 
             try {
                 Files.copy(service.getGroup().getGroupType().getPath(STORAGE_PATH), service.getGroup().getGroupType().getPath(((LocalCloudService) service).getDirectory()), StandardCopyOption.REPLACE_EXISTING);
 
                 if (cloudService.getGroup().getGroupType() == CloudGroupType.MINESTOM) {
                     FileHelper.createDirectoryIfNotExists(serviceDirectory.resolve("extensions"));
-                    Files.copy(STORAGE_PATH.resolve("bytecluster-plugin.jar"), serviceDirectory.resolve("extensions").resolve("bytecluster-plugin.jar"));
+                    Files.copy(STORAGE_PATH.resolve("bytecluster-plugin.jar"), serviceDirectory.resolve("extensions").resolve("bytecluster-plugin.jar"), StandardCopyOption.REPLACE_EXISTING);
                 } else {
                     FileHelper.createDirectoryIfNotExists(serviceDirectory.resolve("plugins"));
-                    Files.copy(STORAGE_PATH.resolve("bytecluster-plugin.jar"), serviceDirectory.resolve("plugins").resolve("bytecluster-plugin.jar"));
+                    Files.copy(STORAGE_PATH.resolve("bytecluster-plugin.jar"), serviceDirectory.resolve("plugins").resolve("bytecluster-plugin.jar"), StandardCopyOption.REPLACE_EXISTING);
+                    ;
                 }
 
                 Node.getInstance().getModuleHandler().copyModuleFiles(cloudService);
@@ -136,7 +140,11 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
                         if (localService.getProcess().waitFor(5, TimeUnit.SECONDS)) {
                             localService.getProcess().exitValue();
                             localService.setProcess(null);
-                            FileHelper.deleteDirectory(localService.getDirectory());
+
+
+                            if (!localService.getGroup().isStaticService()) {
+                                FileHelper.deleteDirectory(localService.getDirectory());
+                            }
                             Logger.info("Service " + localService.getName() + " is now stopped.");
                             return;
                         }
@@ -144,7 +152,9 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
                     }
                     localService.getProcess().toHandle().destroyForcibly();
                     localService.setProcess(null);
-                    FileHelper.deleteDirectory(localService.getDirectory());
+                    if (!localService.getGroup().isStaticService()) {
+                        FileHelper.deleteDirectory(localService.getDirectory());
+                    }
                     Logger.info("Service " + localService.getName() + " is now stopped.");
                 }
             }

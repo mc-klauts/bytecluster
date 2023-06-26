@@ -23,6 +23,7 @@ import net.bytemc.cluster.api.service.AbstractCloudService;
 import net.bytemc.cluster.api.service.CloudServiceState;
 import net.bytemc.cluster.node.Node;
 import net.bytemc.cluster.node.event.CloudEventHandlerImpl;
+import net.bytemc.cluster.node.templates.ServiceTemplateHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -99,7 +100,7 @@ public final class LocalCloudService extends AbstractCloudService {
     }
 
     public @NotNull Path getDirectory() {
-        return CloudServiceFactoryQueue.TEMP_PATH.resolve(getName());
+        return (getGroup().isStaticService() ? ServiceTemplateHandler.STATIC_SERVICE_PATH : CloudServiceFactoryQueue.TEMP_PATH).resolve(getName());
     }
 
     @Override

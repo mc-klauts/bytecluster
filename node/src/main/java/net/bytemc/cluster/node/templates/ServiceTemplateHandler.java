@@ -13,9 +13,11 @@ import java.nio.file.Path;
 public final class ServiceTemplateHandler {
 
     private static Path TEMPLATE_PATH = Path.of("templates");
+    public static Path STATIC_SERVICE_PATH = Path.of("static");
 
     public ServiceTemplateHandler() {
         FileHelper.createDirectoryIfNotExists(TEMPLATE_PATH);
+        FileHelper.createDirectoryIfNotExists(STATIC_SERVICE_PATH);
 
         this.createTemplate("GLOBAL");
         this.createTemplate("EVERY_SERVER");
