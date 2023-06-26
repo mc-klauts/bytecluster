@@ -20,4 +20,6 @@ public interface CloudServiceGroup {
 
     int getDefaultStartPort();
 
+    boolean isStaticService();
+
 }

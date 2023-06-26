@@ -102,8 +102,9 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
         int maxMemory = buffer.readInt();
         int defaultStartPort = buffer.readInt();
         boolean fallback = buffer.readBoolean();
+        boolean isStatic = buffer.readBoolean();
 
-        return new CloudServiceGroupImpl(name, groupType, min, max, maxMemory, fallback, defaultStartPort, bootstrapNodes);
+        return new CloudServiceGroupImpl(name, groupType, min, max, maxMemory, fallback, defaultStartPort, bootstrapNodes, isStatic);
     }
 
     public void reload() {

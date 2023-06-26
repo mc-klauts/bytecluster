@@ -33,6 +33,7 @@ public final class PacketBufferHelper {
         packetBuffer.writeInt(cloudServiceGroup.getMaxMemory());
         packetBuffer.writeInt(cloudServiceGroup.getDefaultStartPort());
         packetBuffer.writeBoolean(cloudServiceGroup.isFallback());
+        packetBuffer.writeBoolean(cloudServiceGroup.isStaticService());
     }
 
 }

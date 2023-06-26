@@ -15,5 +15,6 @@ public abstract class AbstractCloudServiceGroup implements CloudServiceGroup {
     private boolean fallback;
     private int defaultStartPort;
     private String bootstrapNodes;
+    private boolean staticService;
 
 }
