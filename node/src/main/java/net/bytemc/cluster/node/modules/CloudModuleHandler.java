@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 public final class CloudModuleHandler {
 
-    private final static Path MODULE_PATH = Path.of("modules");
+    public final static Path MODULE_PATH = Path.of("modules");
 
     @Getter
     private final List<LoadedModule> loadedModules = new CopyOnWriteArrayList<>();
