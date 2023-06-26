@@ -37,7 +37,7 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
 
     @Override
     public void addGroup(CloudServiceGroup group) {
-        //todo
+        Wrapper.getInstance().sendPacket(new WrapperAddGroupPacket(group));
     }
 
     @Override

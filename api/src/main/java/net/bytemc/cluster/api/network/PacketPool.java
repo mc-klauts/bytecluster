@@ -59,6 +59,7 @@ public final class PacketPool {
                 CloudServiceMemoryRequestPacket.class,
                 CloudServiceCpuPacket.class,
                 CloudServiceCpuRequestPacket.class,
+                WrapperAddGroupPacket.class,
                 CallEventPacket.class,
                 SubscribeEventPacket.class
         );
