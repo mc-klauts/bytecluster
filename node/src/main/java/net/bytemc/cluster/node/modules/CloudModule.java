@@ -17,6 +17,6 @@ public interface CloudModule {
         //check if configuration path is exists
         FileHelper.createDirectoryIfNotExists(path);
 
-        return Path.of(info.getName());
+        return path;
     }
 }
