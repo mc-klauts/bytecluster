@@ -14,11 +14,13 @@ public final class VelocityPacketListener {
 
     public VelocityPacketListener(ProxyServer server) {
         Wrapper.getInstance().getPacketPool().registerListener(CloudPlayerTablistPacket.class, (channel, packet) -> {
-            server.getPlayer(packet.getUuid()).ifPresent(player -> player.sendPlayerListHeaderAndFooter(miniMessage.deserialize(packet.getHeader()), miniMessage.deserialize(packet.getFooter())));
+            server.getPlayer(packet.getUuid()).ifPresent(player -> {
+                player.sendPlayerListHeaderAndFooter(miniMessage.deserialize(packet.getHeader()), miniMessage.deserialize(packet.getFooter()));
+            });
         });
 
         Wrapper.getInstance().getPacketPool().registerListener(CloudPlayerRequestKickPacket.class, (channel, packet) -> {
-            server.getPlayer(packet.getUuid()).ifPresent(player -> player.disconnect(Component.text("polo")));
+            server.getPlayer(packet.getUuid()).ifPresent(player -> player.disconnect(Component.text(packet.getReason())));
         });
 
         Wrapper.getInstance().getPacketPool().registerListener(CloudPlayerSendMessagePacket.class, (channel, packet) -> {

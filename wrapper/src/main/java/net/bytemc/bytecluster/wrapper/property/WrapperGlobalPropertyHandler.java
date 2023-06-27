@@ -26,8 +26,8 @@ public final class WrapperGlobalPropertyHandler implements GlobalPropertyHandler
     @Override
     public <T> AsyncTask<Property<T>> requestPropertyAsync(String id) {
         var task = new AsyncTask<Property<T>>();
-        Wrapper.getInstance().sendQueryPacket(new PropertyRequestSharePacket(id), PropertySharePacket.class, respone -> {
-            task.complete(new WrapperProperty<>(id, respone.getType(), respone.getPropertyAsString()));
+        Wrapper.getInstance().sendQueryPacket(new PropertyRequestSharePacket(id), PropertySharePacket.class, response -> {
+            task.complete(new WrapperProperty<>(id, response.getType(), response.getPropertyAsString()));
         });
         return task;
     }

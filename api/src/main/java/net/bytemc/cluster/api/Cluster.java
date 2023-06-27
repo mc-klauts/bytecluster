@@ -39,4 +39,6 @@ public abstract class Cluster {
 
     public abstract GlobalPropertyHandler getGlobalPropertyHandler();
 
+    public abstract ClassLoader getRuntimeClassLoader();
+
 }

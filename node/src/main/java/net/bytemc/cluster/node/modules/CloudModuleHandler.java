@@ -127,7 +127,7 @@ public final class CloudModuleHandler {
     }
 
     private List<LoadedModuleFileContent> getAllCloudModuleFileInfos() {
-        return getAllModuleJarFiles().stream().map(it -> new LoadedModuleFileContent(it, getInfoFromFile(it, "module.json"))).toList();
+        return getAllModuleJarFiles().stream().filter(it -> it.getName().endsWith(".jar")).map(it -> new LoadedModuleFileContent(it, getInfoFromFile(it, "module.json"))).toList();
     }
 
     public Class<?> findModuleClass(String name) throws ClassNotFoundException {

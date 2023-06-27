@@ -88,4 +88,9 @@ public final class Wrapper extends Cluster {
     public CloudService getLocalService() {
         return localService;
     }
+
+    @Override
+    public ClassLoader getRuntimeClassLoader() {
+        return WrapperLauncher.getWrapperThread().getContextClassLoader();
+    }
 }

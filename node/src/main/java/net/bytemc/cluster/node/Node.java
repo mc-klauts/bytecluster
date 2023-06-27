@@ -99,4 +99,9 @@ public final class Node extends Cluster {
         ((CloudServiceProviderImpl) this.serviceProvider).runProcess(this.serviceGroupProvider);
         ((CloudServiceProviderImpl) this.serviceProvider).queue();
     }
+
+    @Override
+    public ClassLoader getRuntimeClassLoader() {
+        return ClassLoader.getSystemClassLoader();
+    }
 }

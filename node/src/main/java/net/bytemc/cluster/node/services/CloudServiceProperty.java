@@ -11,9 +11,18 @@ public final class CloudServiceProperty<T> implements Property<T> {
     private String propertyAsString;
     private T value;
 
-    public CloudServiceProperty(String id, Class<?> clazz, String gson) {
+    public CloudServiceProperty(String id, String clazz, String gson) {
         this.id = id;
         this.propertyAsString = gson;
-        this.value = (T) GsonHelper.SENDABLE_GSON.fromJson(gson, clazz);
+        try {
+            this.value = (T) GsonHelper.SENDABLE_GSON.fromJson(gson, Class.forName(clazz));
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public T getValue(ClassLoader classLoader) {
+        return this.value;
     }
 }

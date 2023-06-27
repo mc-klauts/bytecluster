@@ -3,7 +3,10 @@ package net.bytemc.cluster.node.network.listener;
 import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.network.packets.groups.*;
 import net.bytemc.cluster.api.network.packets.player.*;
+import net.bytemc.cluster.api.network.packets.properties.PropertyRequestSharePacket;
+import net.bytemc.cluster.api.network.packets.properties.PropertySharePacket;
 import net.bytemc.cluster.api.network.packets.services.*;
+import net.bytemc.cluster.api.properties.Property;
 import net.bytemc.cluster.api.service.CloudService;
 import net.bytemc.cluster.node.Node;
 
@@ -65,5 +68,14 @@ public final class ApiQueryResponseHandler {
         pool.addQueryModification(GroupExistRequest.class, (packet) -> {
             return new GroupExistResponse(Cluster.getInstance().getServiceGroupProvider().exists(packet.getGroupId()));
         });
+
+        pool.addQueryModification(PropertyRequestSharePacket.class, (packet) -> {
+            Property<Object> property = Node.getInstance().getGlobalPropertyHandler().requestProperty(packet.getId());
+            if (property == null) {
+                return new PropertySharePacket("null", "null");
+            }
+            return new PropertySharePacket(property.getValue().getClass().getName(), property.getPropertyAsString());
+        });
+
     }
 }

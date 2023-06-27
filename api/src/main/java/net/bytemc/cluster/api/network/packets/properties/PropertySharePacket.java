@@ -10,22 +10,18 @@ import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 @Packet.Info(id = 80)
 public final class PropertySharePacket extends Packet {
 
-    private Class<?> type;
+    private String type;
     private String propertyAsString;
 
     @Override
     public void read(PacketBuffer reader) {
-        try {
-            this.type = Class.forName(reader.readString());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.type = reader.readString();
         this.propertyAsString = reader.readString();
     }
 
     @Override
     public void write(PacketBuffer writer) {
-        writer.writeString(this.type.getName());
+        writer.writeString(this.type);
         writer.writeString(this.propertyAsString);
     }
 }

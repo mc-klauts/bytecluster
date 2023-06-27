@@ -139,7 +139,7 @@ public final class LocalCloudService extends AbstractCloudService {
     @Override
     public <T> AsyncTask<Property<T>> requestPropertyAsync(String id) {
         var task = new AsyncTask<Property<T>>();
-       sendQueryPacket(new PropertyRequestSharePacket(id), PropertySharePacket.class, packet -> task.complete(new CloudServiceProperty<>(id, packet.getType(), packet.getPropertyAsString())));
+       sendQueryPacket(new PropertyRequestSharePacket(id), PropertySharePacket.class, packet -> task.complete(new CloudServiceProperty<>(id, packet.getType().getClass().getName(), packet.getPropertyAsString())));
         return task;
     }
 

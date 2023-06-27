@@ -7,6 +7,10 @@ import net.bytemc.cluster.api.misc.concurrent.ListHelper;
 import net.bytemc.cluster.api.network.packets.ServiceIdentifiyPacket;
 import net.bytemc.cluster.api.network.packets.groups.*;
 import net.bytemc.cluster.api.network.packets.player.*;
+import net.bytemc.cluster.api.network.packets.properties.PropertyDeletePacket;
+import net.bytemc.cluster.api.network.packets.properties.PropertyRequestSharePacket;
+import net.bytemc.cluster.api.network.packets.properties.PropertySetPacket;
+import net.bytemc.cluster.api.network.packets.properties.PropertySharePacket;
 import net.bytemc.cluster.api.network.packets.services.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,6 +61,10 @@ public final class PacketPool {
                 CloudServiceResponsePlayerAmountPacket.class,
                 CloudServiceMemoryPacket.class,
                 CloudServiceMemoryRequestPacket.class,
+                PropertySharePacket.class,
+                PropertyRequestSharePacket.class,
+                PropertyDeletePacket.class,
+                PropertySetPacket.class,
                 CloudServiceCpuPacket.class,
                 CloudServiceCpuRequestPacket.class,
                 WrapperAddGroupPacket.class,

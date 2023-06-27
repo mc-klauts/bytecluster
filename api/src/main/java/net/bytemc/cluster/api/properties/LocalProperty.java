@@ -14,4 +14,8 @@ public class LocalProperty<T> implements Property<T> {
         this.propertyAsString = GsonHelper.SENDABLE_GSON.toJson(value);
     }
 
+    @Override
+    public T getValue(ClassLoader classLoader) {
+        return value;
+    }
 }
