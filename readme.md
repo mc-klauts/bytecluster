@@ -16,6 +16,7 @@
 - [ ] group commands
 - [ ] service commands
 - [ ] help command
+- [ ] replace getValue(Classloader loader);
 
 ### Complete
 
