@@ -9,7 +9,9 @@ import java.nio.file.Path;
 public enum CloudGroupType {
 
     VELOCITY("velocity.jar", true),
-    MINESTOM("minestom.jar");
+    MINESTOM("minestom.jar"),
+
+    PAPER_1_20_1("paper-1.20.1.jar");
 
     String fileId;
     boolean proxy = false;

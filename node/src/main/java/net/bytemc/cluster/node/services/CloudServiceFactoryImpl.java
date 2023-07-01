@@ -10,7 +10,7 @@ import net.bytemc.cluster.api.misc.FileHelper;
 import net.bytemc.cluster.node.misc.VelocityForwardingSecretHelper;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -88,6 +88,24 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
                 Logger.error("Cannot copy service runtime file. Service is now closed.", e);
                 service.shutdown();
                 return;
+            }
+
+            if (cloudService.getGroup().getGroupType() == CloudGroupType.PAPER_1_20_1) {
+                this.acceptEula(cloudService);
+                try {
+                    final var process = new ProcessBuilder("java", "-Dpaperclip.patchonly=true", "-jar", CloudGroupType.PAPER_1_20_1.getFileId()).directory(serviceDirectory.toFile()).start();
+                    final var inputStreamReader = new InputStreamReader(process.getInputStream());
+                    final var bufferedReader = new BufferedReader(inputStreamReader);
+                    process.waitFor();
+                    process.destroyForcibly();
+                    bufferedReader.close();
+                    inputStreamReader.close();
+                    Files.copy(serviceDirectory.resolve("cache").resolve("mojang_1.20.1.jar"), serviceDirectory.resolve(CloudGroupType.PAPER_1_20_1.getFileId()), StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             if (cloudService.getGroup().getGroupType() == CloudGroupType.VELOCITY) {
@@ -169,6 +187,7 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
         if (group.getGroupType() == CloudGroupType.VELOCITY) {
             arguments.addAll(VELOCITY_FLAGS);
         }
+
         arguments.add("-Xms" + group.getMaxMemory() + "M");
         arguments.add("-Xmx" + group.getMaxMemory() + "M");
         arguments.add("-cp");
@@ -191,10 +210,19 @@ public final class CloudServiceFactoryImpl implements CloudServiceFactory {
         arguments.add("127.0.0.1");
         arguments.add(String.valueOf(Node.getInstance().getRuntimeConfiguration().getPort()));
         arguments.add(String.valueOf(service.getPort()));
+        arguments.add(service.getGroup().getGroupType().name());
+        arguments.add(VelocityForwardingSecretHelper.TOKEN);
 
-        if (service.getGroup().getGroupType() == CloudGroupType.MINESTOM) {
-            arguments.add(VelocityForwardingSecretHelper.TOKEN);
-        }
         return arguments;
     }
+
+    private void acceptEula(LocalCloudService service) {
+        try (final var fileWriter = new FileWriter(new File(service.getDirectory().toFile(), "eula.txt"))) {
+            fileWriter.write("eula=true");
+            fileWriter.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

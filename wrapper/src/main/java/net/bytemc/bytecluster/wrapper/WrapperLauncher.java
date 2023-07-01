@@ -2,6 +2,7 @@ package net.bytemc.bytecluster.wrapper;
 
 import lombok.Getter;
 import net.bytemc.bytecluster.wrapper.loader.ApplicationExternalClassLoader;
+import net.bytemc.cluster.api.service.CloudGroupType;
 
 import java.lang.instrument.Instrumentation;
 import java.nio.file.Files;
@@ -43,21 +44,33 @@ public class WrapperLauncher {
                     JarEntry jarEntry;
                     while ((jarEntry = jarInputStream.getNextJarEntry()) != null) {
                         if (jarEntry.getName().endsWith(".class")) {
-                            Class.forName(jarEntry.getName().replace('/', '.').replace(".class", ""), false, classLoader);
+                            try {
+                                Class.forName(jarEntry.getName().replace('/', '.').replace(".class", ""), false, classLoader);
+                            } catch (ClassNotFoundException exception) {
+                                //ignore
+                            }
                         }
                     }
                 }
             }
 
+            var type = CloudGroupType.valueOf(arguments.remove(3));
+
             // if velocity forwarding is enabled, we need to add the velocity forwarding secret helper to the classpath
-            if (arguments.size() >= 5) {
-                secureToken = Optional.ofNullable(arguments.get(4));
-            }
+            secureToken = Optional.ofNullable(arguments.remove(3));
 
             instrumentation.appendToSystemClassLoaderSearch(new JarFile(applicationFile.toFile()));
             final var mainClass = Class.forName(main, true, classLoader);
             wrapperThread = new Thread(() -> {
                 try {
+
+                    if (type == CloudGroupType.PAPER_1_20_1) {
+                        arguments.add("--port");
+                        arguments.add(String.valueOf(Wrapper.getInstance().getLocalService().getPort()));
+                        arguments.add("--nogui");
+                    }
+
+                    // build arguments
                     mainClass.getMethod("main", String[].class).invoke(null, (Object) arguments.toArray(new String[0]));
                 } catch (Exception exception) {
                     exception.printStackTrace();
