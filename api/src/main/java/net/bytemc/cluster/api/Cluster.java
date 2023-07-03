@@ -19,7 +19,6 @@ public abstract class Cluster {
 
     private final PacketPool packetPool = new PacketPool();
 
-    @Getter
     private final CommandRepository commandRepository = new CommandRepository();
 
 

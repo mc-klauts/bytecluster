@@ -1,15 +1,17 @@
 package net.bytemc.cluster.api.command.argument.transformers;
 
 import java.lang.reflect.Parameter;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import net.bytemc.cluster.api.command.argument.ArgumentTransformer;
 
-public final class StringArgumentTransformer implements
-    ArgumentTransformer<String> {
+public final class PlainTextTransformer implements ArgumentTransformer<String> {
 
+    @Contract(pure = true)
     @Override
     public String transform(
         Parameter parameter,
-        String input
+        @NotNull String input
     ) {
         return input;
     }

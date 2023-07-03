@@ -8,13 +8,14 @@ import net.bytemc.cluster.api.command.autocompletion.DefaultTabCompleter;
 import net.bytemc.cluster.api.command.autocompletion.TabCompleter;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target({ElementType.METHOD})
 public @interface SubCommand {
 
     String name();
 
-    String example();
+    String description() default "";
 
+    String permission() default "";
     Class<? extends TabCompleter> tabCompleter() default DefaultTabCompleter.class;
 
 }

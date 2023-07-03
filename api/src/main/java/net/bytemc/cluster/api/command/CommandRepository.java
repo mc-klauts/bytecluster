@@ -1,33 +1,80 @@
 package net.bytemc.cluster.api.command;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import lombok.Getter;
-import lombok.SneakyThrows;
+import java.util.Optional;
+import net.bytemc.cluster.api.command.commandsender.CommandSender;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
 public final class CommandRepository {
 
-    @Getter
-    private final Map<Class<?>, InternalCommand> commandMap = new HashMap<>();
+    private final Map<Class<?>, IndexedCommand> commandMap = new HashMap<>();
 
-    @SneakyThrows
-    public void registerCommand(@NotNull Class<?> clazz) {
-        final var clazzInstance = clazz.newInstance();
-        final var command = new InternalCommand(clazzInstance);
-        command.index();
-        this.commandMap.put(clazz, command);
+    public void registerCommand(Class<?> commandClass) {
+        final CommandCreator commandCreator = new CommandCreator(commandClass);
+        commandCreator.handle();
+
+        this.commandMap.put(commandClass, commandCreator.getIndexedCommand());
     }
 
+    public void unregisterCommand(Class<?> commandClass) {
+        this.commandMap.remove(commandClass);
+    }
 
-    public void registerCommands(@NotNull Class<?>... clazz) {
-        for (var aClass : clazz) {
-            this.registerCommand(aClass);
+    @Contract(pure = true)
+    @Unmodifiable
+    public @NotNull Collection<IndexedCommand> findAll() {
+        return this.commandMap.values();
+    }
+
+    public @NotNull Optional<IndexedCommand> findOptional(String name) {
+        return this.commandMap.values().stream().filter(
+            indexedCommand -> indexedCommand.getName().equalsIgnoreCase(name) || List.of(
+                indexedCommand.getAliases()).contains(name)).findFirst();
+    }
+
+    public void registerCommands(Class<?>... commandClasses) {
+        for (Class<?> commandClass : commandClasses) {
+            registerCommand(commandClass);
         }
     }
 
-    public void unregister(Class<?> clazz) {
-        this.commandMap.remove(clazz);
-    }
+    /**
+     * Processing the given input and handling command execution by name
+     *
+     * @param commandSender which send the command
+     * @param input         which the commandSender typed
+     */
+    public void execute(
+        CommandSender commandSender,
+        @NotNull List<String> input
+    ) {
+        // skip method execution if there is no input
+        if (input.isEmpty()) {
+            return;
+        }
 
+        // loop through all commands
+        for (IndexedCommand command : this.commandMap.values()) {
+            // get first argument
+            final String name = input.get(0);
+            // check if the command default name or the aliases are equals to the typed name. If not continue to the next element
+            if (!command.getName().equalsIgnoreCase(name) && !List.of(command.getAliases())
+                .contains(name)) {
+                continue;
+            }
+
+            // remove first argument (name)
+            input.remove(0);
+
+            // execute command so the sub commands could be used
+            command.execute(commandSender, input);
+            return;
+        }
+        System.out.println("No command found!");
+    }
 }

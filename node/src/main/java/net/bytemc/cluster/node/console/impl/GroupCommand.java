@@ -3,30 +3,29 @@ package net.bytemc.cluster.node.console.impl;
 import java.util.Arrays;
 import java.util.List;
 import net.bytemc.cluster.api.command.annotations.Command;
-import net.bytemc.cluster.api.command.annotations.CommandArgument;
+import net.bytemc.cluster.api.command.annotations.CommandParameter;
 import net.bytemc.cluster.api.command.annotations.SubCommand;
 import net.bytemc.cluster.api.command.argument.transformers.BooleanArgumentTransformer;
 import net.bytemc.cluster.api.command.argument.transformers.CloudGroupTypeTransformer;
 import net.bytemc.cluster.api.command.argument.transformers.IntArgumentTransformer;
 import net.bytemc.cluster.api.command.argument.transformers.StringArgumentTransformer;
 import net.bytemc.cluster.api.command.autocompletion.TabCompleter;
-import net.bytemc.cluster.api.command.interfaces.CommandSender;
+import net.bytemc.cluster.api.command.commandsender.CommandSender;
 import net.bytemc.cluster.api.service.CloudGroupType;
 import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.node.Node;
-import net.bytemc.cluster.node.console.impl.GroupCommand.GroupTabCompleter;
 import net.bytemc.cluster.node.groups.CloudServiceGroupImpl;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
 import org.jetbrains.annotations.NotNull;
 
 @Command(name = "group", aliases = {"template", "groups",
-    "templates"}, tabCompleter = GroupTabCompleter.class)
+    "templates"})
 public final class GroupCommand {
 
-    @SubCommand(name = "start", example = "group start <name>", tabCompleter = NamedGroupTabCompleter.class)
+    @SubCommand(name = "start", tabCompleter = NamedGroupTabCompleter.class)
     private void startServer(
         CommandSender commandSender,
-        @CommandArgument(name = "template", transformer = StringArgumentTransformer.class) String template
+        @CommandParameter(name = "template", transformer = StringArgumentTransformer.class) String template
     ) {
         final var cloudServiceGroupProvider = Node.getInstance().getServiceGroupProvider();
         if (!cloudServiceGroupProvider.exists(template)) {
@@ -38,7 +37,7 @@ public final class GroupCommand {
             .addTask(cloudServiceGroupProvider.findGroup(template), 1);
     }
 
-    @SubCommand(name = "list", example = "group list")
+    @SubCommand(name = "list")
     private void listGroups(CommandSender commandSender) {
         final var groups = Node.getInstance().getServiceGroupProvider().findGroups();
         if (groups.isEmpty()) {
@@ -53,13 +52,13 @@ public final class GroupCommand {
         }
     }
 
-    @SubCommand(name = "create", example = "group create <name> <group_type> <memory> <fallback>", tabCompleter = GroupCreateTabCompleter.class)
+    @SubCommand(name = "create", tabCompleter = GroupCreateTabCompleter.class)
     private void createGroup(
         CommandSender commandSender,
-        @CommandArgument(name = "name", transformer = StringArgumentTransformer.class) String name,
-        @CommandArgument(name = "group_type", transformer = CloudGroupTypeTransformer.class) CloudGroupType type,
-        @CommandArgument(name = "memory", transformer = IntArgumentTransformer.class) int memory,
-        @CommandArgument(name = "fallback", transformer = BooleanArgumentTransformer.class) boolean fallback
+        @CommandParameter(name = "name", transformer = StringArgumentTransformer.class) String name,
+        @CommandParameter(name = "group_type", transformer = CloudGroupTypeTransformer.class) CloudGroupType type,
+        @CommandParameter(name = "memory", transformer = IntArgumentTransformer.class) int memory,
+        @CommandParameter(name = "fallback", transformer = BooleanArgumentTransformer.class) boolean fallback
     ) {
         final var cloudServiceGroupProvider = Node.getInstance().getServiceGroupProvider();
         if (cloudServiceGroupProvider.exists(name)) {
@@ -67,14 +66,15 @@ public final class GroupCommand {
             return;
         }
 
-        cloudServiceGroupProvider.addGroup(new CloudServiceGroupImpl(name, type, 1, 1, memory, fallback, -1, "node-1", false));
+        cloudServiceGroupProvider.addGroup(
+            new CloudServiceGroupImpl(name, type, 1, 1, memory, fallback, -1, "node-1", false));
         commandSender.sendMessage("Created group " + name);
     }
 
-    @SubCommand(name = "remove", example = "group remove <name>", tabCompleter = NamedGroupTabCompleter.class)
+    @SubCommand(name = "remove", tabCompleter = NamedGroupTabCompleter.class)
     private void removeGroup(
         @NotNull CommandSender commandSender,
-        @CommandArgument(name = "name", transformer = StringArgumentTransformer.class) String name
+        @CommandParameter(name = "name", transformer = StringArgumentTransformer.class) String name
     ) {
         final var cloudServiceGroupProvider = Node.getInstance().getServiceGroupProvider();
         if (!cloudServiceGroupProvider.exists(name)) {
@@ -86,10 +86,10 @@ public final class GroupCommand {
         commandSender.sendMessage("Successfully removed group " + name);
     }
 
-    @SubCommand(name = "info", example = "group info <name>", tabCompleter = NamedGroupTabCompleter.class)
+    @SubCommand(name = "info", tabCompleter = NamedGroupTabCompleter.class)
     private void groupInfo(
         CommandSender commandSender,
-        @CommandArgument(name = "name", transformer = StringArgumentTransformer.class) String name
+        @CommandParameter(name = "name", transformer = StringArgumentTransformer.class) String name
     ) {
         final var cloudServiceGroupProvider = Node.getInstance().getServiceGroupProvider();
         if (!cloudServiceGroupProvider.exists(name)) {
@@ -107,28 +107,15 @@ public final class GroupCommand {
         commandSender.sendMessage("- Fallback: " + group.isFallback());
     }
 
-    public static class GroupTabCompleter implements TabCompleter {
-
-        @Override
-        public List<String> complete(
-            CommandSender commandSender,
-            String name,
-            String[] args
-        ) {
-            return List.of("list", "create", "remove", "start");
-        }
-    }
-
     public static class GroupCreateTabCompleter implements TabCompleter {
 
         @Override
         public List<String> complete(
             CommandSender commandSender,
-            String name,
-            String @NotNull [] args
+            @NotNull List<String> arguments
         ) {
-            return args.length == 3 ? Arrays.stream(CloudGroupType.values()).map(Enum::name)
-                .toList() : args.length == 5 ? List.of("true", "false") : EMPTY;
+            return arguments.size() == 2 ? Arrays.stream(CloudGroupType.values()).map(Enum::name)
+                .toList() : arguments.size() == 4 ? List.of("true", "false") : EMPTY;
         }
     }
 
@@ -137,11 +124,10 @@ public final class GroupCommand {
         @Override
         public List<String> complete(
             CommandSender commandSender,
-            String name,
-            String @NotNull [] args
+            @NotNull List<String> arguments
         ) {
             final var cloudServiceGroupProvider = Node.getInstance().getServiceGroupProvider();
-            return args.length == 2 ? cloudServiceGroupProvider.findGroups().stream()
+            return arguments.size() == 1 ? cloudServiceGroupProvider.findGroups().stream()
                 .map(CloudServiceGroup::getName).toList() : EMPTY;
         }
     }

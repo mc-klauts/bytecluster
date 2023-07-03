@@ -1,18 +1,16 @@
 package net.bytemc.cluster.api.command.autocompletion;
 
-import java.util.ArrayList;
 import java.util.List;
-import net.bytemc.cluster.api.command.interfaces.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import net.bytemc.cluster.api.command.commandsender.CommandSender;
 
 public class DefaultTabCompleter implements TabCompleter {
 
     @Override
     public @NotNull List<String> complete(
         CommandSender commandSender,
-        String name,
-        String[] args
+        List<String> arguments
     ) {
-        return new ArrayList<>();
+        return EMPTY;
     }
 }

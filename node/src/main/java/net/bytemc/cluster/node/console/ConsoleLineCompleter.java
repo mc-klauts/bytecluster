@@ -1,9 +1,11 @@
 package net.bytemc.cluster.node.console;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import net.bytemc.cluster.api.Cluster;
-import net.bytemc.cluster.api.command.interfaces.CommandSender;
-import net.bytemc.cluster.node.Node;
+import net.bytemc.cluster.api.command.commandsender.CommandSender;
+import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.node.console.command.SimpleCommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jline.reader.Candidate;
@@ -21,21 +23,19 @@ public class ConsoleLineCompleter implements Completer {
         @NotNull ParsedLine parsedLine,
         List<Candidate> list
     ) {
-        if (parsedLine.words().isEmpty()) {
-            return;
-        }
+        final List<String> words = new ArrayList<>(parsedLine.words());
 
-        if (parsedLine.words().size() == 1) {
+        if (words.isEmpty() || words.size() == 1) {
             list.addAll(
-                Cluster.getInstance().getCommandRepository().getCommandMap().values().stream()
-                    .map(command -> new Candidate(command.getCallNames().get(0))).toList());
+                Cluster.getInstance().getCommandRepository().findAll().stream()
+                    .map(command -> new Candidate(command.getName())).toList());
             return;
         }
 
-        final String callName = parsedLine.words().get(0);
-        for (String s : Node.getInstance().getCommandExecutor()
-            .tryTabComplete(this.commandSender, callName, parsedLine.line())) {
-            list.add(new Candidate(s));
-        }
+        final String alias = words.remove(0);
+        Cluster.getInstance().getCommandRepository().findOptional(alias)
+            .ifPresent(
+                indexedCommand -> indexedCommand.complete(commandSender, words)
+                    .forEach(s -> list.add(new Candidate(s))));
     }
 }

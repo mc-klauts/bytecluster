@@ -1,10 +1,9 @@
 package net.bytemc.cluster.node;
 
+import java.nio.file.Path;
 import lombok.Getter;
 import lombok.Setter;
 import net.bytemc.cluster.api.Cluster;
-import net.bytemc.cluster.api.command.CommandExecutor;
-import net.bytemc.cluster.api.command.CommandRepository;
 import net.bytemc.cluster.api.event.EventHandler;
 import net.bytemc.cluster.api.logging.Logger;
 import net.bytemc.cluster.api.properties.GlobalPropertyHandler;
@@ -14,7 +13,11 @@ import net.bytemc.cluster.node.cluster.ClusterNetwork;
 import net.bytemc.cluster.node.configuration.ConfigurationHelper;
 import net.bytemc.cluster.node.configuration.RuntimeConfiguration;
 import net.bytemc.cluster.node.console.ConsoleTerminal;
-import net.bytemc.cluster.node.console.impl.*;
+import net.bytemc.cluster.node.console.impl.ClearScreenCommand;
+import net.bytemc.cluster.node.console.impl.GroupCommand;
+import net.bytemc.cluster.node.console.impl.ReloadCommand;
+import net.bytemc.cluster.node.console.impl.ServiceCommand;
+import net.bytemc.cluster.node.console.impl.ShutdownCommand;
 import net.bytemc.cluster.node.dependency.DependencyHandler;
 import net.bytemc.cluster.node.dependency.DependencyHandlerImpl;
 import net.bytemc.cluster.node.event.CloudEventHandlerImpl;
@@ -26,8 +29,6 @@ import net.bytemc.cluster.node.player.PlayerHandlerImpl;
 import net.bytemc.cluster.node.properties.GlobalPropertyHandlerImpl;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
 import net.bytemc.cluster.node.templates.ServiceTemplateHandler;
-
-import java.nio.file.Path;
 
 @Getter
 public final class Node extends Cluster {
@@ -46,7 +47,6 @@ public final class Node extends Cluster {
     private final CloudServiceGroupProvider serviceGroupProvider;
     private final CloudServiceProvider serviceProvider;
 
-    private final CommandExecutor commandExecutor;
     private final ConsoleTerminal consoleTerminal;
     private final ClusterNetwork clusterNetwork;
 
@@ -69,11 +69,12 @@ public final class Node extends Cluster {
         this.logger = new NodeLogger();
 
         final var commandRepository = Cluster.getInstance().getCommandRepository();
-        commandRepository.registerCommands(ClearScreenCommand.class, ShutdownCommand.class, GroupCommand.class, ServiceCommand.class, ReloadCommand.class);
+        commandRepository.registerCommands(ClearScreenCommand.class, ShutdownCommand.class,
+            GroupCommand.class, ServiceCommand.class, ReloadCommand.class);
 
-        this.runtimeConfiguration = ConfigurationHelper.readConfiguration(Path.of("config.json"), RuntimeConfiguration.DEFAULT_CONFIGURATION);
+        this.runtimeConfiguration = ConfigurationHelper.readConfiguration(Path.of("config.json"),
+            RuntimeConfiguration.DEFAULT_CONFIGURATION);
 
-        this.commandExecutor = new CommandExecutor();
         this.globalPropertyHandler = new GlobalPropertyHandlerImpl();
 
         this.moduleHandler = new CloudModuleHandler();
@@ -84,14 +85,14 @@ public final class Node extends Cluster {
         this.serviceGroupProvider = new CloudServiceGroupProviderImpl();
         this.playerHandler = new PlayerHandlerImpl();
 
-        Logger.info("Loading following groups: " + String.join(", ", serviceGroupProvider.findGroups().stream().map(it -> it.getName()).toList()));
+        Logger.info("Loading following groups: " + String.join(", ",
+            serviceGroupProvider.findGroups().stream().map(it -> it.getName()).toList()));
 
         this.moduleHandler.loadModules();
 
         this.templateHandler = new ServiceTemplateHandler();
         this.serviceProvider = new CloudServiceProviderImpl();
         this.clusterNetwork = new ClusterNetwork(this.runtimeConfiguration);
-
 
         // if user close the cluster without the shutdown command
         Runtime.getRuntime().addShutdownHook(new Thread(() -> NodeShutdownHandler.shutdown(this)));

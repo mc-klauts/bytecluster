@@ -12,7 +12,8 @@ public final class LongArgumentTransformer implements
     @Override
     public Long transform(
         Parameter parameter,
-        String input) {
+        String input
+    ) {
         return this.pattern.matcher(input).matches() ? Long.parseLong(input) : -1;
     }
 }
