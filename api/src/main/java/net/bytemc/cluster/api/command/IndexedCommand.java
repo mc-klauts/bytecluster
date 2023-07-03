@@ -67,7 +67,8 @@ public final class IndexedCommand {
 
     public List<String> complete(
         @NotNull CommandSender commandSender,
-        @NotNull List<String> args
+        @NotNull List<String> args,
+        boolean jLineSupport
     ) {
         if (!commandSender.hasPermission(permission)) {
             commandSender.sendNonePermission();
@@ -78,7 +79,7 @@ public final class IndexedCommand {
             this.tabCompleter = new SubCommandTabCompleter(this);
         }
 
-        if (args.size() == 1 && !this.subCommandMap.isEmpty()) {
+        if ((jLineSupport ? args.size() == 1 : args.isEmpty()) && !this.subCommandMap.isEmpty()) {
             return this.tabCompleter.complete(commandSender, args);
         }
 
