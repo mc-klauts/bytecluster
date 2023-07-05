@@ -36,6 +36,8 @@ public class WrapperLauncher {
             final var main = arguments.remove(0);
             final var applicationFile = Paths.get(arguments.remove(0));
 
+            System.out.println(arguments);
+
             var classLoader = ClassLoader.getSystemClassLoader();
             if (Boolean.parseBoolean(arguments.remove(0))) {
 
