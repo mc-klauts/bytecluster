@@ -25,7 +25,7 @@ public final class VelocityClusterCommand implements SimpleCommand {
     public @NotNull CompletableFuture<List<String>> suggestAsync(@NotNull Invocation invocation) {
         return this.commandRepository.findOptional(invocation.alias()).map(indexedCommand -> CompletableFuture.completedFuture(
                 indexedCommand.complete(new VelocityCommandInvoker(invocation.source()),
-                    new ArrayList<>(List.of(invocation.arguments())))))
+                    new ArrayList<>(List.of(invocation.arguments())), false)))
             .orElseGet(() -> CompletableFuture.completedFuture(List.of()));
     }
 
