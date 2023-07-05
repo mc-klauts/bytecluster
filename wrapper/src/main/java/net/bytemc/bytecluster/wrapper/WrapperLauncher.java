@@ -36,8 +36,6 @@ public class WrapperLauncher {
             final var main = arguments.remove(0);
             final var applicationFile = Paths.get(arguments.remove(0));
 
-            System.out.println(arguments);
-
             var classLoader = ClassLoader.getSystemClassLoader();
             if (Boolean.parseBoolean(arguments.remove(0))) {
 
@@ -56,10 +54,10 @@ public class WrapperLauncher {
                 }
             }
 
-            var type = CloudGroupType.valueOf(arguments.remove(3));
+            var type = CloudGroupType.valueOf(arguments.remove(4));
 
             // if velocity forwarding is enabled, we need to add the velocity forwarding secret helper to the classpath
-            secureToken = Optional.ofNullable(arguments.remove(3));
+            secureToken = Optional.ofNullable(arguments.remove(4));
 
             instrumentation.appendToSystemClassLoaderSearch(new JarFile(applicationFile.toFile()));
             final var mainClass = Class.forName(main, true, classLoader);
