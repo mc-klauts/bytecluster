@@ -11,17 +11,20 @@ import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 public final class PropertySetPacket extends Packet{
 
     private String id;
+    private String type;
     private String propertyAsString;
 
     @Override
     public void read(PacketBuffer reader) {
         id = reader.readString();
+        type = reader.readString();
         propertyAsString = reader.readString();
     }
 
     @Override
     public void write(PacketBuffer writer) {
         writer.writeString(id);
+        writer.writeString(type);
         writer.writeString(propertyAsString);
     }
 }

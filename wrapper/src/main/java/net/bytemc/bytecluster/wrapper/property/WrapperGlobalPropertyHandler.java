@@ -8,6 +8,7 @@ import net.bytemc.cluster.api.network.packets.properties.PropertyRequestSharePac
 import net.bytemc.cluster.api.network.packets.properties.PropertySetPacket;
 import net.bytemc.cluster.api.network.packets.properties.PropertySharePacket;
 import net.bytemc.cluster.api.properties.GlobalPropertyHandler;
+import net.bytemc.cluster.api.properties.LocalProperty;
 import net.bytemc.cluster.api.properties.Property;
 
 public final class WrapperGlobalPropertyHandler implements GlobalPropertyHandler {
@@ -19,7 +20,7 @@ public final class WrapperGlobalPropertyHandler implements GlobalPropertyHandler
 
     @Override
     public <T> T setProperty(String id, T value) {
-        Wrapper.getInstance().sendPacket(new PropertySetPacket(id, GsonHelper.SENDABLE_GSON.toJson(value)));
+        Wrapper.getInstance().sendPacket(new PropertySetPacket(id, value.getClass().getName(), GsonHelper.SENDABLE_GSON.toJson(value)));
         return value;
     }
 
@@ -27,7 +28,7 @@ public final class WrapperGlobalPropertyHandler implements GlobalPropertyHandler
     public <T> AsyncTask<Property<T>> requestPropertyAsync(String id) {
         var task = new AsyncTask<Property<T>>();
         Wrapper.getInstance().sendQueryPacket(new PropertyRequestSharePacket(id), PropertySharePacket.class, response -> {
-            task.complete(new WrapperProperty<>(id, response.getType(), response.getPropertyAsString()));
+            task.complete(new LocalProperty<>(response.getPropertyAsString()));
         });
         return task;
     }

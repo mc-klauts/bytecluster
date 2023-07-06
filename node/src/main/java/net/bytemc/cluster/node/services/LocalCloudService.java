@@ -132,14 +132,14 @@ public final class LocalCloudService extends AbstractCloudService {
 
     @Override
     public <T> T setProperty(String id, T value) {
-        sendPacket(new PropertySetPacket(id, GsonHelper.SENDABLE_GSON.toJson(value)));
+        sendPacket(new PropertySetPacket(id, value.getClass().getName(), GsonHelper.SENDABLE_GSON.toJson(value)));
         return value;
     }
 
     @Override
     public <T> AsyncTask<Property<T>> requestPropertyAsync(String id) {
         var task = new AsyncTask<Property<T>>();
-       sendQueryPacket(new PropertyRequestSharePacket(id), PropertySharePacket.class, packet -> task.complete(new CloudServiceProperty<>(id, packet.getType().getClass().getName(), packet.getPropertyAsString())));
+       sendQueryPacket(new PropertyRequestSharePacket(id), PropertySharePacket.class, packet -> task.complete(new CloudServiceProperty<>(id, packet.getPropertyAsString())));
         return task;
     }
 

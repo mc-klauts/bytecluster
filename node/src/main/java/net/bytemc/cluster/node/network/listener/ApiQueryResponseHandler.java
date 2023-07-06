@@ -72,9 +72,9 @@ public final class ApiQueryResponseHandler {
         pool.addQueryModification(PropertyRequestSharePacket.class, (packet) -> {
             Property<Object> property = Node.getInstance().getGlobalPropertyHandler().requestProperty(packet.getId());
             if (property == null) {
-                return new PropertySharePacket("null", "null");
+                return new PropertySharePacket("null");
             }
-            return new PropertySharePacket(property.getValue().getClass().getName(), property.getPropertyAsString());
+            return new PropertySharePacket(property.getPropertyAsString());
         });
 
     }
