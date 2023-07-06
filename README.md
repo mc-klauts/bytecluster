@@ -10,13 +10,13 @@
 
 ### Todo
 
-- [ ] spigot 1.20 support
+- [ ] make AbstractCommunicatableEvent working
 - [ ] memory calculation
 - [ ] message channel
 - [ ] group commands
 - [ ] service commands
 - [ ] help command
-- [ ] replace getValue(Classloader loader);
+- [ ] CloudPlayer properties
 
 ### Complete
 
@@ -34,3 +34,5 @@
 - [x] module folder and module loader
 - [x] System.setOut(); <- move and setErr();
 - [x] static services
+- [x] spigot 1.20 support
+- [x] replace getValue(Classloader loader);
