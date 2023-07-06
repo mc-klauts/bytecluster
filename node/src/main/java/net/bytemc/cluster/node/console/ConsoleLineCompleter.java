@@ -35,7 +35,7 @@ public class ConsoleLineCompleter implements Completer {
         final String alias = words.remove(0);
         Cluster.getInstance().getCommandRepository().findOptional(alias)
             .ifPresent(
-                indexedCommand -> indexedCommand.complete(commandSender, words)
+                indexedCommand -> indexedCommand.complete(commandSender, words, false)
                     .forEach(s -> list.add(new Candidate(s))));
     }
 }
