@@ -9,10 +9,11 @@ import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.bytemc.cluster.api.Cluster;
 import net.bytemc.cluster.api.command.CommandRepository;
 import net.bytemc.cluster.api.service.filter.CloudServiceFilter;
-import java.net.InetSocketAddress;
 import net.bytemc.cluster.plugin.velocity.command.VelocityCommandSupport;
 
-@Plugin(id = "bytemc-proxy", name = "bytemc-Proxy", version = "1.0.0", authors = {"ByteMC"})
+import java.net.InetSocketAddress;
+
+@Plugin(id = "bytecluster-plugin", name = "bytecluster-plugin", version = "1.0.0", authors = {"bytemc"})
 public final class VelocityPlatformBootstrap {
 
     @Inject
@@ -37,8 +38,6 @@ public final class VelocityPlatformBootstrap {
 
         // register commands
         final VelocityCommandSupport commandSupport = new VelocityCommandSupport(this.proxyServer);
-        final CommandRepository commandRepository = commandSupport.getCommandRepository();
-        //commandRepository.registerCommand();
         commandSupport.registerAllCommandsOnVelocity();
     }
 }

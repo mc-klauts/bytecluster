@@ -25,9 +25,8 @@ public final class VelocityProxyServerListener {
 
     @SubscribeEvent
     public void handle(CloudServiceShutdownEvent event) {
-        var info = proxyServer.getServer(event.getCloudService().getName()).orElse(null);
-        if (info != null) {
+        proxyServer.getServer(event.getCloudService().getName()).ifPresent(info -> {
             proxyServer.unregisterServer(info.getServerInfo());
-        }
+        });
     }
 }

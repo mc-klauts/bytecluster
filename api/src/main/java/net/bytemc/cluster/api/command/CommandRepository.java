@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
+
+import lombok.AccessLevel;
+import lombok.Setter;
 import net.bytemc.cluster.api.command.commandsender.CommandSender;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -14,11 +18,18 @@ public final class CommandRepository {
 
     private final Map<Class<?>, IndexedCommand> commandMap = new HashMap<>();
 
+    private Consumer<IndexedCommand> onCommandRegister;
+
     public void registerCommand(Class<?> commandClass) {
         final CommandCreator commandCreator = new CommandCreator(commandClass);
         commandCreator.handle();
+        IndexedCommand indexedCommand = commandCreator.getIndexedCommand();
 
-        this.commandMap.put(commandClass, commandCreator.getIndexedCommand());
+        this.commandMap.put(commandClass, indexedCommand);
+
+        if (this.onCommandRegister != null) {
+            this.onCommandRegister.accept(indexedCommand);
+        }
     }
 
     public void unregisterCommand(Class<?> commandClass) {
@@ -76,5 +87,13 @@ public final class CommandRepository {
             return;
         }
         System.out.println("No command found!");
+    }
+
+    public void setOnCommandRegister(Consumer<IndexedCommand> onCommandRegister) {
+        if (this.onCommandRegister != null) {
+            return;
+        }
+
+        this.onCommandRegister = onCommandRegister;
     }
 }
