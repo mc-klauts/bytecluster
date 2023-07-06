@@ -7,8 +7,10 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.bytemc.cluster.api.Cluster;
+import net.bytemc.cluster.api.command.CommandRepository;
 import net.bytemc.cluster.api.service.filter.CloudServiceFilter;
 import java.net.InetSocketAddress;
+import net.bytemc.cluster.plugin.velocity.command.VelocityCommandSupport;
 
 @Plugin(id = "bytemc-proxy", name = "bytemc-Proxy", version = "1.0.0", authors = {"ByteMC"})
 public final class VelocityPlatformBootstrap {
@@ -32,5 +34,11 @@ public final class VelocityPlatformBootstrap {
         for (var service : Cluster.getInstance().getServiceProvider().findServices(CloudServiceFilter.NON_PROXIES)) {
             this.proxyServer.registerServer(new ServerInfo(service.getName(), new InetSocketAddress(service.getHostname(), service.getPort())));
         }
+
+        // register commands
+        final VelocityCommandSupport commandSupport = new VelocityCommandSupport(this.proxyServer);
+        final CommandRepository commandRepository = commandSupport.getCommandRepository();
+        //commandRepository.registerCommand();
+        commandSupport.registerAllCommandsOnVelocity();
     }
 }

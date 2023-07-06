@@ -12,7 +12,8 @@ public final class DoubleArgumentTransformer implements
     @Override
     public Double transform(
         Parameter parameter,
-        String input) {
+        String input
+    ) {
         return this.pattern.matcher(input).matches() ? Double.parseDouble(input) : -1D;
     }
 }

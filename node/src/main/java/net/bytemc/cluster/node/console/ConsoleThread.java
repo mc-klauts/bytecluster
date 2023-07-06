@@ -1,8 +1,10 @@
 package net.bytemc.cluster.node.console;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
-import net.bytemc.cluster.api.command.interfaces.CommandSender;
-import net.bytemc.cluster.node.Node;
+import net.bytemc.cluster.api.Cluster;
+import net.bytemc.cluster.api.command.commandsender.CommandSender;
 import net.bytemc.cluster.node.console.command.SimpleCommandSender;
 import org.fusesource.jansi.Ansi;
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +25,9 @@ public final class ConsoleThread extends Thread {
         String line;
         while (!Thread.currentThread().isInterrupted() && (line = this.readLine()) != null) {
             this.terminal.writeEmpty(() -> Ansi.ansi().reset().cursorUp(1).eraseLine().toString());
-            Node.getInstance().getCommandExecutor().tryExecution(this.commandSender, line);
+            Cluster.getInstance().getCommandRepository()
+                .execute(this.commandSender, new ArrayList<>(
+                    List.of(line.split(" "))));
         }
     }
 

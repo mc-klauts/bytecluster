@@ -6,6 +6,7 @@ public interface ArgumentTransformer<T> {
 
     T transform(
         Parameter parameter,
-        String input);
+        String input
+    );
 
 }

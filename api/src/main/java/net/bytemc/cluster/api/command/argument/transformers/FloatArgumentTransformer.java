@@ -12,7 +12,8 @@ public final class FloatArgumentTransformer implements
     @Override
     public Float transform(
         Parameter parameter,
-        String input) {
+        String input
+    ) {
         return this.pattern.matcher(input).matches() ? Float.parseFloat(input) : -1f;
     }
 }

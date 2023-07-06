@@ -12,7 +12,8 @@ public final class IntArgumentTransformer implements
     @Override
     public Integer transform(
         Parameter parameter,
-        String input) {
+        String input
+    ) {
         return this.pattern.matcher(input).matches() ? Integer.parseInt(input) : -1;
     }
 }
