@@ -8,8 +8,6 @@ import net.bytemc.cluster.api.network.PacketBufferHelper;
 import net.bytemc.cluster.api.network.buffer.PacketBuffer;
 import net.bytemc.cluster.api.player.CloudPlayer;
 
-import java.util.UUID;
-
 @Getter
 @AllArgsConstructor
 public final class CloudPlayerSwitchEvent extends AbstractCommunicatableEvent {
