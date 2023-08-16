@@ -2,7 +2,7 @@ package net.bytemc.cluster.api.misc.async;
 
 import java.util.concurrent.*;
 
-public final class AsyncTask<T> extends CompletableFuture<T> {
+public final class AsyncTask<R> extends CompletableFuture<R> {
 
     private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
 
@@ -14,20 +14,20 @@ public final class AsyncTask<T> extends CompletableFuture<T> {
         });
     }
 
-    public T getSync(T def) {
-        return this.get(5, TimeUnit.SECONDS, def);
+    public R getSync(R object) {
+        return this.get(5, TimeUnit.SECONDS, object);
     }
 
-    public T get(long time, TimeUnit timeUnit, T def) {
+    public R get(long time, TimeUnit timeUnit, R exceptionObject) {
         try {
             return this.get(time, timeUnit);
         } catch (CancellationException | ExecutionException | InterruptedException | TimeoutException e) {
-            return def;
+            return exceptionObject;
         }
     }
 
-    public static <T> AsyncTask<T> async(ExceptionBroker<T, Throwable> handle) {
-        final var worker = new AsyncTask<T>();
+    public static <R> AsyncTask<R> async(ExceptionBroker<R, Throwable> handle) {
+        final var worker = new AsyncTask<R>();
         EXECUTOR.execute(() -> {
             try {
                 worker.complete(handle.get());
@@ -38,12 +38,12 @@ public final class AsyncTask<T> extends CompletableFuture<T> {
         return worker;
     }
 
-    public static <T> AsyncTask<T> directly(Object result) {
-        final var worker = new AsyncTask<T>();
+    public static <R> AsyncTask<R> directly(Object result) {
+        final var worker = new AsyncTask<R>();
         if (result instanceof Throwable throwable) {
             worker.completeExceptionally(throwable);
         } else {
-            worker.complete((T) result);
+            worker.complete((R) result);
         }
         return worker;
     }

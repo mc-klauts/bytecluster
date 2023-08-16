@@ -25,6 +25,5 @@ public final class WrapperPacketListener {
             }
             return new CloudServiceCpuPacket(CpuEvaluator.processCpuLoad());
         });
-
     }
 }
