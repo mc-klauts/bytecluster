@@ -3,6 +3,7 @@ package net.bytemc.cluster.node.console.impl;
 import java.util.List;
 import net.bytemc.cluster.api.command.annotations.Command;
 import net.bytemc.cluster.api.command.annotations.CommandParameter;
+import net.bytemc.cluster.api.command.annotations.DefaultExecution;
 import net.bytemc.cluster.api.command.annotations.SubCommand;
 import net.bytemc.cluster.api.command.argument.transformers.StringArgumentTransformer;
 import net.bytemc.cluster.api.command.autocompletion.TabCompleter;
@@ -27,6 +28,11 @@ public final class ServiceCommand {
         }
         commandSender.sendMessage("Trying to shutdown " + service.getName() + " service&8...");
         service.shutdown();
+    }
+
+    @DefaultExecution
+    public void handle(CommandSender commandSender) {
+        commandSender.sendMessage("service shutdown &8<&7name&8> | §7Shutdown a current service.");
     }
 
     public static class ServiceNameTabCompleter implements TabCompleter {

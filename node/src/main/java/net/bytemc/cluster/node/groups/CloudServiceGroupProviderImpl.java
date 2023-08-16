@@ -64,6 +64,8 @@ public final class CloudServiceGroupProviderImpl implements CloudServiceGroupPro
             return;
         }
 
+        this.groups.put(group.getName(), group);
+
         //save in configuration
         ConfigurationHelper.createConfigurationIfNotExists(Path.of("groups", group.getName() + ".json"), group);
         Logger.info("Successfully created group " + group.getName() + ".");

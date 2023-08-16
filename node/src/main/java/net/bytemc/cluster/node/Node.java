@@ -81,6 +81,7 @@ public final class Node extends Cluster {
         this.moduleHandler = new CloudModuleHandler();
         this.eventHandler = new CloudEventHandlerImpl();
 
+        Logger.empty(" ");
         Logger.empty("  ʙʏᴛᴇᴄʟᴜsᴛᴇʀ &8- &7©ʙʏᴛᴇᴍᴄɴᴇᴛᴢᴡᴇʀᴋ");
         Logger.empty(" ");
 
