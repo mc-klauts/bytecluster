@@ -23,6 +23,11 @@ public final class NodeLogger implements Logger {
         exception.printStackTrace();
     }
 
+    @Override
+    public void logEmpty(String line) {
+        System.out.println(line);
+    }
+
     public static void error(String text) {
         Node.getInstance().getConsoleTerminal().write("&8[&7" + DATE_FORMAT.format(new Date()) + "&8] &cerror &8» &7" + text);
     }

@@ -19,4 +19,9 @@ public final class WrapperLogging implements Logger {
         System.err.println(text);
         exception.printStackTrace();
     }
+
+    @Override
+    public void logEmpty(String line) {
+        System.out.println(line);
+    }
 }

@@ -31,25 +31,24 @@ public class WrapperLauncher {
     public static void main(String[] args) {
         try {
             final var wrapper = new Wrapper(args[3]);
-
             final var arguments = new ArrayList<>(Arrays.asList(args));
             final var main = arguments.remove(0);
             final var applicationFile = Paths.get(arguments.remove(0));
 
             var classLoader = ClassLoader.getSystemClassLoader();
             if (Boolean.parseBoolean(arguments.remove(0))) {
-
                 classLoader = new ApplicationExternalClassLoader().addUrl(Paths.get(arguments.remove(0)));
                 try (final var jarInputStream = new JarInputStream(Files.newInputStream(applicationFile))) {
                     JarEntry jarEntry;
                     while ((jarEntry = jarInputStream.getNextJarEntry()) != null) {
-                        if (jarEntry.getName().endsWith(".class")) {
-                            try {
-                                Class.forName(jarEntry.getName().replace('/', '.').replace(".class", ""), false, classLoader);
-                            } catch (ClassNotFoundException exception) {
-                                //ignore
-                            }
+
+                        if (!jarEntry.getName().endsWith(".class")) {
+                            continue;
                         }
+
+                        try {
+                            Class.forName(jarEntry.getName().replace('/', '.').replace(".class", ""), false, classLoader);
+                        } catch (ClassNotFoundException ignore) {}
                     }
                 }
             }

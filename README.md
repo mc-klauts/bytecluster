@@ -1,12 +1,26 @@
 
+## ByteCluster (Not released)
+Last update: 16.08.2023 Copyright by ByteMC-Network
 
-### Events
+Needed Repository:
+```xml
+<repositories>
+    <repository>
+        <id>bytemc</id>
+        <url>https://artifactory.bytemc.de/artifactory/bytemc-public/</url>
+    </repository>
+</repositories>
+```
 
-- `CloudServiceConnectEvent` - if server wrapper is connected to the node
-- `CloudServiceDisconnectEvent` - if server wrapper is disconnected from the node
-- `CloudPlayerLoginEvent` - if a player login on the server
-- `CloudPlayerDisconnectEvent` - if a player logout from the server
-- `CloudPlayerSwitchEvent` - if a player switch the server
+Maven-Api-Dependency: 
+```xml
+<dependency>
+    <groupId>net.bytemc.cluster</groupId>
+    <artifactId>api</artifactId>
+    <version>[VERSION</version>
+</dependency>
+```
+
 
 ### Todo
 

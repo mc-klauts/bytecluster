@@ -29,6 +29,7 @@ import net.bytemc.cluster.node.player.PlayerHandlerImpl;
 import net.bytemc.cluster.node.properties.GlobalPropertyHandlerImpl;
 import net.bytemc.cluster.node.services.CloudServiceProviderImpl;
 import net.bytemc.cluster.node.templates.ServiceTemplateHandler;
+import org.jline.utils.Log;
 
 @Getter
 public final class Node extends Cluster {
@@ -80,7 +81,8 @@ public final class Node extends Cluster {
         this.moduleHandler = new CloudModuleHandler();
         this.eventHandler = new CloudEventHandlerImpl();
 
-        Logger.info("Initializing networkservice...");
+        Logger.empty("  ʙʏᴛᴇᴄʟᴜsᴛᴇʀ &8- &7©ʙʏᴛᴇᴍᴄɴᴇᴛᴢᴡᴇʀᴋ");
+        Logger.empty(" ");
 
         this.serviceGroupProvider = new CloudServiceGroupProviderImpl();
         this.playerHandler = new PlayerHandlerImpl();

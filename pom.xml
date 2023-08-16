@@ -16,6 +16,13 @@
         <module>launcher</module>
     </modules>
 
+    <distributionManagement>
+        <repository>
+            <id>bytemc</id>
+            <url>https://artifactory.bytemc.de/artifactory/bytemc-public/</url>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <maven.compiler.source>20</maven.compiler.source>
         <maven.compiler.target>20</maven.compiler.target>

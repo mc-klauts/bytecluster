@@ -10,6 +10,12 @@ public interface Logger {
 
     void logError(String text, Throwable exception);
 
+    void logEmpty(String line);
+
+    static void empty(String line) {
+        Cluster.getInstance().getLogger().logEmpty(line);
+    }
+
     static void info(String text) {
         Cluster.getInstance().getLogger().logInfo(text);
     }
@@ -21,4 +27,5 @@ public interface Logger {
     static void error(String text, Throwable exception) {
         Cluster.getInstance().getLogger().logError(text, exception);
     }
+
 }
