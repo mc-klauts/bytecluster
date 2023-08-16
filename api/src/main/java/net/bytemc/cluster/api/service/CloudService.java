@@ -40,8 +40,7 @@ public interface CloudService extends PropertyHolder, StatisticsHolder {
         return Cluster.getInstance().getServiceGroupProvider().findGroup(this.getGroupName());
     }
 
-    default TaskFuture<CloudServiceGroup> getGroupAsync() {
-        return TaskFuture.instantly(getGroup());
+    default AsyncTask<CloudServiceGroup> getGroupAsync() {
+        return AsyncTask.directly(getGroup());
     }
-
 }

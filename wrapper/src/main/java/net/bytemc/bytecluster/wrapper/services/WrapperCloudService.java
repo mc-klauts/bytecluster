@@ -8,6 +8,7 @@ import net.bytemc.cluster.api.network.packets.services.*;
 import net.bytemc.cluster.api.properties.Property;
 import net.bytemc.cluster.api.service.AbstractCloudService;
 import net.bytemc.cluster.api.service.CloudService;
+import net.bytemc.cluster.api.service.CloudServiceGroup;
 import net.bytemc.cluster.api.service.CloudServiceState;
 
 @Getter
@@ -88,5 +89,10 @@ public class WrapperCloudService extends AbstractCloudService {
     public long getBootTime() {
         //todo
         return 0;
+    }
+
+    @Override
+    public AsyncTask<CloudServiceGroup> getGroupAsync() {
+        return Wrapper.getInstance().getServiceGroupProvider().findGroupAsync(getGroupName());
     }
 }

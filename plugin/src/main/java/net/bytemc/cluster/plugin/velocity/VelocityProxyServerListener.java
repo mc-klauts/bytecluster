@@ -16,8 +16,10 @@ public final class VelocityProxyServerListener {
 
     @SubscribeEvent
     public void handle(CloudServiceConnectEvent event) {
-        event.getService().getGroupAsync().onComplete(cloudServiceGroup -> {
-            if(!cloudServiceGroup.getGroupType().isProxy()) {
+        System.out.println("polo123");
+
+        event.getService().getGroupAsync().whenComplete((group, throwable) -> {
+            if(!group.getGroupType().isProxy()) {
                 proxyServer.registerServer(new ServerInfo(event.getService().getName(), new InetSocketAddress(event.getService().getHostname(), event.getService().getPort())));
             }
         });
@@ -25,6 +27,7 @@ public final class VelocityProxyServerListener {
 
     @SubscribeEvent
     public void handle(CloudServiceShutdownEvent event) {
+        System.out.println("polo");
         proxyServer.getServer(event.getCloudService().getName()).ifPresent(info -> {
             proxyServer.unregisterServer(info.getServerInfo());
         });
