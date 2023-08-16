@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import net.bytemc.cluster.api.command.annotations.Command;
 import net.bytemc.cluster.api.command.annotations.CommandParameter;
+import net.bytemc.cluster.api.command.annotations.DefaultExecution;
 import net.bytemc.cluster.api.command.annotations.SubCommand;
 import net.bytemc.cluster.api.command.argument.transformers.BooleanArgumentTransformer;
 import net.bytemc.cluster.api.command.argument.transformers.CloudGroupTypeTransformer;
@@ -35,6 +36,15 @@ public final class GroupCommand {
 
         ((CloudServiceProviderImpl) Node.getInstance().getServiceProvider()).getQueue()
             .addTask(cloudServiceGroupProvider.findGroup(template), 1);
+    }
+
+    @DefaultExecution
+    public void handleDefault(CommandSender commandSender) {
+        commandSender.sendMessage("group list &8| &7test message");
+        commandSender.sendMessage("group start &8<&7name&8> &8| &7test message");
+        commandSender.sendMessage("group create &8<&7name&8> &8<&7group_type&8> &8<&7memory&8> &8<&7fallback&8> &8| &7test message");
+        commandSender.sendMessage("group remove &8<&7name&8> &8| &7test message");
+        commandSender.sendMessage("group info &8<&7name&8> &8| &7test message");
     }
 
     @SubCommand(name = "list")
